@@ -1,0 +1,9 @@
+{
+  "name": "fill-admin",
+  "main": ".svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2025-10-03",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".svelte-kit/cloudflare",
+  },
+}

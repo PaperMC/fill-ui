@@ -1,0 +1,4 @@
+# Ignore generated GraphQL client artifacts
+src/lib/gql/
+# Ignore shadcn-svelte components
+src/lib/components/ui/
