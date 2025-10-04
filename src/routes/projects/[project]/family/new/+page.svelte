@@ -8,11 +8,6 @@
   import { graphql } from "$lib/gql";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
-  import { AUTH_CTX } from "$lib/auth.svelte";
-  import { onMount } from "svelte";
-
-  const auth = AUTH_CTX.get();
-  onMount(() => auth.forceLogin());
 
   let familyId: string | undefined = $state();
   let minJava: number | undefined = $state(21); // default minimum java

@@ -15,10 +15,6 @@
   import JavaOverridesInfo from "$lib/components/JavaOverridesInfo.svelte";
   import { splitFlags } from "$lib/utils";
   import { resolve } from "$app/paths";
-  import { AUTH_CTX } from "$lib/auth.svelte";
-
-  const auth = AUTH_CTX.get();
-  onMount(() => auth.forceLogin());
 
   let versionId: string | undefined = $state();
   let familyId: string | undefined = $state();
