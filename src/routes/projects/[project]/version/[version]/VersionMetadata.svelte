@@ -14,6 +14,9 @@
   import { getContextClient, mutationStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import { page } from "$app/state";
+  import { AUTH_CTX } from "$lib/auth.svelte";
+
+  const auth = AUTH_CTX.get();
 
   type Family = {
     id: string;
@@ -175,19 +178,21 @@
 <section class="space-y-4">
   <div class="flex items-center gap-2">
     <h2 class="flex items-center text-lg font-medium">Metadata</h2>
-    <Button
-      size="icon"
-      variant="ghost"
-      disabled={editMode}
-      class="size-6"
-      onclick={() => {
-        editMode = true;
-        resetEditState();
-      }}
-      title={editMode ? "Editing metadata" : "Edit metadata"}
-    >
-      <span class="iconify size-4 lucide--pencil"></span>
-    </Button>
+    {#if auth.getUsername()}
+      <Button
+        size="icon"
+        variant="ghost"
+        disabled={editMode}
+        class="size-6"
+        onclick={() => {
+          editMode = true;
+          resetEditState();
+        }}
+        title={editMode ? "Editing metadata" : "Edit metadata"}
+      >
+        <span class="iconify size-4 lucide--pencil"></span>
+      </Button>
+    {/if}
   </div>
   <div class="space-y-2 rounded-lg border p-4">
     <h3 class="text-lg font-medium">General</h3>

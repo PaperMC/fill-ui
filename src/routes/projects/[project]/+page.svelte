@@ -6,6 +6,9 @@
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import LoadingGif from "$lib/components/LoadingGif.svelte";
+  import { AUTH_CTX } from "$lib/auth.svelte";
+
+  const auth = AUTH_CTX.get();
 
   const familiesQuery = new RunedQuery(
     queryStore({
@@ -38,9 +41,11 @@
   <section class="space-y-4">
     <div class="flex items-center gap-2">
       <h2 class="flex items-center text-lg font-medium">Families</h2>
-      <Button size="icon" class="size-6" href="/projects/{page.params.project}/family/new">
-        <span class="iconify size-4 lucide--plus"></span>
-      </Button>
+      {#if auth.getUsername()}
+        <Button size="icon" class="size-6" href="/projects/{page.params.project}/family/new">
+          <span class="iconify size-4 lucide--plus"></span>
+        </Button>
+      {/if}
     </div>
     {#if familiesQuery.loading}
       <LoadingGif text="Loading families…" />

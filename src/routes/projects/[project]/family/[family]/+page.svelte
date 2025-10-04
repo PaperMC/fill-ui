@@ -8,6 +8,9 @@
   import { graphql } from "$lib/gql";
   import LoadingGif from "$lib/components/LoadingGif.svelte";
   import FamilyMetadata from "./FamilyMetadata.svelte";
+  import { AUTH_CTX } from "$lib/auth.svelte";
+
+  const auth = AUTH_CTX.get();
 
   const familyQuery = new RunedQuery(
     queryStore({
@@ -69,9 +72,11 @@
       <section class="space-y-4">
         <div class="flex items-center gap-2">
           <h2 class="flex items-center text-lg font-medium">Versions</h2>
-          <Button size="icon" class="size-6" href="/projects/{page.params.project}/version/new?family={encodeURIComponent(page.params.family ?? '')}">
-            <span class="iconify size-4 lucide--plus"></span>
-          </Button>
+          {#if auth.getUsername()}
+            <Button size="icon" class="size-6" href="/projects/{page.params.project}/version/new?family={encodeURIComponent(page.params.family ?? '')}">
+              <span class="iconify size-4 lucide--plus"></span>
+            </Button>
+          {/if}
         </div>
         {#if versions.length > 0}
           <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

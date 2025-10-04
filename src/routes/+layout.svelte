@@ -7,8 +7,6 @@
   import { API_ENDPOINT } from "$lib/api.svelte";
   import { AUTH_CTX, AuthHolder } from "$lib/auth.svelte";
   import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
-  import { page } from "$app/state";
   import { ModeWatcher } from "mode-watcher";
 
   let { children } = $props();
@@ -28,17 +26,7 @@
   });
   setContextClient(client);
 
-  function forceLogin() {
-    if (auth.getUsername() === null && !page.url.pathname.startsWith("/login")) {
-      // eslint-disable-next-line svelte/no-navigation-without-resolve
-      goto(`/login?redirect=${encodeURIComponent(page.url.pathname + page.url.search)}`);
-      return true;
-    }
-    return false;
-  }
-
   onMount(() => {
-    forceLogin();
     auth.tryRefreshToken();
     const intervalId = setInterval(() => {
       auth.tryRefreshToken();
