@@ -11,6 +11,9 @@
   import LoadingGif from "$lib/components/LoadingGif.svelte";
   import PromoteBuildButton from "$lib/components/PromoteBuildButton.svelte";
   import VersionMetadata from "./VersionMetadata.svelte";
+  import { AUTH_CTX } from "$lib/auth.svelte";
+
+  const auth = AUTH_CTX.get();
 
   const versionQuery = new RunedQuery(
     queryStore({
@@ -139,7 +142,7 @@
                     {#if b.time}<span class="truncate text-xs text-neutral-500">{formatDateTime(b.time)}</span>{/if}
                   </div>
                   <div class="flex items-center gap-2">
-                    {#if b.channel !== BuildChannel.Recommended}
+                    {#if auth.getUsername() && b.channel !== BuildChannel.Recommended}
                       <PromoteBuildButton buildId={b.id} />
                     {/if}
                     <Button

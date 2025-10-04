@@ -123,4 +123,13 @@ export class AuthHolder {
     const token = this.getAuthToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
+
+  async forceLogin() {
+    if (this.getUsername() === null && !page.url.pathname.startsWith("/login")) {
+      // eslint-disable-next-line svelte/no-navigation-without-resolve
+      await goto(`/login?redirect=${encodeURIComponent(page.url.pathname + page.url.search)}`);
+      return true;
+    }
+    return false;
+  }
 }
