@@ -113,7 +113,7 @@
               <div class="mb-2 text-sm">{d.name}</div>
               {#if d.checksums?.sha256}
                 <div class="grid grid-cols-[auto_1fr] gap-x-2 text-xs break-all">
-                  <div class="flex flex-col justify-between">
+                  <div class="flex flex-col gap-1">
                     <span>SHA-256</span>
                     <CopyToClipboard text={d.checksums.sha256} />
                   </div>
