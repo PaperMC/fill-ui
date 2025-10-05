@@ -64,6 +64,9 @@
 
 <svelte:head>
   <title>Login - Fill</title>
+  <meta name="description" content="Log in to Fill for management access." />
+  <meta property="og:title" content="Login - Fill" />
+  <meta property="og:description" content="Log in to Fill for management access." />
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">

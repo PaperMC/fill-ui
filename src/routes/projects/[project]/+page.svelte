@@ -8,6 +8,9 @@
   import LoadingGif from "$lib/components/LoadingGif.svelte";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
+  import { type PageProps } from "./$types";
+
+  let { data }: PageProps = $props();
 
   const auth = AUTH_CTX.get();
   const sharedQueries = SHARED_QUERIES_CTX.get();
@@ -31,11 +34,17 @@
   );
 
   let families = $derived(familiesQuery.current?.project?.families?.filter((family): family is NonNullable<typeof family> => family != null) || []);
-  let projectName = $derived(sharedQueries.projectNameOrFallback(page.params.project));
+  let projectName = $derived(data.preloadedProject?.project?.name || sharedQueries.projectNameOrFallback(page.params.project));
 </script>
 
 <svelte:head>
   <title>{projectName} - Fill</title>
+  {#if data.preloadedProject !== undefined}
+    {@const desc = `Version families for the ${projectName} project.`}
+    <meta name="description" content={desc} />
+    <meta property="og:title" content="{projectName} - Fill" />
+    <meta property="og:description" content={desc} />
+  {/if}
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">

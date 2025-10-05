@@ -15,6 +15,9 @@
 
 <svelte:head>
   <title>Projects - Fill</title>
+  <meta name="description" content="Browse all available projects." />
+  <meta property="og:title" content="Projects - Fill" />
+  <meta property="og:description" content="Browse all available projects." />
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">

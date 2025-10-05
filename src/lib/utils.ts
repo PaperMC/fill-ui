@@ -32,3 +32,11 @@ export async function copyToClipboard(text: string, setCopied: (value: boolean) 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RestProps = Record<string, any>;
+
+export function shouldSSROpenGraph(request: Request) {
+  // We don't want to delay initial page load for browsers, just for bots and things like Discord looking for metadata
+  const headers = request.headers;
+  const ua = headers.get("User-Agent") ?? "";
+  if (!ua) return false;
+  return ua.includes("bot") || ua.includes("Bot");
+}
