@@ -1,19 +1,12 @@
 <script lang="ts">
-  import { API_ENDPOINT, RunedQuery } from "$lib/api.svelte";
+  import { RunedQuery } from "$lib/api.svelte";
   import Header from "$lib/components/Header.svelte";
   import { page } from "$app/state";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
-  import { Button } from "$lib/components/ui/button";
-  import ChannelBadge from "$lib/components/ChannelBadge.svelte";
-  import { formatDateTime } from "$lib/utils/date";
-  import { BuildChannel } from "$lib/gql/graphql";
   import LoadingGif from "$lib/components/LoadingGif.svelte";
-  import PromoteBuildButton from "$lib/components/PromoteBuildButton.svelte";
   import VersionMetadata from "./VersionMetadata.svelte";
-  import { AUTH_CTX } from "$lib/auth.svelte";
-
-  const auth = AUTH_CTX.get();
+  import Build from "./Build.svelte";
 
   const versionQuery = new RunedQuery(
     queryStore({
@@ -79,6 +72,10 @@
                     sha256
                   }
                 }
+                commits {
+                  sha
+                  message
+                }
               }
             }
           }
@@ -94,18 +91,6 @@
 
   let builds = $derived(buildsQuery.current?.project?.version?.builds ?? []);
   const safeBuilds = $derived(builds.filter((b): b is NonNullable<typeof b> => b != null));
-
-  function formatBytes(bytes?: number | null): string {
-    if (!bytes || bytes < 0) return "-";
-    const units = ["B", "KB", "MB", "GB", "TB"] as const;
-    let i = 0;
-    let value = bytes;
-    while (value >= 1024 && i < units.length - 1) {
-      value /= 1024;
-      i++;
-    }
-    return `${value.toFixed(value >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
-  }
 </script>
 
 <svelte:head>
@@ -134,48 +119,7 @@
         {:else}
           <ul class="space-y-2">
             {#each safeBuilds as b (b.id)}
-              <li class="space-y-2 rounded-md border p-3">
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                  <div class="flex min-w-0 items-center gap-2">
-                    <span class="font-mono text-sm">#{b.id}</span>
-                    <ChannelBadge channel={b.channel} />
-                    {#if b.time}<span class="truncate text-xs text-neutral-500">{formatDateTime(b.time)}</span>{/if}
-                  </div>
-                  <div class="flex items-center gap-2">
-                    {#if auth.getUsername() && b.channel !== BuildChannel.Recommended}
-                      <PromoteBuildButton buildId={b.id} />
-                    {/if}
-                    <Button
-                      href="{API_ENDPOINT}/v3/projects/{page.params.project}/versions/{page.params.version}/builds/{b.id}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      size="sm"
-                      variant="link"
-                    >
-                      <span class="iconify lucide--external-link"></span>
-                      API
-                    </Button>
-                  </div>
-                </div>
-                {#if b.downloads && b.downloads.length > 0}
-                  <div class="flex flex-wrap gap-2">
-                    {#each b.downloads as d (d.name)}
-                      <Button href={d.url} rel="noopener noreferrer" title={d.name} size="sm" variant="outline">
-                        <span class="iconify lucide--download"></span>
-                        <span class="font-mono">{d.name}</span>
-                        {#if d.size}
-                          <span
-                            class="relative z-0 rounded border px-1 font-mono text-xs before:absolute before:inset-0 before:z-[-1] before:rounded before:bg-secondary"
-                            >{formatBytes(d.size)}</span
-                          >
-                        {/if}
-                      </Button>
-                    {/each}
-                  </div>
-                {:else}
-                  <div class="text-xs text-neutral-500">No downloads.</div>
-                {/if}
-              </li>
+              <Build build={b} />
             {/each}
           </ul>
         {/if}

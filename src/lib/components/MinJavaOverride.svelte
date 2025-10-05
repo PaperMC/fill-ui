@@ -10,11 +10,13 @@
   }
 
   let { minJavaOverride = $bindable(), familyMinJava, label }: Props = $props();
+  const uid = $props.id();
+  const inputId = `min-java-override-${uid}`;
 </script>
 
-<Label for="min-java-input">{label}</Label>
+<Label for={inputId}>{label}</Label>
 <div class="flex items-center gap-1">
-  <Input.Root id="min-java-input" type="number" min="1" step="1" bind:value={minJavaOverride} placeholder="Family: {familyMinJava}"></Input.Root>
+  <Input.Root id={inputId} type="number" min="1" step="1" bind:value={minJavaOverride} placeholder="Family: {familyMinJava}"></Input.Root>
   <Button
     type="button"
     variant="secondary"

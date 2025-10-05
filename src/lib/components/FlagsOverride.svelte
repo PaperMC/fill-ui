@@ -9,11 +9,13 @@
   }
 
   let { flagsOverride = $bindable(), familyFlags }: Props = $props();
+  const uid = $props.id();
+  const inputId = `flags-override-${uid}`;
 </script>
 
-<Label for="flags-input">Recommended JVM Flags Override (space separated)</Label>
+<Label for={inputId}>Recommended JVM Flags Override (space separated)</Label>
 <div class="flex items-center gap-1">
-  <Input.Root id="flags-input" bind:value={flagsOverride} placeholder="Family: {familyFlags.length === 0 ? 'None' : familyFlags}"></Input.Root>
+  <Input.Root id={inputId} bind:value={flagsOverride} placeholder="Family: {familyFlags.length === 0 ? 'None' : familyFlags}"></Input.Root>
   <Button
     type="button"
     variant="secondary"
