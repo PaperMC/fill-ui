@@ -10,6 +10,9 @@
   import FamilyMetadata from "./FamilyMetadata.svelte";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
+  import { type PageProps } from "./$types";
+
+  let { data }: PageProps = $props();
 
   const auth = AUTH_CTX.get();
 
@@ -53,10 +56,17 @@
   let family = $derived(familyQuery.current?.project?.family ?? null);
   let versions = $derived(familyQuery.current?.project?.versions?.filter((v) => v !== null) ?? []);
   const sharedQueries = SHARED_QUERIES_CTX.get();
+  let projectName = $derived(data.preloadedFamily?.project?.name || sharedQueries.projectNameOrFallback(page.params.project));
 </script>
 
 <svelte:head>
-  <title>{sharedQueries.projectNameOrFallback(page.params.project)} Family {page.params.family} - Fill</title>
+  <title>{projectName} Family {page.params.family} - Fill</title>
+  {#if data.preloadedFamily !== undefined}
+    {@const desc = `Details and versions for family ${data.preloadedFamily.project?.family?.id} of ${projectName}.`}
+    <meta name="description" content={desc} />
+    <meta property="og:title" content="{projectName} Family {data.preloadedFamily.project?.family?.id} - Fill" />
+    <meta property="og:description" content={desc} />
+  {/if}
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">

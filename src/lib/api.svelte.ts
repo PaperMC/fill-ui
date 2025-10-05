@@ -1,6 +1,6 @@
 import type { Readable } from "svelte/store";
 import { onMount } from "svelte";
-import { getContextClient, type OperationResultState, queryStore } from "@urql/svelte";
+import { createClient, fetchExchange, getContextClient, type OperationResultState, queryStore } from "@urql/svelte";
 import { graphql } from "$lib/gql";
 import { Context } from "runed";
 
@@ -67,4 +67,12 @@ export class SharedQueries {
     if (!projectId) return undefined;
     return this.projects.current?.projects?.find((p) => p !== null && p.id === projectId)?.name || projectId;
   }
+}
+
+export function createServerClient() {
+  return createClient({
+    url: API_ENDPOINT + "/graphql",
+    exchanges: [fetchExchange],
+    preferGetMethod: false,
+  });
 }

@@ -8,6 +8,9 @@
   import VersionMetadata from "./VersionMetadata.svelte";
   import Build from "./Build.svelte";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
+  import { type PageProps } from "./$types";
+
+  let { data }: PageProps = $props();
 
   const versionQuery = new RunedQuery(
     queryStore({
@@ -97,10 +100,17 @@
   let linkedBuildNumber = $derived(linkedBuildParam ? parseInt(linkedBuildParam) : null);
 
   const sharedQueries = SHARED_QUERIES_CTX.get();
+  let projectName = $derived(data.preloadedVersion?.project?.name || sharedQueries.projectNameOrFallback(page.params.project));
 </script>
 
 <svelte:head>
-  <title>{sharedQueries.projectNameOrFallback(page.params.project)} Version {page.params.version} - Fill</title>
+  <title>{projectName} Version {page.params.version} - Fill</title>
+  {#if data.preloadedVersion !== undefined}
+    {@const desc = `Details and downloads for version ${data.preloadedVersion.project?.version?.id} of ${projectName}.`}
+    <meta name="description" content={desc} />
+    <meta property="og:title" content="{projectName} Version {data.preloadedVersion.project?.version?.id} - Fill" />
+    <meta property="og:description" content={desc} />
+  {/if}
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
