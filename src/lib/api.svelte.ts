@@ -2,7 +2,18 @@ import type { Readable } from "svelte/store";
 import { onMount } from "svelte";
 import type { OperationResultState } from "@urql/svelte";
 
-export const API_ENDPOINT = import.meta.env.DEV ? "http://localhost:8080" : "https://fill.papermc.io";
+const PROD_ENDPOINT = "https://fill.papermc.io";
+export const API_ENDPOINT = getApiEndpoint();
+
+function getApiEndpoint() {
+  if (import.meta.env.DEV) {
+    if (import.meta.env.VITE_USE_PROD_ENDPOINT === "true") {
+      return PROD_ENDPOINT;
+    }
+    return "http://localhost:8080";
+  }
+  return PROD_ENDPOINT;
+}
 
 export class RunedQuery<V> {
   private currentState: OperationResultState<V> | undefined = $state();
