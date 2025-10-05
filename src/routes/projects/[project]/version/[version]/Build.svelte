@@ -10,9 +10,10 @@
   import * as Popover from "$lib/components/ui/popover/index.js";
   import { mergeProps } from "bits-ui";
   import CommitList from "./CommitList.svelte";
-  import { pushState } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import { watch } from "runed";
   import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
+  import { tick } from "svelte";
 
   interface Props {
     build: Build;
@@ -35,29 +36,31 @@
     return `${value.toFixed(value >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
   }
 
-  let button: HTMLElement | null = $state(null);
-  watch(
-    () => button,
-    (btn, old) => {
-      if (!old && btn && linked) {
-        btn.focus();
-        btn.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    },
-  );
+  let card: HTMLElement | null = $state(null);
+  watch([() => card, () => linked], ([card, linked]) => {
+    if (card !== null && linked) {
+      tick().then(() => {
+        card.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+  });
 </script>
 
-<li class="space-y-2 rounded-md border p-3">
+<li
+  bind:this={card}
+  data-linked={linked}
+  class="space-y-2 rounded-md border p-3 data-[linked=true]:ring-2 data-[linked=true]:ring-ring data-[linked=true]:ring-offset-2"
+>
   <div class="flex flex-wrap items-center justify-between gap-2">
     <div class="flex min-w-0 items-center gap-2">
       <Button
-        bind:ref={button}
         id="build-{build.id}"
         onclick={(e) => {
           e.preventDefault();
           // eslint-disable-next-line svelte/no-navigation-without-resolve
-          pushState(`?build=${build.id}`, {});
-          button?.scrollIntoView({ behavior: "smooth", block: "center" });
+          goto(`?build=${build.id}`, {
+            noScroll: true,
+          });
         }}
         href="?build={build.id}"
         variant="link"
