@@ -9,6 +9,7 @@
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
+  import { SHARED_QUERIES_CTX } from "$lib/api.svelte";
 
   let familyId: string | undefined = $state();
   let minJava: number | undefined = $state(21); // default minimum java
@@ -79,15 +80,16 @@
     });
   }
 
+  const sharedQueries = SHARED_QUERIES_CTX.get();
   let breadcrumbs = $derived.by(() => {
-    let base = buildHeaderSegments(page.params.project);
+    let base = buildHeaderSegments(sharedQueries, page.params.project);
     base.push({ label: "<new family>", href: "" });
     return base;
   });
 </script>
 
 <svelte:head>
-  <title>New {page.params.project} Family - Fill</title>
+  <title>New {sharedQueries.projectNameOrFallback(page.params.project)} Family - Fill</title>
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">

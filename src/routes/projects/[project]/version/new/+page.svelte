@@ -6,7 +6,7 @@
   import * as Select from "$lib/components/ui/select";
   import * as Input from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
-  import { RunedQuery } from "$lib/api.svelte";
+  import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import { getContextClient, queryStore, mutationStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import { goto } from "$app/navigation";
@@ -147,15 +147,16 @@
     return family?.java?.flags?.recommended?.join(" ") ?? "";
   }
 
+  const sharedQueries = SHARED_QUERIES_CTX.get();
   let breadcrumbs = $derived.by(() => {
-    let base = buildHeaderSegments(page.params.project);
+    let base = buildHeaderSegments(sharedQueries, page.params.project);
     base.push({ label: "<new version>", href: "" });
     return base;
   });
 </script>
 
 <svelte:head>
-  <title>New {page.params.project} Version - Fill</title>
+  <title>New {sharedQueries.projectNameOrFallback(page.params.project)} Version - Fill</title>
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { RunedQuery } from "$lib/api.svelte";
+  import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
   import { Button } from "$lib/components/ui/button";
@@ -10,6 +10,7 @@
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
 
   const auth = AUTH_CTX.get();
+  const sharedQueries = SHARED_QUERIES_CTX.get();
 
   const familiesQuery = new RunedQuery(
     queryStore({
@@ -30,14 +31,15 @@
   );
 
   let families = $derived(familiesQuery.current?.project?.families?.filter((family): family is NonNullable<typeof family> => family != null) || []);
+  let projectName = $derived(sharedQueries.projectNameOrFallback(page.params.project));
 </script>
 
 <svelte:head>
-  <title>{page.params.project} - Fill</title>
+  <title>{projectName} - Fill</title>
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header breadcrumbs={buildHeaderSegments(page.params.project)} />
+  <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project)} />
 
   <section class="space-y-4">
     <div class="flex items-center gap-2">
@@ -53,7 +55,7 @@
     {:else if familiesQuery.error}
       <div class="text-sm text-red-600">{familiesQuery.error.message}</div>
     {:else if families.length === 0}
-      <p class="text-sm text-neutral-500">No families found for project "{page.params.project}".</p>
+      <p class="text-sm text-neutral-500">No families found for project "{projectName}".</p>
     {:else}
       <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each families as family (family.id)}
