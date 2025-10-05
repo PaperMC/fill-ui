@@ -91,6 +91,9 @@
 
   let builds = $derived(buildsQuery.current?.project?.version?.builds ?? []);
   const safeBuilds = $derived(builds.filter((b): b is NonNullable<typeof b> => b != null));
+
+  let linkedBuildParam = $derived(page.url.searchParams.get("build") ?? null);
+  let linkedBuildNumber = $derived(linkedBuildParam ? parseInt(linkedBuildParam) : null);
 </script>
 
 <svelte:head>
@@ -119,7 +122,7 @@
         {:else}
           <ul class="space-y-2">
             {#each safeBuilds as b (b.id)}
-              <Build build={b} />
+              <Build build={b} linked={linkedBuildNumber === b.id} />
             {/each}
           </ul>
         {/if}

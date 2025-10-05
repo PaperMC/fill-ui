@@ -10,12 +10,15 @@
   import * as Popover from "$lib/components/ui/popover/index.js";
   import { mergeProps } from "bits-ui";
   import CommitList from "./CommitList.svelte";
+  import { pushState } from "$app/navigation";
+  import { watch } from "runed";
 
   interface Props {
     build: Build;
+    linked: boolean;
   }
 
-  let { build }: Props = $props();
+  let { build, linked }: Props = $props();
 
   const auth = AUTH_CTX.get();
 
@@ -30,12 +33,36 @@
     }
     return `${value.toFixed(value >= 10 || i === 0 ? 0 : 1)} ${units[i]}`;
   }
+
+  let button: HTMLElement | null = $state(null);
+  watch(
+    () => button,
+    (btn, old) => {
+      if (!old && btn && linked) {
+        btn.focus();
+        btn.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    },
+  );
 </script>
 
 <li class="space-y-2 rounded-md border p-3">
   <div class="flex flex-wrap items-center justify-between gap-2">
     <div class="flex min-w-0 items-center gap-2">
-      <span class="font-mono text-sm">#{build.id}</span>
+      <Button
+        bind:ref={button}
+        id="build-{build.id}"
+        onclick={(e) => {
+          e.preventDefault();
+          // eslint-disable-next-line svelte/no-navigation-without-resolve
+          pushState(`?build=${build.id}`, {});
+          button?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }}
+        href="?build={build.id}"
+        variant="link"
+        size="sm"
+        class="h-6 px-0.5 font-mono text-sm">#{build.id}</Button
+      >
       <ChannelBadge channel={build.channel} />
       {#if build.time}<span class="truncate text-xs text-neutral-500">{formatDateTime(build.time)}</span>{/if}
     </div>
