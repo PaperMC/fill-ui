@@ -14,8 +14,8 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n        query AllProjects {\n          projects {\n            id\n            name\n          }\n        }\n      ": typeof types.AllProjectsDocument,
     "\n        mutation PromoteBuild($input: PromoteBuildInput!) {\n          promoteBuild(input: $input) {\n            version {\n              id\n            }\n          }\n        }\n      ": typeof types.PromoteBuildDocument,
-    "\n        query AllProjects {\n          projects {\n            id\n          }\n        }\n      ": typeof types.AllProjectsDocument,
     "\n        query ProjectFamilies($id: String!) {\n          project(id: $id) {\n            families {\n              id\n            }\n          }\n        }\n      ": typeof types.ProjectFamiliesDocument,
     "\n        query Family($project: String!, $id: String!) {\n          project(id: $project) {\n            family(id: $id) {\n              id\n              java {\n                version {\n                  minimum\n                }\n                flags {\n                  recommended\n                }\n              }\n            }\n            versions(filterBy: { familyId: $id }) {\n              id\n              family {\n                id\n              }\n              support {\n                status\n                end\n              }\n            }\n          }\n        }\n      ": typeof types.FamilyDocument,
     "\n        mutation CreateFamily($input: CreateFamilyInput!) {\n          createFamily(input: $input) {\n            family {\n              id\n              java {\n                version {\n                  minimum\n                }\n                flags {\n                  recommended\n                }\n              }\n            }\n          }\n        }\n      ": typeof types.CreateFamilyDocument,
@@ -26,8 +26,8 @@ type Documents = {
     "\n        mutation CreateVersion($input: CreateVersionInput!) {\n          createVersion(input: $input) {\n            version {\n              id\n              family {\n                id\n              }\n              java {\n                version {\n                  minimum\n                }\n                flags {\n                  recommended\n                }\n              }\n            }\n          }\n        }\n      ": typeof types.CreateVersionDocument,
 };
 const documents: Documents = {
+    "\n        query AllProjects {\n          projects {\n            id\n            name\n          }\n        }\n      ": types.AllProjectsDocument,
     "\n        mutation PromoteBuild($input: PromoteBuildInput!) {\n          promoteBuild(input: $input) {\n            version {\n              id\n            }\n          }\n        }\n      ": types.PromoteBuildDocument,
-    "\n        query AllProjects {\n          projects {\n            id\n          }\n        }\n      ": types.AllProjectsDocument,
     "\n        query ProjectFamilies($id: String!) {\n          project(id: $id) {\n            families {\n              id\n            }\n          }\n        }\n      ": types.ProjectFamiliesDocument,
     "\n        query Family($project: String!, $id: String!) {\n          project(id: $project) {\n            family(id: $id) {\n              id\n              java {\n                version {\n                  minimum\n                }\n                flags {\n                  recommended\n                }\n              }\n            }\n            versions(filterBy: { familyId: $id }) {\n              id\n              family {\n                id\n              }\n              support {\n                status\n                end\n              }\n            }\n          }\n        }\n      ": types.FamilyDocument,
     "\n        mutation CreateFamily($input: CreateFamilyInput!) {\n          createFamily(input: $input) {\n            family {\n              id\n              java {\n                version {\n                  minimum\n                }\n                flags {\n                  recommended\n                }\n              }\n            }\n          }\n        }\n      ": types.CreateFamilyDocument,
@@ -55,11 +55,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n        mutation PromoteBuild($input: PromoteBuildInput!) {\n          promoteBuild(input: $input) {\n            version {\n              id\n            }\n          }\n        }\n      "): (typeof documents)["\n        mutation PromoteBuild($input: PromoteBuildInput!) {\n          promoteBuild(input: $input) {\n            version {\n              id\n            }\n          }\n        }\n      "];
+export function graphql(source: "\n        query AllProjects {\n          projects {\n            id\n            name\n          }\n        }\n      "): (typeof documents)["\n        query AllProjects {\n          projects {\n            id\n            name\n          }\n        }\n      "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n        query AllProjects {\n          projects {\n            id\n          }\n        }\n      "): (typeof documents)["\n        query AllProjects {\n          projects {\n            id\n          }\n        }\n      "];
+export function graphql(source: "\n        mutation PromoteBuild($input: PromoteBuildInput!) {\n          promoteBuild(input: $input) {\n            version {\n              id\n            }\n          }\n        }\n      "): (typeof documents)["\n        mutation PromoteBuild($input: PromoteBuildInput!) {\n          promoteBuild(input: $input) {\n            version {\n              id\n            }\n          }\n        }\n      "];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

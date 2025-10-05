@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { RunedQuery } from "$lib/api.svelte";
+  import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import SupportBadge from "$lib/components/SupportBadge.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
@@ -52,14 +52,15 @@
 
   let family = $derived(familyQuery.current?.project?.family ?? null);
   let versions = $derived(familyQuery.current?.project?.versions?.filter((v) => v !== null) ?? []);
+  const sharedQueries = SHARED_QUERIES_CTX.get();
 </script>
 
 <svelte:head>
-  <title>{page.params.project} Family {page.params.family} - Fill</title>
+  <title>{sharedQueries.projectNameOrFallback(page.params.project)} Family {page.params.family} - Fill</title>
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header breadcrumbs={buildHeaderSegments(page.params.project, page.params.family)} />
+  <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, page.params.family)} />
   {#if familyQuery.loading}
     <LoadingGif text="Loading family…" />
   {:else if familyQuery.error}

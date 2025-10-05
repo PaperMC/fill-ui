@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { RunedQuery } from "$lib/api.svelte";
+  import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
   import { getContextClient, queryStore } from "@urql/svelte";
@@ -95,14 +95,16 @@
 
   let linkedBuildParam = $derived(page.url.searchParams.get("build") ?? null);
   let linkedBuildNumber = $derived(linkedBuildParam ? parseInt(linkedBuildParam) : null);
+
+  const sharedQueries = SHARED_QUERIES_CTX.get();
 </script>
 
 <svelte:head>
-  <title>{page.params.project} Version {page.params.version} - Fill</title>
+  <title>{sharedQueries.projectNameOrFallback(page.params.project)} Version {page.params.version} - Fill</title>
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header breadcrumbs={buildHeaderSegments(page.params.project, version?.family.id, page.params.version)} />
+  <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, version?.family.id, page.params.version)} />
   {#if versionQuery.loading}
     <LoadingGif text="Loading version…" />
   {:else if versionQuery.error}

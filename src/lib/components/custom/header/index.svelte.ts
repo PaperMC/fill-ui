@@ -1,3 +1,5 @@
+import type { SharedQueries } from "$lib/api.svelte";
+
 export interface HeaderNavigationSegment {
   label: string;
   href: string;
@@ -12,11 +14,11 @@ export const projectsHeaderSegment: HeaderNavigationSegment = {
   href: "/projects",
 };
 
-export function buildHeaderSegments(projectId?: string, familyId?: string, versionId?: string): HeaderNavigationSegment[] {
+export function buildHeaderSegments(queries: SharedQueries, projectId?: string, familyId?: string, versionId?: string): HeaderNavigationSegment[] {
   const segments: HeaderNavigationSegment[] = [projectsHeaderSegment];
   // Only push subsequent segments if the parent segment exists
   if (projectId) {
-    segments.push(projectHeaderSegment(projectId));
+    segments.push(projectHeaderSegment(projectId, queries.projectNameOrFallback(projectId) ?? projectId));
     if (familyId) {
       segments.push(familyHeaderSegment(projectId, familyId));
       if (versionId) {
@@ -27,9 +29,9 @@ export function buildHeaderSegments(projectId?: string, familyId?: string, versi
   return segments;
 }
 
-export function projectHeaderSegment(projectId: string): HeaderNavigationSegment {
+export function projectHeaderSegment(projectId: string, projectName: string): HeaderNavigationSegment {
   return {
-    label: projectId,
+    label: projectName,
     href: `/projects/${encodeURIComponent(projectId)}`,
   };
 }

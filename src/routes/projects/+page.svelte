@@ -1,32 +1,16 @@
 <script lang="ts">
-  import { RunedQuery } from "$lib/api.svelte";
+  import { SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
-  import { getContextClient, queryStore } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
   import LoadingGif from "$lib/components/LoadingGif.svelte";
   import { projectsHeaderSegment } from "$lib/components/custom/header/index.svelte";
 
-  const projects = new RunedQuery(
-    queryStore({
-      client: getContextClient(),
-      query: graphql(`
-        query AllProjects {
-          projects {
-            id
-          }
-        }
-      `),
-    }),
-  );
+  const sharedQueries = SHARED_QUERIES_CTX.get();
 
-  let projectIds = $derived(
-    projects.current?.projects
-      ?.map((o) => {
-        return o?.id;
-      })
-      ?.filter((o) => o != null) || [],
-  );
+  let safeProjects = $derived.by(() => {
+    if (sharedQueries.projects.error || sharedQueries.projects.loading) return [];
+    return sharedQueries.projects.current?.projects?.filter((p) => p !== null) || [];
+  });
 </script>
 
 <svelte:head>
@@ -38,17 +22,17 @@
 
   <section class="space-y-4">
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {#if projects.loading}
+      {#if sharedQueries.projects.loading}
         <LoadingGif text="Loading projects…" />
-      {:else if projects.error}
-        <div class="text-sm text-red-600">Error loading projects: {projects.error.message}</div>
-      {:else if projectIds.length === 0}
+      {:else if sharedQueries.projects.error}
+        <div class="text-sm text-red-600">Error loading projects: {sharedQueries.projects.error.message}</div>
+      {:else if safeProjects.length === 0}
         <div class="text-sm text-neutral-500">No projects found.</div>
       {:else}
-        {#each projectIds as project (project)}
+        {#each safeProjects as project (project.id)}
           <li>
-            <Button class="w-full justify-between" variant="outline" href={`/projects/${project}`}>
-              <h3 class="text-sm font-medium">{project}</h3>
+            <Button class="w-full justify-between" variant="outline" href={`/projects/${project.id}`}>
+              <h3 class="text-sm font-medium">{project.name}</h3>
             </Button>
           </li>
         {/each}

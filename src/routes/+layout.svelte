@@ -4,7 +4,7 @@
   import favicon32x from "$lib/assets/favicon-32x32.png";
   import favicon16x from "$lib/assets/favicon-16x16.png";
   import { Client, cacheExchange, fetchExchange, setContextClient } from "@urql/svelte";
-  import { API_ENDPOINT } from "$lib/api.svelte";
+  import { API_ENDPOINT, SHARED_QUERIES_CTX, SharedQueries } from "$lib/api.svelte";
   import { AUTH_CTX, AuthHolder } from "$lib/auth.svelte";
   import { onMount } from "svelte";
   import { ModeWatcher } from "mode-watcher";
@@ -25,6 +25,8 @@
     },
   });
   setContextClient(client);
+
+  SHARED_QUERIES_CTX.set(new SharedQueries());
 
   onMount(() => {
     auth.tryRefreshToken();
