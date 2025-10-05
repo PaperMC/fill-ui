@@ -6,4 +6,5 @@
     "binding": "ASSETS",
     "directory": ".svelte-kit/cloudflare",
   },
+  "preview_urls": true,
 }
