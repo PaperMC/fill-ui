@@ -24,12 +24,12 @@
           onclick={() => {
             auth.logout();
             // eslint-disable-next-line svelte/no-navigation-without-resolve
-            goto("/login?redirect=" + loginRedirect);
+            goto("/login?redirect=" + encodeURIComponent(loginRedirect));
           }}>Logout</Button
         >
       </div>
     {:else}
-      <Button variant="link" href="/login?redirect={loginRedirect}">Login</Button>
+      <Button variant="link" href="/login?redirect={encodeURIComponent(loginRedirect)}">Login</Button>
     {/if}
   </div>
   <Breadcrumb.Root>
