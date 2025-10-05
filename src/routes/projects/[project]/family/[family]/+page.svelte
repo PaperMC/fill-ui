@@ -1,7 +1,7 @@
 <script lang="ts">
   import { RunedQuery } from "$lib/api.svelte";
   import SupportBadge from "$lib/components/SupportBadge.svelte";
-  import Header from "$lib/components/Header.svelte";
+  import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
   import { page } from "$app/state";
   import { getContextClient, queryStore } from "@urql/svelte";
@@ -9,6 +9,7 @@
   import LoadingGif from "$lib/components/LoadingGif.svelte";
   import FamilyMetadata from "./FamilyMetadata.svelte";
   import { AUTH_CTX } from "$lib/auth.svelte";
+  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
 
   const auth = AUTH_CTX.get();
 
@@ -58,7 +59,7 @@
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header project={page.params.project} family={page.params.family} />
+  <Header breadcrumbs={buildHeaderSegments(page.params.project, page.params.family)} />
   {#if familyQuery.loading}
     <LoadingGif text="Loading family…" />
   {:else if familyQuery.error}

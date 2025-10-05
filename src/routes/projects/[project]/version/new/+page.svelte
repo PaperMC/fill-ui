@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { onMount } from "svelte";
-  import Header from "$lib/components/Header.svelte";
+  import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
   import * as Select from "$lib/components/ui/select";
   import * as Input from "$lib/components/ui/input";
@@ -15,6 +15,7 @@
   import JavaOverridesInfo from "$lib/components/JavaOverridesInfo.svelte";
   import { splitFlags } from "$lib/utils";
   import { resolve } from "$app/paths";
+  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
 
   let versionId: string | undefined = $state();
   let familyId: string | undefined = $state();
@@ -145,6 +146,12 @@
     const family = families.find((f) => f.id === familyId);
     return family?.java?.flags?.recommended?.join(" ") ?? "";
   }
+
+  let breadcrumbs = $derived.by(() => {
+    let base = buildHeaderSegments(page.params.project);
+    base.push({ label: "<new version>", href: "" });
+    return base;
+  });
 </script>
 
 <svelte:head>
@@ -152,7 +159,7 @@
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header project={page.params.project} projectPage={{ name: "<new version>", href: `` }} />
+  <Header {breadcrumbs} />
 
   <form class="space-y-2" onsubmit={submitForm}>
     <Label for="id-input">ID</Label>

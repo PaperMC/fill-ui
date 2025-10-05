@@ -1,12 +1,13 @@
 <script lang="ts">
   import { RunedQuery } from "$lib/api.svelte";
-  import Header from "$lib/components/Header.svelte";
+  import Header from "$lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
   import { Button } from "$lib/components/ui/button";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import LoadingGif from "$lib/components/LoadingGif.svelte";
   import { AUTH_CTX } from "$lib/auth.svelte";
+  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
 
   const auth = AUTH_CTX.get();
 
@@ -36,7 +37,7 @@
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header project={page.params.project} />
+  <Header breadcrumbs={buildHeaderSegments(page.params.project)} />
 
   <section class="space-y-4">
     <div class="flex items-center gap-2">

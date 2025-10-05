@@ -4,28 +4,11 @@
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
+  import { type HeaderProps } from "$lib/components/custom/header/index.svelte";
 
-  interface Props {
-    project?: string | undefined;
-    projectPage?: { name: string; href: string } | undefined;
-    family?: string | undefined;
-    version?: string | undefined;
-  }
-  type Segment = { label: string; href: string };
-  let { project, projectPage, family, version }: Props = $props();
+  let { breadcrumbs }: HeaderProps = $props();
   const auth = AUTH_CTX.get();
-  const encode = (v: string) => encodeURIComponent(v);
-  const segments: Segment[] = $derived.by(() => {
-    const seg: Segment[] = [];
-    seg.push({ label: "Projects", href: "/projects" });
-    if (project) seg.push({ label: project, href: `/projects/${encode(project)}` });
-    if (project && projectPage) {
-      seg.push({ label: projectPage.name, href: projectPage.href });
-    }
-    if (project && family) seg.push({ label: family, href: `/projects/${encode(project)}/family/${encode(family)}` });
-    if (project && family && version) seg.push({ label: version, href: `/projects/${encode(project)}/version/${encode(version)}` });
-    return seg;
-  });
+
   let loginRedirect = $derived(page.url.pathname + page.url.search);
 </script>
 
@@ -51,13 +34,13 @@
   </div>
   <Breadcrumb.Root>
     <Breadcrumb.List class="text-lg">
-      {#each segments as seg, i (seg.href)}
+      {#each breadcrumbs as seg, i (seg.href)}
         <Breadcrumb.Item>
           <Breadcrumb.Link class="flex items-center text-foreground hover:text-muted-foreground" href={seg.href}>
             {seg.label}
           </Breadcrumb.Link>
         </Breadcrumb.Item>
-        {#if i < segments.length - 1}
+        {#if i < breadcrumbs.length - 1}
           <Breadcrumb.Separator class="iconify font-light select-none lucide--slash" />
         {/if}
       {/each}

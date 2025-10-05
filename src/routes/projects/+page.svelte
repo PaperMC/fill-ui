@@ -1,10 +1,11 @@
 <script lang="ts">
   import { RunedQuery } from "$lib/api.svelte";
-  import Header from "$lib/components/Header.svelte";
+  import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import LoadingGif from "$lib/components/LoadingGif.svelte";
+  import { projectsHeaderSegment } from "$lib/components/custom/header/index.svelte";
 
   const projects = new RunedQuery(
     queryStore({
@@ -33,7 +34,7 @@
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header />
+  <Header breadcrumbs={[projectsHeaderSegment]} />
 
   <section class="space-y-4">
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

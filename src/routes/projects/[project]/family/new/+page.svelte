@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import Header from "$lib/components/Header.svelte";
+  import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
   import * as Input from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
@@ -8,6 +8,7 @@
   import { graphql } from "$lib/gql";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
+  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
 
   let familyId: string | undefined = $state();
   let minJava: number | undefined = $state(21); // default minimum java
@@ -77,6 +78,12 @@
       }
     });
   }
+
+  let breadcrumbs = $derived.by(() => {
+    let base = buildHeaderSegments(page.params.project);
+    base.push({ label: "<new family>", href: "" });
+    return base;
+  });
 </script>
 
 <svelte:head>
@@ -84,7 +91,7 @@
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header project={page.params.project} projectPage={{ name: "<new family>", href: `` }} />
+  <Header {breadcrumbs} />
 
   <form class="space-y-2" onsubmit={submitForm}>
     <Label for="id-input">ID</Label>

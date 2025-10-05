@@ -1,12 +1,13 @@
 <script lang="ts">
   import { RunedQuery } from "$lib/api.svelte";
-  import Header from "$lib/components/Header.svelte";
+  import Header from "$lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import LoadingGif from "$lib/components/LoadingGif.svelte";
   import VersionMetadata from "./VersionMetadata.svelte";
   import Build from "./Build.svelte";
+  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
 
   const versionQuery = new RunedQuery(
     queryStore({
@@ -101,7 +102,7 @@
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header project={page.params.project} family={version?.family.id} version={page.params.version} />
+  <Header breadcrumbs={buildHeaderSegments(page.params.project, version?.family.id, page.params.version)} />
   {#if versionQuery.loading}
     <LoadingGif text="Loading version…" />
   {:else if versionQuery.error}
