@@ -17,3 +17,18 @@ export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & {
 export function splitFlags(flags: string) {
   return flags.split(/\s+/).filter((f) => f.length > 0);
 }
+
+export async function copyToClipboard(text: string, setCopied: (value: boolean) => void) {
+  try {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
+  } catch (err) {
+    console.error("Failed to copy:", err);
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RestProps = Record<string, any>;

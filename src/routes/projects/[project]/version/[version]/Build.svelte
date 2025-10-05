@@ -12,6 +12,7 @@
   import CommitList from "./CommitList.svelte";
   import { pushState } from "$app/navigation";
   import { watch } from "runed";
+  import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
 
   interface Props {
     build: Build;
@@ -105,11 +106,17 @@
               {/snippet}
             </Popover.Trigger>
             <Popover.Content>
-              <div class="font-medium">{d.name} Checksums</div>
+              <div class="leading-4 font-medium">Checksums</div>
+              <div class="mb-2 text-sm">{d.name}</div>
               {#if d.checksums?.sha256}
-                <div class="text-xs break-all">
-                  <span class="font-mono">SHA-256:</span>
-                  {d.checksums.sha256}
+                <div class="grid grid-cols-[auto_1fr] gap-x-2 text-xs break-all">
+                  <div class="flex flex-col">
+                    <span>SHA-256</span>
+                    <CopyToClipboard text={d.checksums.sha256} />
+                  </div>
+                  <span class="relative z-0 p-0.5 font-mono before:absolute before:inset-0 before:z-[-1] before:rounded before:bg-secondary"
+                    >{d.checksums.sha256}</span
+                  >
                 </div>
               {:else}
                 <div class="text-xs text-neutral-500">No checksums available.</div>
