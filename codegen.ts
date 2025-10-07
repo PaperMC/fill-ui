@@ -1,7 +1,16 @@
-import { CodegenConfig } from "@graphql-codegen/cli";
+import { type CodegenConfig } from "@graphql-codegen/cli";
+
+const PROD_ENDPOINT = "https://fill.papermc.io/graphql";
+
+function getSchema() {
+  if (process.env.USE_PROD_ENDPOINT === "true") {
+    return PROD_ENDPOINT;
+  }
+  return "http://localhost:8080";
+}
 
 const config: CodegenConfig = {
-  schema: "../src/main/resources/graphql/schema.graphqls",
+  schema: getSchema(),
   documents: ["src/**/*.svelte", "src/**/*.ts", "src/**/*.svelte.ts"],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
