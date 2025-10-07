@@ -6,13 +6,13 @@
   function classes(ch: BuildChannel): string {
     switch (ch) {
       case "ALPHA": // red
-        return "bg-[#d32f2f]/15 text-[#b71c1c] border-[#d32f2f]/40 dark:bg-[#d32f2f]/10 dark:text-[#d32f2f] dark:border-[#d32f2f]/50";
+        return "bg-[#ea5b6f]/5 text-[#ea5b6f] border-[#ea5b6f]/40 dark:bg-[#e42e47]/5 dark:text-[#e42e47] dark:border-[#e42e47]/50";
       case "BETA": // yellow
-        return "bg-[#f9a825]/15 text-[#f57f17] border-[#f9a825]/40 dark:bg-[#f9a825]/10 dark:text-[#f9a825] dark:border-[#f9a825]/50";
+        return "bg-[#ffc859]/5 text-[#ffc859] border-[#ffc859]/40 dark:bg-[#f9da22]/5 dark:text-[#f9da22] dark:border-[#f9da22]/50";
       case "STABLE": // blue
-        return "bg-[#42a5f5]/15 text-[#0d47a1] border-[#42a5f5]/40 dark:bg-[#42a5f5]/10 dark:text-[#42a5f5] dark:border-[#42a5f5]/50";
+        return "bg-[#2b7fff]/5 text-[#2b7fff] border-[#2b7fff]/40 dark:bg-[#2b7fff]/5 dark:text-[#2b7fff] dark:border-[#2b7fff]/50";
       case "RECOMMENDED": // green
-        return "bg-[#66bb6a]/15 text-[#1b5e20] border-[#66bb6a]/40 dark:bg-[#66bb6a]/10 dark:text-[#66bb6a] dark:border-[#66bb6a]/50";
+        return "bg-[#4ecb8b]/5 text-[#4ecb8b] border-[#4ecb8b]/40 dark:bg-[#4ecb8b]/5 dark:text-[#4ecb8b] dark:border-[#4ecb8b]/50";
       default:
         return "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700";
     }
