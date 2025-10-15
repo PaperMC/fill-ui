@@ -82,6 +82,26 @@ export type CreateVersionPayload = {
   version?: Maybe<Version>;
 };
 
+export type DeleteFamilyInput = {
+  id: Scalars['String']['input'];
+  project: Scalars['String']['input'];
+};
+
+export type DeleteFamilyPayload = {
+  __typename?: 'DeleteFamilyPayload';
+  ok?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type DeleteVersionInput = {
+  id: Scalars['String']['input'];
+  project: Scalars['String']['input'];
+};
+
+export type DeleteVersionPayload = {
+  __typename?: 'DeleteVersionPayload';
+  ok: Scalars['Boolean']['output'];
+};
+
 export type Download = {
   __typename?: 'Download';
   checksums: Checksums;
@@ -129,7 +149,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   createFamily?: Maybe<CreateFamilyPayload>;
   createVersion?: Maybe<CreateVersionPayload>;
+  deleteFamily?: Maybe<DeleteFamilyPayload>;
+  deleteVersion?: Maybe<DeleteVersionPayload>;
   promoteBuild?: Maybe<PromoteBuildPayload>;
+  updateFamily?: Maybe<UpdateFamilyPayload>;
   updateVersion?: Maybe<UpdateVersionPayload>;
 };
 
@@ -144,8 +167,23 @@ export type MutationCreateVersionArgs = {
 };
 
 
+export type MutationDeleteFamilyArgs = {
+  input: DeleteFamilyInput;
+};
+
+
+export type MutationDeleteVersionArgs = {
+  input: DeleteVersionInput;
+};
+
+
 export type MutationPromoteBuildArgs = {
   input: PromoteBuildInput;
+};
+
+
+export type MutationUpdateFamilyArgs = {
+  input: UpdateFamilyInput;
 };
 
 
@@ -219,6 +257,18 @@ export enum SupportStatus {
   Unsupported = 'UNSUPPORTED'
 }
 
+export type UpdateFamilyInput = {
+  id: Scalars['String']['input'];
+  java?: InputMaybe<JavaInput>;
+  project: Scalars['String']['input'];
+};
+
+export type UpdateFamilyPayload = {
+  __typename?: 'UpdateFamilyPayload';
+  /** The family. */
+  family?: Maybe<Family>;
+};
+
 export type UpdateVersionInput = {
   id: Scalars['String']['input'];
   java?: InputMaybe<JavaInput>;
@@ -237,7 +287,7 @@ export type Version = {
   builds?: Maybe<Array<Maybe<Build>>>;
   family: Family;
   id: Scalars['String']['output'];
-  java: Java;
+  java?: Maybe<Java>;
   support: Support;
 };
 
@@ -315,7 +365,7 @@ export type VersionQueryVariables = Exact<{
 }>;
 
 
-export type VersionQuery = { __typename?: 'Query', project?: { __typename?: 'Project', version?: { __typename?: 'Version', id: string, support: { __typename?: 'Support', status: SupportStatus, end?: any | null }, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } }, family: { __typename?: 'Family', id: string, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } } | null } | null };
+export type VersionQuery = { __typename?: 'Query', project?: { __typename?: 'Project', version?: { __typename?: 'Version', id: string, support: { __typename?: 'Support', status: SupportStatus, end?: any | null }, java?: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } | null, family: { __typename?: 'Family', id: string, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } } | null } | null };
 
 export type VersionBuildsQueryVariables = Exact<{
   project: Scalars['String']['input'];
@@ -344,7 +394,7 @@ export type CreateVersionMutationVariables = Exact<{
 }>;
 
 
-export type CreateVersionMutation = { __typename?: 'Mutation', createVersion?: { __typename?: 'CreateVersionPayload', version?: { __typename?: 'Version', id: string, family: { __typename?: 'Family', id: string }, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } | null } | null };
+export type CreateVersionMutation = { __typename?: 'Mutation', createVersion?: { __typename?: 'CreateVersionPayload', version?: { __typename?: 'Version', id: string, family: { __typename?: 'Family', id: string }, java?: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } | null } | null } | null };
 
 
 export const AllProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AllProjects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<AllProjectsQuery, AllProjectsQueryVariables>;

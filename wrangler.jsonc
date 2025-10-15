@@ -7,9 +7,4 @@
     "directory": ".svelte-kit/cloudflare",
   },
   "preview_urls": true,
-  "observability": {
-    "logs": {
-      "enabled": true,
-    },
-  },
 }
