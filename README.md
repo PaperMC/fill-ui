@@ -1,38 +1,77 @@
-# sv
+# fill-ui
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Web UI for [Fill](https://github.com/PaperMC/fill).
 
-## Creating a project
+## Prerequisites
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [Bun](https://bun.sh/) (latest version recommended)
+
+## Getting Started
+
+Install dependencies:
 
 ```sh
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+bun install
 ```
 
-## Developing
+## Development
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Start the development server:
 
 ```sh
-npm run dev
+# Using local API
+bun run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# Using production API
+bun run devProdServer
 ```
 
 ## Building
 
-To create a production version of your app:
+Create a production build:
 
 ```sh
-npm run build
+bun run build
 ```
 
-You can preview the production build with `npm run preview`.
+Preview the production build:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```sh
+bun run preview
+```
+
+## Code Quality
+
+Check types:
+
+```sh
+bun run check
+```
+
+Lint:
+
+```sh
+bun run lint
+```
+
+Format code:
+
+```sh
+bun run format
+```
+
+## GraphQL Code Generation
+
+Generate GraphQL types and client code:
+
+```sh
+# Using production endpoint
+bun run codegen
+
+# Using development endpoint
+bun run codegenDev
+```
+
+## Deployment
+
+This project is configured to deploy to Cloudflare Workers using the `@sveltejs/adapter-cloudflare` adapter. See `wrangler.jsonc` for Cloudflare Workers configuration.
