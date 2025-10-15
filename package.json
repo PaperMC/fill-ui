@@ -54,6 +54,6 @@
   "dependencies": {
     "@urql/svelte": "^5.0.0",
     "mode-watcher": "^1.1.0",
-    "runed": "^0.34.0"
+    "runed": "^0.35.0"
   }
 }
