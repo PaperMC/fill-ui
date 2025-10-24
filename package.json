@@ -22,7 +22,7 @@
     "@iconify-json/lucide": "^1.2.69",
     "@iconify/tailwind4": "^1.0.6",
     "@internationalized/date": "^3.10.0",
-    "@lucide/svelte": "^0.545.0",
+    "@lucide/svelte": "^0.548.0",
     "@sveltejs/adapter-auto": "^6.1.1",
     "@sveltejs/adapter-cloudflare": "^7.2.4",
     "@sveltejs/kit": "^2.47.0",
