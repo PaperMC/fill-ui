@@ -9,17 +9,20 @@
   import Build from "./Build.svelte";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
   import { type PageProps } from "./$types";
+  import { Debounced } from "runed";
 
   let { data }: PageProps = $props();
 
-  const versionQuery = new RunedQuery(
+  const versionQuery = RunedQuery.static(
     queryStore({
       client: getContextClient(),
       query: graphql(`
-        query Version($project: String!, $id: String!) {
-          project(id: $project) {
-            version(id: $id) {
+        query Version($projectKey: String!, $versionKey: String!) {
+          project(key: $projectKey) {
+            id
+            version(key: $versionKey) {
               id
+              key
               support {
                 status
                 end
@@ -34,6 +37,7 @@
               }
               family {
                 id
+                key
                 java {
                   version {
                     minimum
@@ -48,8 +52,8 @@
         }
       `),
       variables: {
-        project: page.params.project ?? "",
-        id: page.params.version ?? "",
+        projectKey: page.params.project ?? "",
+        versionKey: page.params.version ?? "",
       },
     }),
   );
@@ -57,28 +61,41 @@
   let version = $derived(versionQuery.current?.project?.version ?? null);
 
   // Separate builds query so builds load independently of metadata.
-  const buildsQuery = new RunedQuery(
-    queryStore({
+  function makeBuildsQuery(start?: string) {
+    return queryStore({
       client: getContextClient(),
       query: graphql(`
-        query VersionBuilds($project: String!, $id: String!) {
-          project(id: $project) {
-            version(id: $id) {
-              builds {
-                id
-                time
-                channel
-                downloads {
-                  name
-                  size
-                  url
-                  checksums {
-                    sha256
+        query VersionBuilds($projectKey: String!, $versionKey: String!, $after: String) {
+          project(key: $projectKey) {
+            id
+            version(key: $versionKey) {
+              id
+              builds(first: 25, after: $after) @_relayPagination {
+                edges {
+                  node {
+                    id
+                    number
+                    channel
+                    createdAt
+                    downloads {
+                      name
+                      size
+                      url
+                      checksums {
+                        sha256
+                      }
+                    }
+                    commits {
+                      sha
+                      message
+                    }
                   }
                 }
-                commits {
-                  sha
-                  message
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
                 }
               }
             }
@@ -86,15 +103,25 @@
         }
       `),
       variables: {
-        project: page.params.project ?? "",
-        id: page.params.version ?? "",
+        projectKey: page.params.project ?? "",
+        versionKey: page.params.version ?? "",
+        after: start,
       },
       requestPolicy: "cache-and-network",
-    }),
-  );
+    });
+  }
 
-  let builds = $derived(buildsQuery.current?.project?.version?.builds ?? []);
-  const safeBuilds = $derived(builds.filter((b): b is NonNullable<typeof b> => b != null));
+  let startCursor: string | undefined = $state();
+  let buildsQueryStore = $derived(makeBuildsQuery(startCursor));
+  const buildsQuery = new RunedQuery(() => buildsQueryStore);
+  let buildsLoadingDebounced = new Debounced(() => buildsQuery.loading, 100);
+  $effect(() => {
+    if (buildsQuery.current?.project?.version?.builds?.pageInfo?.hasNextPage) {
+      startCursor = buildsQuery.current?.project?.version?.builds?.pageInfo?.endCursor ?? undefined;
+    }
+  });
+
+  let builds = $derived(buildsQuery.current?.project?.version?.builds?.edges?.map((e) => e?.node).filter((n) => n != null) ?? []);
 
   let linkedBuildParam = $derived(page.url.searchParams.get("build") ?? null);
   let linkedBuildNumber = $derived(linkedBuildParam ? parseInt(linkedBuildParam) : null);
@@ -106,15 +133,15 @@
 <svelte:head>
   <title>{projectName} Version {page.params.version} - Fill</title>
   {#if data.preloadedVersion !== undefined}
-    {@const desc = `Details and downloads for version ${data.preloadedVersion.project?.version?.id} of ${projectName}.`}
+    {@const desc = `Details and downloads for version ${data.preloadedVersion.project?.version?.key} of ${projectName}.`}
     <meta name="description" content={desc} />
-    <meta property="og:title" content="{projectName} Version {data.preloadedVersion.project?.version?.id} - Fill" />
+    <meta property="og:title" content="{projectName} Version {data.preloadedVersion.project?.version?.key} - Fill" />
     <meta property="og:description" content={desc} />
   {/if}
 </svelte:head>
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
-  <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, version?.family.id, page.params.version)} />
+  <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, version?.family.key, page.params.version)} />
   {#if versionQuery.loading}
     <LoadingGif text="Loading version…" />
   {:else if versionQuery.error}
@@ -126,18 +153,20 @@
       <VersionMetadata {version} />
       <section class="space-y-4">
         <h2 class="flex items-center gap-2 text-lg font-medium">Builds</h2>
-        {#if buildsQuery.loading}
-          <LoadingGif text="Loading builds…" />
-        {:else if buildsQuery.error}
+        {#if buildsQuery.error}
           <div class="text-sm text-red-600">{buildsQuery.error.message}</div>
-        {:else if safeBuilds.length === 0}
+        {:else if !buildsLoadingDebounced.current && builds.length === 0}
           <p class="text-sm text-neutral-500">No builds found.</p>
-        {:else}
+        {/if}
+        {#if !buildsQuery.error}
           <ul class="space-y-2">
-            {#each safeBuilds as b (b.id)}
-              <Build build={b} linked={linkedBuildNumber === b.id} />
+            {#each builds as b (b.number)}
+              <Build build={b} linked={linkedBuildNumber === b.number} />
             {/each}
           </ul>
+        {/if}
+        {#if buildsLoadingDebounced.current || buildsLoadingDebounced.pending}
+          <LoadingGif text="Loading builds…" />
         {/if}
       </section>
     </div>

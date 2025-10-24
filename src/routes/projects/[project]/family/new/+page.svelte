@@ -42,6 +42,7 @@
           createFamily(input: $input) {
             family {
               id
+              key
               java {
                 version {
                   minimum
@@ -57,7 +58,7 @@
       variables: {
         input: {
           project: page.params.project!,
-          id: familyId,
+          key: familyId,
           java: javaInput,
         },
       },
@@ -72,7 +73,7 @@
           goto(
             resolve("/projects/[project]/family/[family]", {
               project: page.params.project!,
-              family: data.createFamily.family.id,
+              family: data.createFamily.family.key,
             }),
           );
         }

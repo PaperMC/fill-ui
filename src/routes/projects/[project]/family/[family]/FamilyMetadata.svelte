@@ -3,7 +3,7 @@
   import type { Java } from "$lib/gql/graphql";
 
   type Family = {
-    id: string;
+    key: string;
     java: Java;
   };
 
@@ -22,7 +22,7 @@
     <h3 class="text-lg font-medium">General</h3>
     <div class="text-sm">
       <div class="font-medium">Family ID</div>
-      <div class="mt-0.5 break-all">{family.id}</div>
+      <div class="mt-0.5 break-all">{family.key}</div>
     </div>
 
     <h3 class="mt-4 text-lg font-medium">Java</h3>

@@ -6,10 +6,10 @@
   import { page } from "$app/state";
 
   interface Props {
-    buildId: number;
+    buildNumber: number;
   }
 
-  let { buildId }: Props = $props();
+  let { buildNumber }: Props = $props();
 
   const client = getContextClient();
 
@@ -27,6 +27,10 @@
             version {
               id
             }
+            build {
+              id
+              channel
+            }
           }
         }
       `),
@@ -34,7 +38,7 @@
         input: {
           project: page.params.project!,
           version: page.params.version!,
-          id, // field name per schema
+          number: id,
         },
       },
     });
@@ -69,7 +73,7 @@
       <AlertDialog.Header>
         <AlertDialog.Title>Promote Build to Recommended</AlertDialog.Title>
         <AlertDialog.Description>
-          Are you sure you want to promote build #{buildId} to recommended? This action cannot be undone.
+          Are you sure you want to promote build #{buildNumber} to recommended? This action cannot be undone.
         </AlertDialog.Description>
       </AlertDialog.Header>
       <AlertDialog.Footer>
@@ -77,7 +81,7 @@
         <AlertDialog.Action
           onclick={() => {
             open = false;
-            promoteBuild(buildId);
+            promoteBuild(buildNumber);
           }}>Promote</AlertDialog.Action
         >
       </AlertDialog.Footer>

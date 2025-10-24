@@ -52,6 +52,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@urql/exchange-graphcache": "^8.1.0",
     "@urql/svelte": "^5.0.0",
     "mode-watcher": "^1.1.0",
     "runed": "^0.35.1"

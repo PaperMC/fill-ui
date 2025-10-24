@@ -19,12 +19,12 @@
   const auth = AUTH_CTX.get();
 
   type Family = {
-    id: string;
+    key: string;
     java?: Java;
   };
 
   type Version = {
-    id: string;
+    key: string;
     family: Family;
     support: Support;
     java?: Java | null;
@@ -145,6 +145,19 @@
           updateVersion(input: $input) {
             version {
               id
+              key
+              support {
+                status
+                end
+              }
+              java {
+                version {
+                  minimum
+                }
+                flags {
+                  recommended
+                }
+              }
             }
           }
         }
@@ -152,7 +165,7 @@
       variables: {
         input: {
           project: page.params.project!,
-          id: version.id,
+          key: version.key,
           ...(supportInput && { support: supportInput }),
           ...(javaInput && { java: javaInput }),
         },
@@ -198,11 +211,11 @@
     <h3 class="text-lg font-medium">General</h3>
     <div class="text-sm">
       <div class="font-medium">Version ID</div>
-      <div class="mt-0.5 break-all">{version.id}</div>
+      <div class="mt-0.5 break-all">{version.key}</div>
     </div>
     <div class="text-sm">
       <div class="font-medium">Family</div>
-      <div class="mt-0.5">{version.family.id}</div>
+      <div class="mt-0.5">{version.family.key}</div>
     </div>
     <div class="text-sm">
       <div class="font-medium">Support</div>

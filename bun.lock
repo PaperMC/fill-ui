@@ -4,6 +4,7 @@
     "": {
       "name": "fill-webui",
       "dependencies": {
+        "@urql/exchange-graphcache": "^8.1.0",
         "@urql/svelte": "^5.0.0",
         "mode-watcher": "^1.1.0",
         "runed": "^0.35.1",
@@ -517,6 +518,8 @@
     "@typescript-eslint/visitor-keys": ["@typescript-eslint/visitor-keys@8.46.1", "", { "dependencies": { "@typescript-eslint/types": "8.46.1", "eslint-visitor-keys": "^4.2.1" } }, "sha512-ptkmIf2iDkNUjdeu2bQqhFPV1m6qTnFFjg7PPDjxKWaMaP0Z6I9l30Jr3g5QqbZGdw8YdYvLp+XnqnWWZOg/NA=="],
 
     "@urql/core": ["@urql/core@6.0.1", "", { "dependencies": { "@0no-co/graphql.web": "^1.0.13", "wonka": "^6.3.2" } }, "sha512-FZDiQk6jxbj5hixf2rEPv0jI+IZz0EqqGW8mJBEug68/zHTtT+f34guZDmyjJZyiWbj0vL165LoMr/TkeDHaug=="],
+
+    "@urql/exchange-graphcache": ["@urql/exchange-graphcache@8.1.0", "", { "dependencies": { "@0no-co/graphql.web": "^1.0.13", "@urql/core": "^6.0.0", "wonka": "^6.3.2" } }, "sha512-KxdDFcGAWhYOkpCz/NLNHb8SaWSxE2G1iv+jlFty2f/ZlCkD+FjtzwQuieGl7fk1MVR8DG1zLmxGNlwfCNksfQ=="],
 
     "@urql/svelte": ["@urql/svelte@5.0.0", "", { "dependencies": { "@urql/core": "^6.0.0", "wonka": "^6.3.2" }, "peerDependencies": { "svelte": "^3.0.0 || ^4.0.0 || ^5.0.0" } }, "sha512-tHYEyFZwWsBW9GfpXbK+GImWhyZO1TJkhHsquosza0D0qOZyL+wGp/qT74WPUBJaF4gkUSXOQtUidDI7uvnuoQ=="],
 

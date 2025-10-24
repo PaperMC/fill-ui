@@ -6,7 +6,7 @@ function getSchema() {
   if (process.env.USE_PROD_ENDPOINT === "true") {
     return PROD_ENDPOINT;
   }
-  return "http://localhost:8080";
+  return "http://localhost:8080/graphql";
 }
 
 const config: CodegenConfig = {

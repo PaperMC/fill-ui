@@ -16,14 +16,16 @@
 
   const auth = AUTH_CTX.get();
 
-  const familyQuery = new RunedQuery(
+  const familyQuery = RunedQuery.static(
     queryStore({
       client: getContextClient(),
       query: graphql(`
         query Family($project: String!, $id: String!) {
-          project(id: $project) {
-            family(id: $id) {
+          project(key: $project) {
+            id
+            family(key: $id) {
               id
+              key
               java {
                 version {
                   minimum
@@ -33,14 +35,24 @@
                 }
               }
             }
-            versions(filterBy: { familyId: $id }) {
-              id
-              family {
-                id
+            versions(filterBy: { familyKey: $id }, first: 100) {
+              edges {
+                node {
+                  id
+                  key
+                  family {
+                    id
+                    key
+                  }
+                  support {
+                    status
+                    end
+                  }
+                }
               }
-              support {
-                status
-                end
+              pageInfo {
+                hasNextPage
+                endCursor
               }
             }
           }
@@ -54,7 +66,7 @@
   );
 
   let family = $derived(familyQuery.current?.project?.family ?? null);
-  let versions = $derived(familyQuery.current?.project?.versions?.filter((v) => v !== null) ?? []);
+  let versions = $derived(familyQuery.current?.project?.versions?.edges?.map((e) => e?.node).filter((v): v is NonNullable<typeof v> => v != null) ?? []);
   const sharedQueries = SHARED_QUERIES_CTX.get();
   let projectName = $derived(data.preloadedFamily?.project?.name || sharedQueries.projectNameOrFallback(page.params.project));
 </script>
@@ -62,9 +74,9 @@
 <svelte:head>
   <title>{projectName} Family {page.params.family} - Fill</title>
   {#if data.preloadedFamily !== undefined}
-    {@const desc = `Details and versions for family ${data.preloadedFamily.project?.family?.id} of ${projectName}.`}
+    {@const desc = `Details and versions for family ${data.preloadedFamily.project?.family?.key} of ${projectName}.`}
     <meta name="description" content={desc} />
-    <meta property="og:title" content="{projectName} Family {data.preloadedFamily.project?.family?.id} - Fill" />
+    <meta property="og:title" content="{projectName} Family {data.preloadedFamily.project?.family?.key} - Fill" />
     <meta property="og:description" content={desc} />
   {/if}
 </svelte:head>
@@ -92,11 +104,11 @@
         </div>
         {#if versions.length > 0}
           <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {#each versions as version (version.id)}
+            {#each versions as version (version.key)}
               <li>
-                <Button variant="outline" class="w-full" href={`/projects/${page.params.project}/version/${version.id}`}>
+                <Button variant="outline" class="w-full" href={`/projects/${page.params.project}/version/${version.key}`}>
                   <div class="flex w-full items-center justify-between gap-2">
-                    <h3 class="text-sm font-medium">{version.id}</h3>
+                    <h3 class="text-sm font-medium">{version.key}</h3>
                     <SupportBadge support={version.support} />
                   </div>
                 </Button>

@@ -15,14 +15,16 @@
   const auth = AUTH_CTX.get();
   const sharedQueries = SHARED_QUERIES_CTX.get();
 
-  const familiesQuery = new RunedQuery(
+  const familiesQuery = RunedQuery.static(
     queryStore({
       client: getContextClient(),
       query: graphql(`
         query ProjectFamilies($id: String!) {
-          project(id: $id) {
+          project(key: $id) {
+            id
             families {
               id
+              key
             }
           }
         }
@@ -67,10 +69,10 @@
       <p class="text-sm text-neutral-500">No families found for project "{projectName}".</p>
     {:else}
       <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {#each families as family (family.id)}
+        {#each families as family (family.key)}
           <li>
-            <Button class="w-full justify-between" variant="outline" href={`/projects/${page.params.project}/family/${family.id}`}>
-              <h3 class="text-sm font-medium">{family.id}</h3>
+            <Button class="w-full justify-between" variant="outline" href={`/projects/${page.params.project}/family/${family.key}`}>
+              <h3 class="text-sm font-medium">{family.key}</h3>
             </Button>
           </li>
         {/each}

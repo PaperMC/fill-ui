@@ -7,11 +7,11 @@ export const load: PageServerLoad = async ({ request, params }) => {
   if (shouldSSROpenGraph(request)) {
     const query = graphql(`
       query SSRVersion($project: String!, $id: String!) {
-        project(id: $project) {
-          id
+        project(key: $project) {
+          key
           name
-          version(id: $id) {
-            id
+          version(key: $id) {
+            key
             support {
               status
               end

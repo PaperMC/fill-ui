@@ -32,9 +32,9 @@
       {:else if safeProjects.length === 0}
         <div class="text-sm text-neutral-500">No projects found.</div>
       {:else}
-        {#each safeProjects as project (project.id)}
+        {#each safeProjects as project (project.key)}
           <li>
-            <Button class="w-full justify-between" variant="outline" href={`/projects/${project.id}`}>
+            <Button class="w-full justify-between" variant="outline" href={`/projects/${project.key}`}>
               <h3 class="text-sm font-medium">{project.name}</h3>
             </Button>
           </li>
