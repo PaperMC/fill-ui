@@ -142,33 +142,39 @@
 
 <div class="mx-auto max-w-5xl space-y-8 p-6">
   <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, version?.family.key, page.params.version)} />
-  {#if versionQuery.loading}
-    <LoadingGif text="Loading version…" />
-  {:else if versionQuery.error}
-    <div class="text-sm text-red-600">{versionQuery.error.message}</div>
-  {:else if !version}
-    <p class="text-sm text-neutral-500">Version not found.</p>
-  {:else}
-    <div class="space-y-8">
-      <VersionMetadata {version} />
+  <div class="space-y-8">
+    {#if versionQuery.loading}
       <section class="space-y-4">
-        <h2 class="flex items-center gap-2 text-lg font-medium">Builds</h2>
-        {#if buildsQuery.error}
-          <div class="text-sm text-red-600">{buildsQuery.error.message}</div>
-        {:else if !buildsLoadingDebounced.current && builds.length === 0}
-          <p class="text-sm text-neutral-500">No builds found.</p>
-        {/if}
-        {#if !buildsQuery.error}
-          <ul class="space-y-2">
-            {#each builds as b (b.number)}
-              <Build build={b} linked={linkedBuildNumber === b.number} />
-            {/each}
-          </ul>
-        {/if}
-        {#if buildsLoadingDebounced.current || buildsLoadingDebounced.pending}
-          <LoadingGif text="Loading builds…" />
-        {/if}
+        <h2 class="flex items-center text-lg font-medium">Metadata</h2>
+        <LoadingGif text="Loading version…" />
       </section>
-    </div>
-  {/if}
+    {:else if versionQuery.error}
+      <section class="space-y-4">
+        <h2 class="flex items-center text-lg font-medium">Metadata</h2>
+        <div class="text-sm text-red-600">{versionQuery.error.message}</div>
+      </section>
+    {:else if version}
+      <VersionMetadata {version} />
+    {:else}
+      <p class="text-sm text-neutral-500">Version not found.</p>
+    {/if}
+    <section class="space-y-4">
+      <h2 class="flex items-center gap-2 text-lg font-medium">Builds</h2>
+      {#if buildsQuery.error}
+        <div class="text-sm text-red-600">{buildsQuery.error.message}</div>
+      {:else if !buildsLoadingDebounced.current && builds.length === 0}
+        <p class="text-sm text-neutral-500">No builds found.</p>
+      {/if}
+      {#if !buildsQuery.error}
+        <ul class="space-y-2">
+          {#each builds as b (b.number)}
+            <Build build={b} linked={linkedBuildNumber === b.number} />
+          {/each}
+        </ul>
+      {/if}
+      {#if buildsLoadingDebounced.current || buildsLoadingDebounced.pending}
+        <LoadingGif text="Loading builds…" />
+      {/if}
+    </section>
+  </div>
 </div>
