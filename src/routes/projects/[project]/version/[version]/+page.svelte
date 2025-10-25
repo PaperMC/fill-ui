@@ -70,7 +70,7 @@
             id
             version(key: $versionKey) {
               id
-              builds(first: 25, after: $after) @_relayPagination {
+              builds(first: 25, after: $after, orderBy: { direction: DESC }) @_relayPagination {
                 edges {
                   node {
                     id

@@ -35,7 +35,7 @@
                 }
               }
             }
-            versions(filterBy: { familyKey: $id }, first: 100) {
+            versions(filterBy: { familyKey: $id }, first: 100, orderBy: { direction: DESC }) {
               edges {
                 node {
                   id
