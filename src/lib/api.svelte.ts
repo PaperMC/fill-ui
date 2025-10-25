@@ -1,8 +1,7 @@
 import type { Readable } from "svelte/store";
-import { onMount } from "svelte";
 import { createClient, fetchExchange, getContextClient, type OperationResultState, queryStore } from "@urql/svelte";
 import { graphql } from "$lib/gql";
-import { Context } from "runed";
+import { Context, watch } from "runed";
 
 const PROD_ENDPOINT = "https://fill.papermc.io";
 export const API_ENDPOINT = getApiEndpoint();
@@ -19,18 +18,35 @@ function getApiEndpoint() {
 
 export class RunedQuery<V> {
   private currentState: OperationResultState<V> | undefined = $state();
+  private currentData: V | undefined = $state();
+  private unsub: () => void = () => {};
 
-  constructor(store: Readable<OperationResultState<V>>) {
-    onMount(() => {
-      return store.subscribe(
-        (value) => {
-          this.currentState = value;
-        },
-        () => {
-          this.currentState = undefined;
-        },
-      );
-    });
+  static static<V>(store: Readable<OperationResultState<V>>) {
+    return new RunedQuery(() => store);
+  }
+
+  constructor(store: () => Readable<OperationResultState<V>>) {
+    watch(
+      () => store(),
+      (s) => {
+        this.unsub();
+        this.unsub = s.subscribe(
+          (value) => {
+            this.currentState = value;
+            if (value.data) {
+              this.currentData = value.data;
+            }
+          },
+          () => {
+            this.currentState = undefined;
+            this.currentData = undefined;
+          },
+        );
+        return () => {
+          this.unsub();
+        };
+      },
+    );
   }
 
   get loading() {
@@ -38,7 +54,7 @@ export class RunedQuery<V> {
   }
 
   get current() {
-    return this.currentState?.data;
+    return this.currentData;
   }
 
   get error() {
@@ -49,13 +65,14 @@ export class RunedQuery<V> {
 export const SHARED_QUERIES_CTX = new Context<SharedQueries>("fill-shared-queries");
 
 export class SharedQueries {
-  projects = new RunedQuery(
+  projects = RunedQuery.static(
     queryStore({
       client: getContextClient(),
       query: graphql(`
         query AllProjects {
           projects {
             id
+            key
             name
           }
         }
@@ -65,7 +82,7 @@ export class SharedQueries {
 
   projectNameOrFallback(projectId?: string) {
     if (!projectId) return undefined;
-    return this.projects.current?.projects?.find((p) => p !== null && p.id === projectId)?.name || projectId;
+    return this.projects.current?.projects?.find((p) => p !== null && p.key === projectId)?.name || projectId;
   }
 }
 

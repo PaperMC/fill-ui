@@ -22,14 +22,15 @@
   let minJava: number | undefined = $state();
   let flags: string | undefined = $state();
 
-  const familiesQuery = new RunedQuery(
+  const familiesQuery = RunedQuery.static(
     queryStore({
       client: getContextClient(),
       query: graphql(`
-        query ProjectFamiliesWithMeta($id: String!) {
-          project(id: $id) {
+        query ProjectFamiliesWithMeta($projectKey: String!) {
+          project(key: $projectKey) {
             families {
               id
+              key
               java {
                 version {
                   minimum
@@ -43,7 +44,7 @@
         }
       `),
       variables: {
-        id: page.params.project ?? "",
+        projectKey: page.params.project ?? "",
       },
     }),
   );
@@ -94,9 +95,9 @@
         mutation CreateVersion($input: CreateVersionInput!) {
           createVersion(input: $input) {
             version {
-              id
+              key
               family {
-                id
+                key
               }
               java {
                 version {
@@ -114,7 +115,7 @@
         input: {
           project: page.params.project!,
           family: familyId,
-          id: versionId,
+          key: versionId,
           ...(javaInput && { java: javaInput }),
         },
       },
@@ -129,7 +130,7 @@
           goto(
             resolve("/projects/[project]/version/[version]", {
               project: page.params.project!,
-              version: data.createVersion.version.id,
+              version: data.createVersion.version.key,
             }),
           );
         }
@@ -138,12 +139,12 @@
   }
 
   function familyJava() {
-    const family = families.find((f) => f.id === familyId);
+    const family = families.find((f) => f.key === familyId);
     return family?.java?.version?.minimum ?? 21;
   }
 
   function familyFlags() {
-    const family = families.find((f) => f.id === familyId);
+    const family = families.find((f) => f.key === familyId);
     return family?.java?.flags?.recommended?.join(" ") ?? "";
   }
 
@@ -177,8 +178,8 @@
         {:else if families.length === 0}
           <Select.Item value="" disabled>No families available</Select.Item>
         {:else}
-          {#each families as family (family.id)}
-            <Select.Item value={family.id}>{family.id}</Select.Item>
+          {#each families as family (family.key)}
+            <Select.Item value={family.key}>{family.key}</Select.Item>
           {/each}
         {/if}
       </Select.Content>

@@ -4,7 +4,9 @@
   import favicon32x from "$lib/assets/favicon-32x32.png";
   import favicon16x from "$lib/assets/favicon-16x16.png";
   import snifferWalk from "$lib/assets/Sniffer_walk_pixel_art.gif";
-  import { Client, cacheExchange, fetchExchange, setContextClient } from "@urql/svelte";
+  import { Client, fetchExchange, setContextClient } from "@urql/svelte";
+  import { cacheExchange } from "@urql/exchange-graphcache";
+  import { relayPagination } from "@urql/exchange-graphcache/extras";
   import { API_ENDPOINT, SHARED_QUERIES_CTX, SharedQueries } from "$lib/api.svelte";
   import { AUTH_CTX, AuthHolder } from "$lib/auth.svelte";
   import { onMount } from "svelte";
@@ -19,7 +21,23 @@
 
   const client = new Client({
     url: API_ENDPOINT + "/graphql",
-    exchanges: [cacheExchange, fetchExchange],
+    exchanges: [
+      cacheExchange({
+        directives: {
+          relayPagination: (options) => relayPagination({ ...options }),
+        },
+        keys: {
+          Commit: () => null,
+          Checksums: () => null,
+          Download: () => null,
+          Java: () => null,
+          JavaFlags: () => null,
+          JavaVersion: () => null,
+          Support: () => null,
+        },
+      }),
+      fetchExchange,
+    ],
     preferGetMethod: false,
     fetchOptions: () => {
       return {

@@ -54,28 +54,28 @@
   <div class="flex flex-wrap items-center justify-between gap-2">
     <div class="flex min-w-0 items-center gap-2">
       <Button
-        id="build-{build.id}"
+        id="build-{build.number}"
         onclick={(e) => {
           e.preventDefault();
           // eslint-disable-next-line svelte/no-navigation-without-resolve
-          goto(`?build=${build.id}`, {
+          goto(`?build=${build.number}`, {
             noScroll: true,
           });
         }}
-        href="?build={build.id}"
+        href="?build={build.number}"
         variant="link"
         size="sm"
-        class="h-6 px-0.5 font-mono text-sm">#{build.id}</Button
+        class="h-6 px-0.5 font-mono text-sm">#{build.number}</Button
       >
       <ChannelBadge channel={build.channel} />
-      {#if build.time}<span class="truncate text-xs text-neutral-500">{formatDateTime(build.time)}</span>{/if}
+      {#if build.createdAt}<span class="truncate text-xs text-neutral-500">{formatDateTime(build.createdAt)}</span>{/if}
     </div>
     <div class="flex items-center gap-2">
       {#if auth.getUsername() && build.channel !== BuildChannel.Recommended}
-        <PromoteBuildButton buildId={build.id} />
+        <PromoteBuildButton buildNumber={build.number} />
       {/if}
       <Button
-        href="{API_ENDPOINT}/v3/projects/{page.params.project}/versions/{page.params.version}/builds/{build.id}"
+        href="{API_ENDPOINT}/v3/projects/{page.params.project}/versions/{page.params.version}/builds/{build.number}"
         target="_blank"
         rel="noopener noreferrer"
         size="sm"
