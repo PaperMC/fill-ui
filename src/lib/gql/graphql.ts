@@ -53,6 +53,7 @@ export type BuildConnection = {
 
 export type BuildEdge = {
   __typename?: 'BuildEdge';
+  cursor: Scalars['String']['output'];
   node?: Maybe<Build>;
 };
 
@@ -349,6 +350,7 @@ export type VersionConnection = {
 
 export type VersionEdge = {
   __typename?: 'VersionEdge';
+  cursor: Scalars['String']['output'];
   node?: Maybe<Version>;
 };
 
