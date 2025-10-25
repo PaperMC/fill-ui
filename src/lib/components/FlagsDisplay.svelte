@@ -13,5 +13,5 @@
 
 <div class="relative">
   <pre class="rounded-md bg-secondary p-2 pr-8 font-mono text-xs"><code class="block overflow-x-auto">{textToCopy}</code></pre>
-  <CopyToClipboard text={textToCopy} class="absolute top-1 right-1 " />
+  <CopyToClipboard variant="outline" text={textToCopy} class="absolute top-1 right-1 " />
 </div>

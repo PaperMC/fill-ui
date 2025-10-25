@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Button from "$lib/components/ui/button/button.svelte";
-  import { copyToClipboard, type RestProps } from "$lib/utils";
+  import Button, { type ButtonProps } from "$lib/components/ui/button/button.svelte";
+  import { copyToClipboard } from "$lib/utils";
   import { mergeProps } from "bits-ui";
 
-  interface Props extends RestProps {
+  interface Props extends ButtonProps {
     text: string;
   }
 
@@ -16,13 +16,18 @@
   }
 
   let mergedProps = $derived(
-    mergeProps(restProps, {
-      class: "size-6",
-    }),
+    mergeProps(
+      {
+        variant: "ghost",
+        size: "icon",
+        class: "size-6",
+      },
+      restProps,
+    ),
   );
 </script>
 
-<Button size="icon" variant="ghost" {...mergedProps} onclick={copy} title={copied ? "Copied!" : "Copy to clipboard"}>
+<Button {...mergedProps} onclick={copy} title={copied ? "Copied!" : "Copy to clipboard"}>
   {#if copied}
     <span class="iconify lucide--check"></span>
   {:else}
