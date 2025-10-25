@@ -81,7 +81,7 @@
   {/if}
 </svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-8 p-6">
+<div class="space-y-8">
   <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, page.params.family)} />
   {#if familyQuery.loading}
     <LoadingGif text="Loading family…" />

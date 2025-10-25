@@ -140,7 +140,7 @@
   {/if}
 </svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-8 p-6">
+<div class="space-y-8">
   <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, version?.family.key, page.params.version)} />
   <div class="space-y-8">
     {#if versionQuery.loading}

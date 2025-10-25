@@ -13,6 +13,7 @@
   import { ModeWatcher } from "mode-watcher";
   import { page } from "$app/state";
   import { type LayoutProps } from "./$types";
+  import Footer from "./Footer.svelte";
 
   let { children, data }: LayoutProps = $props();
 
@@ -74,4 +75,9 @@
 </svelte:head>
 
 <ModeWatcher />
-{@render children?.()}
+<div class="mx-auto flex min-h-svh max-w-5xl flex-col">
+  <div class="p-6">
+    {@render children?.()}
+  </div>
+  <Footer />
+</div>

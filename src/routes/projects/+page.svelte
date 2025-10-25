@@ -20,7 +20,7 @@
   <meta property="og:description" content="Browse all available projects." />
 </svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-8 p-6">
+<div class="space-y-8">
   <Header breadcrumbs={[projectsHeaderSegment]} />
 
   <section class="space-y-4">

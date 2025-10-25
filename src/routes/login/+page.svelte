@@ -69,7 +69,7 @@
   <meta property="og:description" content="Log in to Fill for management access." />
 </svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-8 p-6">
+<div class="space-y-8">
   <header>
     <h1 class="text-3xl">Fill</h1>
     <h2 class="text-lg">Login</h2>

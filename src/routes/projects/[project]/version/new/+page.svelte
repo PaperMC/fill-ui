@@ -160,7 +160,7 @@
   <title>New {sharedQueries.projectNameOrFallback(page.params.project)} Version - Fill</title>
 </svelte:head>
 
-<div class="mx-auto max-w-5xl space-y-8 p-6">
+<div class="space-y-8">
   <Header {breadcrumbs} />
 
   <form class="space-y-2" onsubmit={submitForm}>
