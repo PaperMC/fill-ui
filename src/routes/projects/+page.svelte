@@ -2,7 +2,7 @@
   import { SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
-  import LoadingGif from "$lib/components/LoadingGif.svelte";
+  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
   import { projectsHeaderSegment } from "$lib/components/custom/header/index.svelte";
 
   const sharedQueries = SHARED_QUERIES_CTX.get();
@@ -26,7 +26,7 @@
   <section class="space-y-4">
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {#if sharedQueries.projects.loading}
-        <LoadingGif text="Loading projects…" />
+        <LoadingSniffer text="Loading projects…" />
       {:else if sharedQueries.projects.error}
         <div class="text-sm text-red-600">Error loading projects: {sharedQueries.projects.error.message}</div>
       {:else if safeProjects.length === 0}

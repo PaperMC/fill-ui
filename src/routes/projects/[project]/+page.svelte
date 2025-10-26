@@ -5,7 +5,7 @@
   import { Button } from "$lib/components/ui/button";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
-  import LoadingGif from "$lib/components/LoadingGif.svelte";
+  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
   import { type PageProps } from "./$types";
@@ -62,7 +62,7 @@
       {/if}
     </div>
     {#if familiesQuery.loading}
-      <LoadingGif text="Loading families…" />
+      <LoadingSniffer text="Loading families…" />
     {:else if familiesQuery.error}
       <div class="text-sm text-red-600">{familiesQuery.error.message}</div>
     {:else if families.length === 0}
