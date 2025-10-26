@@ -6,7 +6,7 @@
   import { page } from "$app/state";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
-  import LoadingGif from "$lib/components/LoadingGif.svelte";
+  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
   import FamilyMetadata from "./FamilyMetadata.svelte";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
@@ -84,7 +84,7 @@
 <div class="space-y-8">
   <Header breadcrumbs={buildHeaderSegments(sharedQueries, page.params.project, page.params.family)} />
   {#if familyQuery.loading}
-    <LoadingGif text="Loading family…" />
+    <LoadingSniffer text="Loading family…" />
   {:else if familyQuery.error}
     <div class="text-sm text-red-600">{familyQuery.error.message}</div>
   {:else if !family}

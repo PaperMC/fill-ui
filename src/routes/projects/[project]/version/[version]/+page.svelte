@@ -4,7 +4,7 @@
   import { page } from "$app/state";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
-  import LoadingGif from "$lib/components/LoadingGif.svelte";
+  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
   import VersionMetadata from "./VersionMetadata.svelte";
   import Build from "./Build.svelte";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
@@ -146,7 +146,7 @@
     {#if versionQuery.loading}
       <section class="space-y-4">
         <h2 class="flex items-center text-lg font-medium">Metadata</h2>
-        <LoadingGif text="Loading version…" />
+        <LoadingSniffer text="Loading version…" />
       </section>
     {:else if versionQuery.error}
       <section class="space-y-4">
@@ -173,7 +173,7 @@
         </ul>
       {/if}
       {#if buildsLoadingDebounced.current || buildsLoadingDebounced.pending}
-        <LoadingGif text="Loading builds…" />
+        <LoadingSniffer text="Loading builds…" />
       {/if}
     </section>
   </div>

@@ -15,7 +15,7 @@
 
   let { text }: Props = $props();
 
-  const gifs = [
+  const sniffers = [
     {
       gif: snifferWalkGif,
       webm: snifferWalkWebm,
@@ -33,16 +33,16 @@
     },
   ];
 
-  export function getRandomLoadingGif(): { gif: string; webm: string; mp4: string } {
-    const randomIndex = Math.floor(Math.random() * gifs.length);
-    return gifs[randomIndex];
+  export function getRandomLoadingSniffer(): { gif: string; webm: string; mp4: string } {
+    const randomIndex = Math.floor(Math.random() * sniffers.length);
+    return sniffers[randomIndex];
   }
 </script>
 
 <div>
   <video autoplay loop muted playsinline class="h-24 w-24">
-    <source src={getRandomLoadingGif().webm} type="video/webm" />
-    <source src={getRandomLoadingGif().mp4} type="video/mp4" />
+    <source src={getRandomLoadingSniffer().webm} type="video/webm" />
+    <source src={getRandomLoadingSniffer().mp4} type="video/mp4" />
   </video>
   {#if text}
     <div class="animate-pulse text-sm text-neutral-500">{text}</div>
