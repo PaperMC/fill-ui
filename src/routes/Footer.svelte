@@ -5,7 +5,10 @@
 <footer class="mt-auto flex flex-col">
   <Separator />
   <div class="flex items-center justify-between px-6 py-6">
-    <a href="https://papermc.io" title="PaperMC" class="logo h-12 w-[calc(var(--spacing)*34.19)] bg-cover bg-center"></a>
+    <picture title="PaperMC">
+      <source srcset="https://assets.papermc.io/brand/papermc_combination_mark_light.min.svg" media="(prefers-color-scheme: dark)" />
+      <img src="https://assets.papermc.io/brand/papermc_combination_mark_dark.min.svg" alt="PaperMC Logo" class="h-12 w-auto" />
+    </picture>
     <div>© The PaperMC Team</div>
   </div>
   <p class="px-6 pb-6 text-sm">
@@ -13,15 +16,3 @@
     registered trademarks of their respective holders. Use of these names does not imply any affiliation or endorsement by them.
   </p>
 </footer>
-
-<style>
-  .logo {
-    background-image: url("/papermc_combination_mark_dark.min.svg");
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .logo {
-      background-image: url("/papermc_combination_mark_light.min.svg");
-    }
-  }
-</style>
