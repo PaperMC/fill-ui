@@ -45,8 +45,8 @@
 
 <div>
   <video autoplay loop muted playsinline class="h-24 w-24">
+    <source src={randomLoadingSniffer.mp4} type="video/mp4;codecs=hvc1" />
     <source src={randomLoadingSniffer.webm} type="video/webm" />
-    <source src={randomLoadingSniffer.mp4} type="video/mp4" />
   </video>
   {#if text}
     <div class="animate-pulse text-sm text-neutral-500">{text}</div>
