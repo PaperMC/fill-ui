@@ -172,7 +172,7 @@
           {/each}
         </ul>
       {/if}
-      {#if buildsLoadingDebounced.current || buildsLoadingDebounced.pending}
+      {#if buildsLoadingDebounced.current}
         <LoadingSniffer text="Loading builds…" />
       {/if}
     </section>
