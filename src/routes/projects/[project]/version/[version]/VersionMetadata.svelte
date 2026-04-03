@@ -1,20 +1,24 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import SupportBadge from "$lib/components/SupportBadge.svelte";
-  import { type Java, type Support, SupportStatus } from "$lib/gql/graphql";
-  import FlagsDisplay from "$lib/components/FlagsDisplay.svelte";
-  import DatePicker from "$lib/components/DatePicker.svelte";
-  import { CalendarDate } from "@internationalized/date";
-  import * as Select from "$lib/components/ui/select";
-  import MinJavaOverride from "$lib/components/MinJavaOverride.svelte";
-  import FlagsOverride from "$lib/components/FlagsOverride.svelte";
-  import JavaOverridesInfo from "$lib/components/JavaOverridesInfo.svelte";
-  import { splitFlags } from "$lib/utils";
-  import { watch } from "runed";
-  import { getContextClient, mutationStore } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
+  import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { AUTH_CTX } from "$lib/auth.svelte";
+  import FlagsDisplay from "$lib/components/FlagsDisplay.svelte";
+  import FlagsOverride from "$lib/components/FlagsOverride.svelte";
+  import JavaOverridesInfo from "$lib/components/JavaOverridesInfo.svelte";
+  import MinJavaOverride from "$lib/components/MinJavaOverride.svelte";
+  import SupportBadge from "$lib/components/SupportBadge.svelte";
+  import * as AlertDialog from "$lib/components/ui/alert-dialog";
+  import { Button } from "$lib/components/ui/button";
+  import DatePicker from "$lib/components/DatePicker.svelte";
+  import * as Input from "$lib/components/ui/input";
+  import * as Select from "$lib/components/ui/select";
+  import { graphql } from "$lib/gql";
+  import { type Java, type Support, SupportStatus } from "$lib/gql/graphql";
+  import { splitFlags } from "$lib/utils";
+  import { CalendarDate } from "@internationalized/date";
+  import { getContextClient, mutationStore } from "@urql/svelte";
+  import { watch } from "runed";
 
   const auth = AUTH_CTX.get();
 
@@ -81,7 +85,7 @@
         editState.support.end = today;
       } else if (oldStatus === SupportStatus.Unsupported) {
         if (editState.support.end === today) {
-          editState.support.end = undefined;
+        editState.support.end = undefined;
         }
       }
     },
@@ -106,20 +110,30 @@
 
   const client = getContextClient();
   let saving = $state(false);
+  let deleting = $state(false);
+  let deleteDialogOpen = $state(false);
+  let deleteConfirmation = $state("");
+
+  watch(
+    () => deleteDialogOpen,
+    (open) => {
+      if (!open) {
+        deleteConfirmation = "";
+      }
+    },
+  );
 
   function saveChanges() {
-    if (saving) return;
+    if (saving || deleting) return;
 
-    if (editState.java.flags && editState.java.flags.length !== 0) {
-      if (!editState.java.minimum) {
-        alert("You must set a minimum Java version if you set custom flags. See the notice for details.");
-        return;
-      }
+    if (editState.java.flags && editState.java.flags.length !== 0 && !editState.java.minimum) {
+      alert("You must set a minimum Java version if you set custom flags. See the notice for details.");
+      return;
     }
 
     saving = true;
 
-    let supportInput = {
+    const supportInput = {
       status: editState.support.status,
       end: editState.support.end
         ? `${editState.support.end.year.toString().padStart(4, "0")}-${editState.support.end.month.toString().padStart(2, "0")}-${editState.support.end.day.toString().padStart(2, "0")}`
@@ -181,6 +195,54 @@
           editMode = false;
           resetEditState();
         }
+      }
+    });
+  }
+
+  function deleteVersion() {
+    if (deleting || saving || deleteConfirmation !== "delete") return;
+
+    deleting = true;
+
+    const result = mutationStore({
+      client,
+      query: `
+        mutation DeleteVersion($input: DeleteVersionInput!) {
+          deleteVersion(input: $input) {
+            ok
+          }
+        }
+      `,
+      variables: {
+        input: {
+          project: page.params.project!,
+          key: version.key,
+        },
+      },
+    });
+
+    result.subscribe(({ data, error, fetching }) => {
+      if (!fetching) {
+        deleting = false;
+        if (error) {
+          alert(`Error deleting version: ${error.message}`);
+          return;
+        }
+
+        const deleted = (data as { deleteVersion?: { ok?: boolean } } | undefined)?.deleteVersion?.ok;
+        if (!deleted) {
+          alert("Error deleting version: The server did not confirm the deletion.");
+          return;
+        }
+
+        deleteDialogOpen = false;
+        editMode = false;
+        goto(
+          resolve("/projects/[project]/family/[family]", {
+            project: page.params.project!,
+            family: version.family.key,
+          }),
+        );
       }
     });
   }
@@ -280,25 +342,80 @@
     {/if}
   </div>
   {#if editMode}
-    <Button
-      variant="destructive"
-      onclick={() => {
-        editMode = false;
-        resetEditState();
-      }}
-      disabled={saving}
-    >
-      <span class="iconify lucide--x"></span>
-      Cancel
-    </Button>
-    <Button disabled={saving} onclick={saveChanges}>
-      {#if saving}
-        <span class="iconify animate-spin lucide--loader-2"></span>
-        Saving Changes…
-      {:else}
-        <span class="iconify lucide--check"></span>
-        Save Changes
-      {/if}
-    </Button>
+    <div class="flex flex-wrap items-center gap-2">
+      <Button
+        variant="secondary"
+        onclick={() => {
+          editMode = false;
+          deleteDialogOpen = false;
+          resetEditState();
+        }}
+        disabled={saving || deleting}
+      >
+        <span class="iconify lucide--x"></span>
+        Cancel
+      </Button>
+
+      <Button disabled={saving || deleting} onclick={saveChanges}>
+        {#if saving}
+          <span class="iconify animate-spin lucide--loader-2"></span>
+          Saving Changes…
+        {:else}
+          <span class="iconify lucide--check"></span>
+          Save Changes
+        {/if}
+      </Button>
+
+      <AlertDialog.Root bind:open={deleteDialogOpen}>
+        <AlertDialog.Trigger>
+          {#snippet child({ props })}
+            <Button variant="destructive" disabled={saving || deleting} {...props}>
+              {#if deleting}
+                <span class="iconify animate-spin lucide--loader-2"></span>
+                Deleting…
+              {:else}
+                <span class="iconify lucide--trash-2"></span>
+                Delete
+              {/if}
+            </Button>
+          {/snippet}
+        </AlertDialog.Trigger>
+        <AlertDialog.Content>
+          <AlertDialog.Header>
+            <AlertDialog.Title>Delete Version</AlertDialog.Title>
+            <AlertDialog.Description>
+              Type <code>delete</code> to confirm deleting version <code>{version.key}</code>. This cannot be undone.
+            </AlertDialog.Description>
+          </AlertDialog.Header>
+
+          <div class="space-y-2">
+            <label class="text-sm font-medium" for="delete-version-confirmation">Confirmation</label>
+            <Input.Root
+              id="delete-version-confirmation"
+              bind:value={deleteConfirmation}
+              placeholder="type 'delete'"
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck={false}
+              disabled={deleting}
+            />
+          </div>
+
+          <AlertDialog.Footer>
+            <AlertDialog.Cancel disabled={deleting}>Cancel</AlertDialog.Cancel>
+            <Button variant="destructive" disabled={deleting || deleteConfirmation !== "delete"} onclick={deleteVersion}>
+              {#if deleting}
+                <span class="iconify animate-spin lucide--loader-2"></span>
+                Deleting…
+              {:else}
+                <span class="iconify lucide--trash-2"></span>
+                Delete Version
+              {/if}
+            </Button>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+    </div>
   {/if}
 </section>

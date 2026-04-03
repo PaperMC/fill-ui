@@ -91,7 +91,7 @@
     <p class="text-sm text-neutral-500">Family not found.</p>
   {:else}
     <div class="space-y-8">
-      <FamilyMetadata {family} />
+      <FamilyMetadata {family} versionCount={versions.length} />
 
       <section class="space-y-4">
         <div class="flex items-center gap-2">
