@@ -1,6 +1,5 @@
 <script lang="ts">
   import Button, { type ButtonProps } from "$lib/components/ui/button/button.svelte";
-  import { copyToClipboard } from "$lib/utils";
   import { mergeProps } from "bits-ui";
 
   interface Props extends ButtonProps {
@@ -9,10 +8,21 @@
 
   let { text, ...restProps }: Props = $props();
 
-  let copied = $state(false);
+  let showCopied = $state(false);
+  let stopShowCopied: ReturnType<typeof setTimeout> | undefined;
 
   async function copy() {
-    await copyToClipboard(text, (v) => (copied = v));
+    try {
+      await navigator.clipboard.writeText(text);
+      showCopied = true;
+      if (stopShowCopied) clearTimeout(stopShowCopied);
+      stopShowCopied = setTimeout(() => {
+        showCopied = false;
+        stopShowCopied = undefined;
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   }
 
   let mergedProps = $derived(
@@ -26,8 +36,8 @@
   );
 </script>
 
-<Button {...mergedProps} onclick={copy} title={copied ? "Copied!" : "Copy to clipboard"}>
-  {#if copied}
+<Button {...mergedProps} onclick={copy} title={showCopied ? "Copied!" : "Copy to clipboard"}>
+  {#if showCopied}
     <span class="iconify lucide--check"></span>
   {:else}
     <span class="iconify lucide--copy"></span>
