@@ -3,3 +3,4 @@
 /.svelte-kit/
 /.idea/
 .DS_Store
+/.wrangler

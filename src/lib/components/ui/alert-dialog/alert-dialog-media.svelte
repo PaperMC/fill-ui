@@ -12,11 +12,8 @@
 
 <div
 	bind:this={ref}
-	data-slot="alert-title"
-	class={cn(
-		"font-medium group-has-[>svg]/alert:col-start-2 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
-		className
-	)}
+	data-slot="alert-dialog-media"
+	class={cn("bg-muted mb-2 inline-flex size-16 items-center justify-center rounded-md sm:group-data-[size=default]/alert-dialog-content:row-span-2 *:[svg:not([class*='size-'])]:size-8", className)}
 	{...restProps}
 >
 	{@render children?.()}

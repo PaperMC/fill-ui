@@ -12,11 +12,8 @@
 
 <div
 	bind:this={ref}
-	data-slot="alert-title"
-	class={cn(
-		"font-medium group-has-[>svg]/alert:col-start-2 [&_a]:hover:text-foreground [&_a]:underline [&_a]:underline-offset-3",
-		className
-	)}
+	data-slot="popover-header"
+	class={cn("flex flex-col gap-1 text-sm", className)}
 	{...restProps}
 >
 	{@render children?.()}
