@@ -2,6 +2,7 @@
   import { SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { Button } from "$lib/components/ui/button";
+  import * as Alert from "$lib/components/ui/alert";
   import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
   import { projectsHeaderSegment } from "$lib/components/custom/header/index.svelte";
 
@@ -28,7 +29,9 @@
       {#if sharedQueries.projects.loading}
         <LoadingSniffer text="Loading projects…" />
       {:else if sharedQueries.projects.error}
-        <div class="text-destructive text-sm">Error loading projects: {sharedQueries.projects.error.message}</div>
+        <Alert.Root variant="destructive">
+          <Alert.Description>Error loading projects: {sharedQueries.projects.error.message}</Alert.Description>
+        </Alert.Root>
       {:else if safeProjects.length === 0}
         <div class="text-muted-foreground text-sm">No projects found.</div>
       {:else}

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Badge } from "$lib/components/ui/badge";
   import type { Support, SupportStatus } from "$lib/gql/graphql";
   import { formatDateTime } from "$lib/utils/date";
 
@@ -19,9 +20,7 @@
 </script>
 
 <span class="inline-flex items-center gap-2">
-  <span class={`inline-flex items-center gap-1 rounded border px-2 py-0.5 text-xs font-medium tracking-wide uppercase ${classes(support.status)}`}
-    >{support.status}</span
-  >
+  <Badge variant="outline" class={`tracking-wide uppercase ${classes(support.status)}`}>{support.status}</Badge>
   {#if showEnd && support.end}
     <span class="text-muted-foreground text-xs">{support.status === "UNSUPPORTED" ? "since" : "until"} {formatDateTime(support.end)}</span>
   {/if}

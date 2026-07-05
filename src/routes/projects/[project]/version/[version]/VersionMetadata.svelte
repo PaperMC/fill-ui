@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
+  import * as Card from "$lib/components/ui/card";
   import SupportBadge from "$lib/components/SupportBadge.svelte";
   import { type Java, type Support, SupportStatus } from "$lib/gql/graphql";
   import FlagsDisplay from "$lib/components/FlagsDisplay.svelte";
@@ -206,78 +207,83 @@
       </Button>
     {/if}
   </div>
-  <div class="space-y-2 rounded-lg border p-4">
-    <h3 class="text-lg font-medium">General</h3>
-    <div class="text-sm">
-      <div class="font-medium">Version ID</div>
-      <div class="mt-0.5 break-all">{version.key}</div>
-    </div>
-    <div class="text-sm">
-      <div class="font-medium">Family</div>
-      <div class="mt-0.5">{version.family.key}</div>
-    </div>
-    <div class="text-sm">
-      <div class="font-medium">Support</div>
-      {#if editMode}
-        <div class="mt-0.5 flex items-center gap-2">
-          <Select.Root type="single" bind:value={editState.support.status} required>
-            <Select.Trigger>
-              <SupportBadge support={{ status: editState.support.status || SupportStatus.Supported }} showEnd={false} />
-            </Select.Trigger>
-            <Select.Content>
-              {#each supportStatuses as status (status)}
-                <Select.Item value={status}>
-                  <SupportBadge support={{ status }} showEnd={false} />
-                </Select.Item>
-              {/each}
-            </Select.Content>
-          </Select.Root>
-          {#if editState.support.status === SupportStatus.Unsupported}
-            <span>since</span>
-          {:else}
-            <span>until</span>
-          {/if}
-          <DatePicker noValueText={editState.support.status === SupportStatus.Unsupported ? "No date set" : "No end date"} bind:value={editState.support.end} />
-        </div>
-      {:else}
-        <div class="mt-0.5"><SupportBadge support={version.support} showEnd={true} /></div>
+  <Card.Root>
+    <Card.Content class="space-y-2">
+      <h3 class="text-lg font-medium">General</h3>
+      <div class="text-sm">
+        <div class="font-medium">Version ID</div>
+        <div class="mt-0.5 break-all">{version.key}</div>
+      </div>
+      <div class="text-sm">
+        <div class="font-medium">Family</div>
+        <div class="mt-0.5">{version.family.key}</div>
+      </div>
+      <div class="text-sm">
+        <div class="font-medium">Support</div>
+        {#if editMode}
+          <div class="mt-0.5 flex items-center gap-2">
+            <Select.Root type="single" bind:value={editState.support.status} required>
+              <Select.Trigger>
+                <SupportBadge support={{ status: editState.support.status || SupportStatus.Supported }} showEnd={false} />
+              </Select.Trigger>
+              <Select.Content>
+                {#each supportStatuses as status (status)}
+                  <Select.Item value={status}>
+                    <SupportBadge support={{ status }} showEnd={false} />
+                  </Select.Item>
+                {/each}
+              </Select.Content>
+            </Select.Root>
+            {#if editState.support.status === SupportStatus.Unsupported}
+              <span>since</span>
+            {:else}
+              <span>until</span>
+            {/if}
+            <DatePicker
+              noValueText={editState.support.status === SupportStatus.Unsupported ? "No date set" : "No end date"}
+              bind:value={editState.support.end}
+            />
+          </div>
+        {:else}
+          <div class="mt-0.5"><SupportBadge support={version.support} showEnd={true} /></div>
+        {/if}
+      </div>
+
+      {#if effectiveJava && version.family.java}
+        <h3 class="mt-4 text-lg font-medium">Java</h3>
+        {#if editMode}
+          <JavaOverridesInfo />
+          <MinJavaOverride bind:minJavaOverride={editState.java.minimum} familyMinJava={version.family.java.version.minimum} label="Minimum Version Override" />
+
+          <FlagsOverride
+            bind:flagsOverride={() => editState.java.flags?.join(" "), (value) => (editState.java.flags = value ? splitFlags(value) : undefined)}
+            familyFlags={version.family.java.flags.recommended.join(" ")}
+          />
+        {:else}
+          <div class="text-sm">
+            <div class="flex items-center gap-2 font-medium">Minimum Version</div>
+            <div class="mt-0.5">{effectiveJava.version.minimum}</div>
+            {#if overridesFamilyJava()}
+              <span class="text-muted-foreground italic">Overrides family ({version.family.java.version.minimum})</span>
+            {:else}
+              <span class="text-muted-foreground italic">Inherited from family</span>
+            {/if}
+          </div>
+
+          <div class="space-y-1 text-sm">
+            <div class="flex items-center gap-2 font-medium">Recommended Flags</div>
+            <FlagsDisplay flags={effectiveJava.flags.recommended.length > 0 ? effectiveJava.flags.recommended : ["None"]} />
+            {#if overridesFamilyJava()}
+              <span class="text-muted-foreground italic">Overrides family</span>
+              <FlagsDisplay flags={version.family.java.flags.recommended.length > 0 ? version.family.java.flags.recommended : ["None"]} />
+            {:else}
+              <span class="text-muted-foreground italic">Inherited from family</span>
+            {/if}
+          </div>
+        {/if}
       {/if}
-    </div>
-
-    {#if effectiveJava && version.family.java}
-      <h3 class="mt-4 text-lg font-medium">Java</h3>
-      {#if editMode}
-        <JavaOverridesInfo />
-        <MinJavaOverride bind:minJavaOverride={editState.java.minimum} familyMinJava={version.family.java.version.minimum} label="Minimum Version Override" />
-
-        <FlagsOverride
-          bind:flagsOverride={() => editState.java.flags?.join(" "), (value) => (editState.java.flags = value ? splitFlags(value) : undefined)}
-          familyFlags={version.family.java.flags.recommended.join(" ")}
-        />
-      {:else}
-        <div class="text-sm">
-          <div class="flex items-center gap-2 font-medium">Minimum Version</div>
-          <div class="mt-0.5">{effectiveJava.version.minimum}</div>
-          {#if overridesFamilyJava()}
-            <span class="text-muted-foreground italic">Overrides family ({version.family.java.version.minimum})</span>
-          {:else}
-            <span class="text-muted-foreground italic">Inherited from family</span>
-          {/if}
-        </div>
-
-        <div class="space-y-1 text-sm">
-          <div class="flex items-center gap-2 font-medium">Recommended Flags</div>
-          <FlagsDisplay flags={effectiveJava.flags.recommended.length > 0 ? effectiveJava.flags.recommended : ["None"]} />
-          {#if overridesFamilyJava()}
-            <span class="text-muted-foreground italic">Overrides family</span>
-            <FlagsDisplay flags={version.family.java.flags.recommended.length > 0 ? version.family.java.flags.recommended : ["None"]} />
-          {:else}
-            <span class="text-muted-foreground italic">Inherited from family</span>
-          {/if}
-        </div>
-      {/if}
-    {/if}
-  </div>
+    </Card.Content>
+  </Card.Root>
   {#if editMode}
     <Button
       variant="destructive"

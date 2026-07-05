@@ -3,6 +3,7 @@
   import Header from "$lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
   import { Button } from "$lib/components/ui/button";
+  import * as Alert from "$lib/components/ui/alert";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
@@ -64,7 +65,9 @@
     {#if familiesQuery.loading}
       <LoadingSniffer text="Loading families…" />
     {:else if familiesQuery.error}
-      <div class="text-destructive text-sm">{familiesQuery.error.message}</div>
+      <Alert.Root variant="destructive">
+        <Alert.Description>{familiesQuery.error.message}</Alert.Description>
+      </Alert.Root>
     {:else if families.length === 0}
       <p class="text-muted-foreground text-sm">No families found for project "{projectName}".</p>
     {:else}

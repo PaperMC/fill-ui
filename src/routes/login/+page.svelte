@@ -83,9 +83,9 @@
       </Alert.Root>
     {/if}
     {#if errorMessage}
-      <div class="rounded-md bg-destructive/15 px-3 py-2 text-sm text-destructive">
-        {errorMessage}
-      </div>
+      <Alert.Root variant="destructive">
+        <Alert.Description>{errorMessage}</Alert.Description>
+      </Alert.Root>
     {/if}
 
     <div class="space-y-2">

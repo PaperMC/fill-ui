@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Badge } from "$lib/components/ui/badge";
   import type { BuildChannel } from "$lib/gql/graphql";
 
   const { channel } = $props<{ channel: BuildChannel }>();
@@ -34,5 +35,4 @@
   }
 </script>
 
-<span class={`inline-flex items-center gap-1 rounded border px-2 py-0.5 text-xs font-medium tracking-wide uppercase ${classes(channel)}`}>{label(channel)}</span
->
+<Badge variant="outline" class={`tracking-wide uppercase ${classes(channel)}`}>{label(channel)}</Badge>

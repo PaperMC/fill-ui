@@ -3,6 +3,7 @@
   import { formatDateTime } from "$lib/utils/date";
   import PromoteBuildButton from "$lib/components/PromoteBuildButton.svelte";
   import { Button } from "$lib/components/ui/button";
+  import * as Card from "$lib/components/ui/card";
   import { API_ENDPOINT } from "$lib/api.svelte";
   import { page } from "$app/state";
   import { type Build, BuildChannel } from "$lib/gql/graphql";
@@ -45,90 +46,91 @@
   });
 </script>
 
-<li
-  bind:this={card}
-  data-linked={linked}
-  class="space-y-2 rounded-md border p-3 data-[linked=true]:ring-2 data-[linked=true]:ring-ring data-[linked=true]:ring-offset-2"
->
-  <div class="flex flex-wrap items-center justify-between gap-2">
-    <div class="flex min-w-0 items-center gap-2">
-      <Button
-        id="build-{build.number}"
-        onclick={(e) => {
-          e.preventDefault();
-          // eslint-disable-next-line svelte/no-navigation-without-resolve
-          goto(`?build=${build.number}`, {
-            noScroll: true,
-          });
-        }}
-        href="?build={build.number}"
-        variant="link"
-        size="sm"
-        class="h-6 px-0.5 font-mono text-sm">#{build.number}</Button
-      >
-      <ChannelBadge channel={build.channel} />
-      {#if build.createdAt}<span class="text-muted-foreground truncate text-xs">{formatDateTime(build.createdAt)}</span>{/if}
-    </div>
-    <div class="flex items-center gap-2">
-      {#if auth.getUsername() && build.channel !== BuildChannel.Recommended}
-        <PromoteBuildButton buildNumber={build.number} />
-      {/if}
-      <Button
-        href="{API_ENDPOINT}/v3/projects/{page.params.project}/versions/{page.params.version}/builds/{build.number}"
-        target="_blank"
-        rel="noopener noreferrer"
-        size="sm"
-        variant="link"
-      >
-        <span class="iconify lucide--external-link"></span>
-        API
-      </Button>
-    </div>
-  </div>
-  <CommitList {build} />
-  {#if build.downloads && build.downloads.length > 0}
-    <div class="flex flex-wrap gap-2 overflow-x-auto">
-      {#each build.downloads as d (d.name)}
-        <div class="flex items-center gap-1">
-          <Button href={d.url} rel="noopener noreferrer" title={d.name} size="sm" variant="outline">
-            <span class="iconify lucide--download"></span>
-            <span class="font-mono">{d.name}</span>
-            {#if d.size}
-              <span class="relative z-0 rounded border px-1 font-mono text-xs before:absolute before:inset-0 before:z-[-1] before:rounded before:bg-secondary"
-                >{formatBytes(d.size)}</span
-              >
-            {/if}
-          </Button>
-          <Popover.Root>
-            <Popover.Trigger>
-              {#snippet child({ props })}
-                <Button title="Show checksums" variant="ghost" size="icon-xs" {...props}>
-                  <span class="iconify lucide--file-check"></span>
-                </Button>
-              {/snippet}
-            </Popover.Trigger>
-            <Popover.Content>
-              <div class="leading-4 font-medium">Checksums</div>
-              <div class="mb-2 text-sm">{d.name}</div>
-              {#if d.checksums?.sha256}
-                <div class="grid grid-cols-[auto_1fr] gap-x-2 text-xs break-all">
-                  <div class="flex flex-col gap-1">
-                    <span>SHA-256</span>
-                    <CopyToClipboard text={d.checksums.sha256} />
-                  </div>
-                  <span class="relative z-0 p-0.5 font-mono before:absolute before:inset-0 before:z-[-1] before:rounded before:bg-secondary"
-                    >{d.checksums.sha256}</span
-                  >
-                </div>
-              {:else}
-                <div class="text-muted-foreground text-xs">No checksums available.</div>
-              {/if}
-            </Popover.Content>
-          </Popover.Root>
+<li>
+  <Card.Root bind:ref={card} data-linked={linked} size="sm" class="data-[linked=true]:ring-2 data-[linked=true]:ring-ring data-[linked=true]:ring-offset-2">
+    <Card.Content class="space-y-2">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex min-w-0 items-center gap-2">
+          <Button
+            id="build-{build.number}"
+            onclick={(e) => {
+              e.preventDefault();
+              // eslint-disable-next-line svelte/no-navigation-without-resolve
+              goto(`?build=${build.number}`, {
+                noScroll: true,
+              });
+            }}
+            href="?build={build.number}"
+            variant="link"
+            size="sm"
+            class="h-6 px-0.5 font-mono text-sm">#{build.number}</Button
+          >
+          <ChannelBadge channel={build.channel} />
+          {#if build.createdAt}<span class="text-muted-foreground truncate text-xs">{formatDateTime(build.createdAt)}</span>{/if}
         </div>
-      {/each}
-    </div>
-  {:else}
-    <div class="text-muted-foreground text-xs">No downloads.</div>
-  {/if}
+        <div class="flex items-center gap-2">
+          {#if auth.getUsername() && build.channel !== BuildChannel.Recommended}
+            <PromoteBuildButton buildNumber={build.number} />
+          {/if}
+          <Button
+            href="{API_ENDPOINT}/v3/projects/{page.params.project}/versions/{page.params.version}/builds/{build.number}"
+            target="_blank"
+            rel="noopener noreferrer"
+            size="sm"
+            variant="link"
+          >
+            <span class="iconify lucide--external-link"></span>
+            API
+          </Button>
+        </div>
+      </div>
+      <CommitList {build} />
+      {#if build.downloads && build.downloads.length > 0}
+        <div class="flex flex-wrap gap-2 overflow-x-auto">
+          {#each build.downloads as d (d.name)}
+            <div class="flex items-center gap-1">
+              <Button href={d.url} rel="noopener noreferrer" title={d.name} size="sm" variant="outline">
+                <span class="iconify lucide--download"></span>
+                <span class="font-mono">{d.name}</span>
+                {#if d.size}
+                  <span
+                    class="relative z-0 rounded border px-1 font-mono text-xs before:absolute before:inset-0 before:z-[-1] before:rounded before:bg-secondary"
+                    >{formatBytes(d.size)}</span
+                  >
+                {/if}
+              </Button>
+              <Popover.Root>
+                <Popover.Trigger>
+                  {#snippet child({ props })}
+                    <Button title="Show checksums" variant="ghost" size="icon-xs" {...props}>
+                      <span class="iconify lucide--file-check"></span>
+                    </Button>
+                  {/snippet}
+                </Popover.Trigger>
+                <Popover.Content>
+                  <div class="leading-4 font-medium">Checksums</div>
+                  <div class="mb-2 text-sm">{d.name}</div>
+                  {#if d.checksums?.sha256}
+                    <div class="grid grid-cols-[auto_1fr] gap-x-2 text-xs break-all">
+                      <div class="flex flex-col gap-1">
+                        <span>SHA-256</span>
+                        <CopyToClipboard text={d.checksums.sha256} />
+                      </div>
+                      <span class="relative z-0 p-0.5 font-mono before:absolute before:inset-0 before:z-[-1] before:rounded before:bg-secondary"
+                        >{d.checksums.sha256}</span
+                      >
+                    </div>
+                  {:else}
+                    <div class="text-muted-foreground text-xs">No checksums available.</div>
+                  {/if}
+                </Popover.Content>
+              </Popover.Root>
+            </div>
+          {/each}
+        </div>
+      {:else}
+        <div class="text-muted-foreground text-xs">No downloads.</div>
+      {/if}
+    </Card.Content>
+  </Card.Root>
 </li>

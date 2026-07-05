@@ -10,6 +10,7 @@
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
   import { type PageProps } from "./$types";
   import { Debounced } from "runed";
+  import * as Alert from "$lib/components/ui/alert";
 
   let { data }: PageProps = $props();
 
@@ -151,7 +152,9 @@
     {:else if versionQuery.error}
       <section class="space-y-4">
         <h2 class="flex items-center text-lg font-medium">Metadata</h2>
-        <div class="text-destructive text-sm">{versionQuery.error.message}</div>
+        <Alert.Root variant="destructive">
+          <Alert.Description>{versionQuery.error.message}</Alert.Description>
+        </Alert.Root>
       </section>
     {:else if version}
       <VersionMetadata {version} />
@@ -164,7 +167,9 @@
     <section class="space-y-4">
       <h2 class="flex items-center gap-2 text-lg font-medium">Builds</h2>
       {#if buildsQuery.error}
-        <div class="text-destructive text-sm">{buildsQuery.error.message}</div>
+        <Alert.Root variant="destructive">
+          <Alert.Description>{buildsQuery.error.message}</Alert.Description>
+        </Alert.Root>
       {:else if !buildsLoadingDebounced.current && builds.length === 0}
         <p class="text-muted-foreground text-sm">No builds found.</p>
       {/if}
