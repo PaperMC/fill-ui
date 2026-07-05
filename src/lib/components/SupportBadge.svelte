@@ -23,6 +23,6 @@
     >{support.status}</span
   >
   {#if showEnd && support.end}
-    <span class="text-xs text-neutral-500">{support.status === "UNSUPPORTED" ? "since" : "until"} {formatDateTime(support.end)}</span>
+    <span class="text-muted-foreground text-xs">{support.status === "UNSUPPORTED" ? "since" : "until"} {formatDateTime(support.end)}</span>
   {/if}
 </span>

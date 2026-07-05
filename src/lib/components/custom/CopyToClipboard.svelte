@@ -19,8 +19,7 @@
     mergeProps(
       {
         variant: "ghost",
-        size: "icon",
-        class: "size-6",
+        size: "icon-xs",
       },
       restProps,
     ),

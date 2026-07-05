@@ -19,7 +19,7 @@
         {#if value}
           <span>{value.toDate(getLocalTimeZone()).toLocaleDateString()}</span>
         {:else}
-          <span class="text-neutral-500">{noValueText}</span>
+          <span class="text-muted-foreground">{noValueText}</span>
         {/if}
         <ChevronDownIcon />
       </Button>

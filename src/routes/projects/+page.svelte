@@ -28,9 +28,9 @@
       {#if sharedQueries.projects.loading}
         <LoadingSniffer text="Loading projects…" />
       {:else if sharedQueries.projects.error}
-        <div class="text-sm text-red-600">Error loading projects: {sharedQueries.projects.error.message}</div>
+        <div class="text-destructive text-sm">Error loading projects: {sharedQueries.projects.error.message}</div>
       {:else if safeProjects.length === 0}
-        <div class="text-sm text-neutral-500">No projects found.</div>
+        <div class="text-muted-foreground text-sm">No projects found.</div>
       {:else}
         {#each safeProjects as project (project.key)}
           <li>

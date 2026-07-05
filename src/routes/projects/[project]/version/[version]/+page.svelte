@@ -151,22 +151,22 @@
     {:else if versionQuery.error}
       <section class="space-y-4">
         <h2 class="flex items-center text-lg font-medium">Metadata</h2>
-        <div class="text-sm text-red-600">{versionQuery.error.message}</div>
+        <div class="text-destructive text-sm">{versionQuery.error.message}</div>
       </section>
     {:else if version}
       <VersionMetadata {version} />
     {:else}
       <section class="space-y-4">
         <h2 class="flex items-center text-lg font-medium">Metadata</h2>
-        <p class="text-sm text-neutral-500">Version not found.</p>
+        <p class="text-muted-foreground text-sm">Version not found.</p>
       </section>
     {/if}
     <section class="space-y-4">
       <h2 class="flex items-center gap-2 text-lg font-medium">Builds</h2>
       {#if buildsQuery.error}
-        <div class="text-sm text-red-600">{buildsQuery.error.message}</div>
+        <div class="text-destructive text-sm">{buildsQuery.error.message}</div>
       {:else if !buildsLoadingDebounced.current && builds.length === 0}
-        <p class="text-sm text-neutral-500">No builds found.</p>
+        <p class="text-muted-foreground text-sm">No builds found.</p>
       {/if}
       {#if !buildsQuery.error}
         <ul class="space-y-2">

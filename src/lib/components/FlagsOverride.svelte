@@ -27,8 +27,7 @@
   <Button
     type="button"
     variant="destructive"
-    size="icon"
-    class="size-8"
+    size="icon-sm"
     onclick={() => {
       flagsOverride = undefined;
     }}><span class="iconify lucide--trash"></span></Button

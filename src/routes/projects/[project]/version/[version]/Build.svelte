@@ -8,7 +8,6 @@
   import { type Build, BuildChannel } from "$lib/gql/graphql";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import * as Popover from "$lib/components/ui/popover/index.js";
-  import { mergeProps } from "bits-ui";
   import CommitList from "./CommitList.svelte";
   import { goto } from "$app/navigation";
   import { watch } from "runed";
@@ -68,7 +67,7 @@
         class="h-6 px-0.5 font-mono text-sm">#{build.number}</Button
       >
       <ChannelBadge channel={build.channel} />
-      {#if build.createdAt}<span class="truncate text-xs text-neutral-500">{formatDateTime(build.createdAt)}</span>{/if}
+      {#if build.createdAt}<span class="text-muted-foreground truncate text-xs">{formatDateTime(build.createdAt)}</span>{/if}
     </div>
     <div class="flex items-center gap-2">
       {#if auth.getUsername() && build.channel !== BuildChannel.Recommended}
@@ -103,7 +102,7 @@
           <Popover.Root>
             <Popover.Trigger>
               {#snippet child({ props })}
-                <Button title="Show checksums" variant="ghost" size="icon" {...mergeProps(props, { class: "size-6" })}>
+                <Button title="Show checksums" variant="ghost" size="icon-xs" {...props}>
                   <span class="iconify lucide--file-check"></span>
                 </Button>
               {/snippet}
@@ -122,7 +121,7 @@
                   >
                 </div>
               {:else}
-                <div class="text-xs text-neutral-500">No checksums available.</div>
+                <div class="text-muted-foreground text-xs">No checksums available.</div>
               {/if}
             </Popover.Content>
           </Popover.Root>
@@ -130,6 +129,6 @@
       {/each}
     </div>
   {:else}
-    <div class="text-xs text-neutral-500">No downloads.</div>
+    <div class="text-muted-foreground text-xs">No downloads.</div>
   {/if}
 </li>

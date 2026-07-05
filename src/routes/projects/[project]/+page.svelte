@@ -56,7 +56,7 @@
     <div class="flex items-center gap-2">
       <h2 class="flex items-center text-lg font-medium">Families</h2>
       {#if auth.getUsername()}
-        <Button size="icon" class="size-6" href="/projects/{page.params.project}/family/new">
+        <Button size="icon-xs" href="/projects/{page.params.project}/family/new">
           <span class="iconify size-4 lucide--plus"></span>
         </Button>
       {/if}
@@ -64,9 +64,9 @@
     {#if familiesQuery.loading}
       <LoadingSniffer text="Loading families…" />
     {:else if familiesQuery.error}
-      <div class="text-sm text-red-600">{familiesQuery.error.message}</div>
+      <div class="text-destructive text-sm">{familiesQuery.error.message}</div>
     {:else if families.length === 0}
-      <p class="text-sm text-neutral-500">No families found for project "{projectName}".</p>
+      <p class="text-muted-foreground text-sm">No families found for project "{projectName}".</p>
     {:else}
       <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each families as family (family.key)}

@@ -7,6 +7,7 @@
   import { goto } from "$app/navigation";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { SvelteURLSearchParams } from "svelte/reactivity";
+  import * as Alert from "$lib/components/ui/alert";
 
   let username: string = $state("");
   let password: string = $state("");
@@ -77,7 +78,9 @@
 
   <form class="max-w-md space-y-4" onsubmit={submitForm}>
     {#if expired}
-      <div class="rounded-md bg-yellow-100 px-3 py-2 text-sm text-yellow-800">Your session has expired. Please log in again.</div>
+      <Alert.Root>
+        <Alert.Description>Your session has expired. Please log in again.</Alert.Description>
+      </Alert.Root>
     {/if}
     {#if errorMessage}
       <div class="rounded-md bg-destructive/15 px-3 py-2 text-sm text-destructive">

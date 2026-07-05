@@ -86,9 +86,9 @@
   {#if familyQuery.loading}
     <LoadingSniffer text="Loading family…" />
   {:else if familyQuery.error}
-    <div class="text-sm text-red-600">{familyQuery.error.message}</div>
+    <div class="text-destructive text-sm">{familyQuery.error.message}</div>
   {:else if !family}
-    <p class="text-sm text-neutral-500">Family not found.</p>
+    <p class="text-muted-foreground text-sm">Family not found.</p>
   {:else}
     <div class="space-y-8">
       <FamilyMetadata {family} />
@@ -97,7 +97,7 @@
         <div class="flex items-center gap-2">
           <h2 class="flex items-center text-lg font-medium">Versions</h2>
           {#if auth.getUsername()}
-            <Button size="icon" class="size-6" href="/projects/{page.params.project}/version/new?family={encodeURIComponent(page.params.family ?? '')}">
+            <Button size="icon-xs" href="/projects/{page.params.project}/version/new?family={encodeURIComponent(page.params.family ?? '')}">
               <span class="iconify size-4 lucide--plus"></span>
             </Button>
           {/if}
@@ -116,7 +116,7 @@
             {/each}
           </ul>
         {:else}
-          <p class="text-sm text-neutral-500">No versions found for this family.</p>
+          <p class="text-muted-foreground text-sm">No versions found for this family.</p>
         {/if}
       </section>
     </div>

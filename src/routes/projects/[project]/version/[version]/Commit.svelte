@@ -17,7 +17,7 @@
 </script>
 
 <div class="space-y-0.5">
-  <div class="truncate font-mono text-xs text-neutral-500">{commit.sha}</div>
+  <div class="text-muted-foreground truncate font-mono text-xs">{commit.sha}</div>
   {#if hasOneLine}
     <div class="ps-2 text-sm wrap-break-word">{firstLine}</div>
   {:else}
@@ -27,7 +27,7 @@
       {:else}
         <div class="ps-2 text-sm wrap-break-word">{firstLine}</div>
       {/if}
-      <Button variant="ghost" size="icon" class="size-6" onclick={() => (collapsed = !collapsed)} aria-label="Expand/collapse commit message">
+      <Button variant="ghost" size="icon-xs" onclick={() => (collapsed = !collapsed)} aria-label="Expand/collapse commit message">
         {#if collapsed}
           <span class="iconify lucide--unfold-vertical"></span>
         {:else}

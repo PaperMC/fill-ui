@@ -193,10 +193,9 @@
     <h2 class="flex items-center text-lg font-medium">Metadata</h2>
     {#if auth.getUsername()}
       <Button
-        size="icon"
+        size="icon-xs"
         variant="ghost"
         disabled={editMode}
-        class="size-6"
         onclick={() => {
           editMode = true;
           resetEditState();
@@ -260,9 +259,9 @@
           <div class="flex items-center gap-2 font-medium">Minimum Version</div>
           <div class="mt-0.5">{effectiveJava.version.minimum}</div>
           {#if overridesFamilyJava()}
-            <span class="text-neutral-500 italic">Overrides family ({version.family.java.version.minimum})</span>
+            <span class="text-muted-foreground italic">Overrides family ({version.family.java.version.minimum})</span>
           {:else}
-            <span class="text-neutral-500 italic">Inherited from family</span>
+            <span class="text-muted-foreground italic">Inherited from family</span>
           {/if}
         </div>
 
@@ -270,10 +269,10 @@
           <div class="flex items-center gap-2 font-medium">Recommended Flags</div>
           <FlagsDisplay flags={effectiveJava.flags.recommended.length > 0 ? effectiveJava.flags.recommended : ["None"]} />
           {#if overridesFamilyJava()}
-            <span class="text-neutral-500 italic">Overrides family</span>
+            <span class="text-muted-foreground italic">Overrides family</span>
             <FlagsDisplay flags={version.family.java.flags.recommended.length > 0 ? version.family.java.flags.recommended : ["None"]} />
           {:else}
-            <span class="text-neutral-500 italic">Inherited from family</span>
+            <span class="text-muted-foreground italic">Inherited from family</span>
           {/if}
         </div>
       {/if}
