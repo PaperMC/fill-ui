@@ -14,11 +14,6 @@ const config = {
     adapter: adapter(),
   },
 
-  compilerOptions: {
-    experimental: {
-      async: true,
-    },
-  },
 };
 
 export default config;
