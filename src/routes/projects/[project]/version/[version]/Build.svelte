@@ -88,7 +88,7 @@
       {#if build.downloads && build.downloads.length > 0}
         <div class="flex flex-wrap gap-2 overflow-x-auto">
           {#each build.downloads as d (d.name)}
-            <div class="flex items-center gap-1">
+            <div class="flex items-center gap-1 last:mb-px">
               <Button href={d.url} rel="noopener noreferrer" title={d.name} size="sm" variant="outline">
                 <span class="iconify lucide--download"></span>
                 <span class="font-mono">{d.name}</span>
