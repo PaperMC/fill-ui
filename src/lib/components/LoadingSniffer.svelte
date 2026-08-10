@@ -34,13 +34,16 @@
 </script>
 
 <script lang="ts">
+  import { createHydrationScope } from "$lib/hydration-scope";
+
   interface Props {
     text?: string | undefined;
   }
 
   let { text }: Props = $props();
 
-  const randomLoadingSniffer = getRandomLoadingSniffer();
+  const hydrate = createHydrationScope();
+  const randomLoadingSniffer = hydrate("randomLoadingSniffer", getRandomLoadingSniffer);
 </script>
 
 <div>
