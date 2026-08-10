@@ -52,6 +52,6 @@
     <source src={randomLoadingSniffer.webm} type="video/webm" />
   </video>
   {#if text}
-    <div class="text-muted-foreground animate-pulse text-sm">{text}</div>
+    <div class="animate-pulse text-sm text-muted-foreground">{text}</div>
   {/if}
 </div>

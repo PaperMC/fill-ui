@@ -66,7 +66,7 @@
             class="h-6 px-0.5 font-mono text-sm">#{build.number}</Button
           >
           <ChannelBadge channel={build.channel} />
-          {#if build.createdAt}<span class="text-muted-foreground truncate text-xs">{formatDateTime(build.createdAt)}</span>{/if}
+          {#if build.createdAt}<span class="truncate text-xs text-muted-foreground">{formatDateTime(build.createdAt)}</span>{/if}
         </div>
         <div class="flex items-center gap-2">
           {#if auth.getUsername() && build.channel !== BuildChannel.Recommended}
@@ -121,7 +121,7 @@
                       >
                     </div>
                   {:else}
-                    <div class="text-muted-foreground text-xs">No checksums available.</div>
+                    <div class="text-xs text-muted-foreground">No checksums available.</div>
                   {/if}
                 </Popover.Content>
               </Popover.Root>
@@ -129,7 +129,7 @@
           {/each}
         </div>
       {:else}
-        <div class="text-muted-foreground text-xs">No downloads.</div>
+        <div class="text-xs text-muted-foreground">No downloads.</div>
       {/if}
     </Card.Content>
   </Card.Root>

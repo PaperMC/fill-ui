@@ -33,7 +33,7 @@
           <Alert.Description>Error loading projects: {sharedQueries.projects.error.message}</Alert.Description>
         </Alert.Root>
       {:else if safeProjects.length === 0}
-        <div class="text-muted-foreground text-sm">No projects found.</div>
+        <div class="text-sm text-muted-foreground">No projects found.</div>
       {:else}
         {#each safeProjects as project (project.key)}
           <li>

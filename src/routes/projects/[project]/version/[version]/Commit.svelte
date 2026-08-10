@@ -17,7 +17,7 @@
 </script>
 
 <div class="space-y-0.5">
-  <div class="text-muted-foreground truncate font-mono text-xs">{commit.sha}</div>
+  <div class="truncate font-mono text-xs text-muted-foreground">{commit.sha}</div>
   {#if hasOneLine}
     <div class="ps-2 text-sm wrap-break-word">{firstLine}</div>
   {:else}

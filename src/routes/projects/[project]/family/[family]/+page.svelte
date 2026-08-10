@@ -91,7 +91,7 @@
       <Alert.Description>{familyQuery.error.message}</Alert.Description>
     </Alert.Root>
   {:else if !family}
-    <p class="text-muted-foreground text-sm">Family not found.</p>
+    <p class="text-sm text-muted-foreground">Family not found.</p>
   {:else}
     <div class="space-y-8">
       <FamilyMetadata {family} />
@@ -119,7 +119,7 @@
             {/each}
           </ul>
         {:else}
-          <p class="text-muted-foreground text-sm">No versions found for this family.</p>
+          <p class="text-sm text-muted-foreground">No versions found for this family.</p>
         {/if}
       </section>
     </div>

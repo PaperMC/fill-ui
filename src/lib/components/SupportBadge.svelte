@@ -22,6 +22,6 @@
 <span class="inline-flex items-center gap-2">
   <Badge variant="outline" class={`tracking-wide uppercase ${classes(support.status)}`}>{support.status}</Badge>
   {#if showEnd && support.end}
-    <span class="text-muted-foreground text-xs">{support.status === "UNSUPPORTED" ? "since" : "until"} {formatDateTime(support.end)}</span>
+    <span class="text-xs text-muted-foreground">{support.status === "UNSUPPORTED" ? "since" : "until"} {formatDateTime(support.end)}</span>
   {/if}
 </span>

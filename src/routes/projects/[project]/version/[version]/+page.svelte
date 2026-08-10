@@ -161,7 +161,7 @@
     {:else}
       <section class="space-y-4">
         <h2 class="flex items-center text-lg font-medium">Metadata</h2>
-        <p class="text-muted-foreground text-sm">Version not found.</p>
+        <p class="text-sm text-muted-foreground">Version not found.</p>
       </section>
     {/if}
     <section class="space-y-4">
@@ -171,7 +171,7 @@
           <Alert.Description>{buildsQuery.error.message}</Alert.Description>
         </Alert.Root>
       {:else if !buildsLoadingDebounced.current && builds.length === 0}
-        <p class="text-muted-foreground text-sm">No builds found.</p>
+        <p class="text-sm text-muted-foreground">No builds found.</p>
       {/if}
       {#if !buildsQuery.error}
         <ul class="space-y-2">

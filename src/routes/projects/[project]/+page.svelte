@@ -69,7 +69,7 @@
         <Alert.Description>{familiesQuery.error.message}</Alert.Description>
       </Alert.Root>
     {:else if families.length === 0}
-      <p class="text-muted-foreground text-sm">No families found for project "{projectName}".</p>
+      <p class="text-sm text-muted-foreground">No families found for project "{projectName}".</p>
     {:else}
       <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each families as family (family.key)}
