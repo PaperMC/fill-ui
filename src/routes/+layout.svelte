@@ -14,11 +14,8 @@
   import { page } from "$app/state";
   import { type LayoutProps } from "./$types";
   import Footer from "./Footer.svelte";
-  import { createAppHydrationScope } from "$lib/hydration-scope";
 
   let { children, data }: LayoutProps = $props();
-
-  createAppHydrationScope();
 
   const auth = new AuthHolder();
   AUTH_CTX.set(auth);
