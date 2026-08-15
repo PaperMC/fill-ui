@@ -1,11 +1,13 @@
 <script lang="ts">
   import { page } from "$app/state";
   import Header from "$lib/components/custom/header/Header.svelte";
+  import * as Alert from "$lib/components/ui/alert";
   import { Button } from "$lib/components/ui/button";
   import * as Input from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
-  import { getContextClient, mutationStore } from "@urql/svelte";
+  import { getContextClient } from "@urql/svelte";
   import { graphql } from "$lib/gql";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
@@ -17,13 +19,15 @@
 
   const client = getContextClient();
   let creating = $state(false);
+  let formError: string | null = $state(null);
 
-  function submitForm(e: Event) {
+  async function submitForm(e: Event) {
     e.preventDefault();
     if (creating) return;
 
+    formError = null;
     if (!familyId || minJava == null) {
-      alert("Please fill in all required fields");
+      formError = "Please fill in all required fields.";
       return;
     }
     creating = true;
@@ -35,50 +39,59 @@
       },
     };
 
-    const result = mutationStore({
-      client,
-      query: graphql(`
-        mutation CreateFamily($input: CreateFamilyInput!) {
-          createFamily(input: $input) {
-            family {
-              id
-              key
-              java {
-                version {
-                  minimum
-                }
-                flags {
-                  recommended
+    try {
+      const result = await client
+        .mutation(
+          graphql(`
+            mutation CreateFamily($input: CreateFamilyInput!) {
+              createFamily(input: $input) {
+                family {
+                  id
+                  key
+                  java {
+                    version {
+                      minimum
+                    }
+                    flags {
+                      recommended
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-      `),
-      variables: {
-        input: {
-          project: page.params.project!,
-          key: familyId,
-          java: javaInput,
-        },
-      },
-    });
-
-    result.subscribe(({ data, error, fetching }) => {
-      if (!fetching) {
-        creating = false;
-        if (error) {
-          alert(`Error creating family: ${error.message}`);
-        } else if (data?.createFamily?.family) {
-          goto(
-            resolve("/projects/[project]/family/[family]", {
+          `),
+          {
+            input: {
               project: page.params.project!,
-              family: data.createFamily.family.key,
-            }),
-          );
-        }
+              key: familyId,
+              java: javaInput,
+            },
+          },
+        )
+        .toPromise();
+      const errorMessage = getOperationErrorMessage(result.error, "create the family");
+      if (errorMessage) {
+        formError = errorMessage;
+        return;
       }
-    });
+
+      const family = result.data?.createFamily?.family;
+      if (!family) {
+        formError = getUnexpectedOperationResultMessage("create the family");
+        return;
+      }
+
+      await goto(
+        resolve("/projects/[project]/family/[family]", {
+          project: page.params.project!,
+          family: family.key,
+        }),
+      );
+    } catch (error) {
+      formError = getUnexpectedOperationResultMessage("create the family", error);
+    } finally {
+      creating = false;
+    }
   }
 
   const sharedQueries = SHARED_QUERIES_CTX.get();
@@ -97,6 +110,11 @@
   <Header {breadcrumbs} />
 
   <form class="space-y-2" onsubmit={submitForm}>
+    {#if formError}
+      <Alert.Root variant="destructive">
+        <Alert.Description>{formError}</Alert.Description>
+      </Alert.Root>
+    {/if}
     <Label for="id-input">ID</Label>
     <Input.Root id="id-input" bind:value={familyId} required placeholder="e.g. 1.21" />
 

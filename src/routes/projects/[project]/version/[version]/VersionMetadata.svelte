@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
+  import * as Alert from "$lib/components/ui/alert";
   import * as Card from "$lib/components/ui/card";
   import SupportBadge from "$lib/components/SupportBadge.svelte";
   import { type Java, type Support, SupportStatus } from "$lib/gql/graphql";
@@ -12,8 +13,9 @@
   import JavaOverridesInfo from "$lib/components/JavaOverridesInfo.svelte";
   import { splitFlags } from "$lib/utils";
   import { watch } from "runed";
-  import { getContextClient, mutationStore } from "@urql/svelte";
+  import { getContextClient } from "@urql/svelte";
   import { graphql } from "$lib/gql";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { page } from "$app/state";
   import { AUTH_CTX } from "$lib/auth.svelte";
 
@@ -107,13 +109,15 @@
 
   const client = getContextClient();
   let saving = $state(false);
+  let saveError: string | null = $state(null);
 
-  function saveChanges() {
+  async function saveChanges() {
     if (saving) return;
 
+    saveError = null;
     if (editState.java.flags && editState.java.flags.length !== 0) {
       if (!editState.java.minimum) {
-        alert("You must set a minimum Java version if you set custom flags. See the notice for details.");
+        saveError = "Set a minimum Java version when using custom flags. See the notice for details.";
         return;
       }
     }
@@ -139,51 +143,59 @@
       };
     }
 
-    const result = mutationStore({
-      client,
-      query: graphql(`
-        mutation UpdateVersion($input: UpdateVersionInput!) {
-          updateVersion(input: $input) {
-            version {
-              id
-              key
-              support {
-                status
-                end
-              }
-              java {
+    try {
+      const result = await client
+        .mutation(
+          graphql(`
+            mutation UpdateVersion($input: UpdateVersionInput!) {
+              updateVersion(input: $input) {
                 version {
-                  minimum
-                }
-                flags {
-                  recommended
+                  id
+                  key
+                  support {
+                    status
+                    end
+                  }
+                  java {
+                    version {
+                      minimum
+                    }
+                    flags {
+                      recommended
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-      `),
-      variables: {
-        input: {
-          project: page.params.project!,
-          key: version.key,
-          ...(supportInput && { support: supportInput }),
-          ...(javaInput && { java: javaInput }),
-        },
-      },
-    });
-
-    result.subscribe(({ data, error, fetching }) => {
-      if (!fetching) {
-        saving = false;
-        if (error) {
-          alert(`Error updating version: ${error.message}`);
-        } else if (data?.updateVersion?.version) {
-          editMode = false;
-          resetEditState();
-        }
+          `),
+          {
+            input: {
+              project: page.params.project!,
+              key: version.key,
+              ...(supportInput && { support: supportInput }),
+              ...(javaInput && { java: javaInput }),
+            },
+          },
+        )
+        .toPromise();
+      const errorMessage = getOperationErrorMessage(result.error, "save the version metadata");
+      if (errorMessage) {
+        saveError = errorMessage;
+        return;
       }
-    });
+
+      if (!result.data?.updateVersion?.version) {
+        saveError = getUnexpectedOperationResultMessage("save the version metadata");
+        return;
+      }
+
+      editMode = false;
+      resetEditState();
+    } catch (error) {
+      saveError = getUnexpectedOperationResultMessage("save the version metadata", error);
+    } finally {
+      saving = false;
+    }
   }
 
   let effectiveJava = $derived(version.java ?? version.family.java);
@@ -207,6 +219,11 @@
       </Button>
     {/if}
   </div>
+  {#if saveError}
+    <Alert.Root variant="destructive">
+      <Alert.Description>{saveError}</Alert.Description>
+    </Alert.Root>
+  {/if}
   <Card.Root>
     <Card.Content class="space-y-2">
       <h3 class="text-lg font-medium">General</h3>

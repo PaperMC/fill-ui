@@ -1,8 +1,10 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
+  import * as Alert from "$lib/components/ui/alert";
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
-  import { getContextClient, mutationStore } from "@urql/svelte";
+  import { getContextClient } from "@urql/svelte";
   import { graphql } from "$lib/gql";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { page } from "$app/state";
 
   interface Props {
@@ -15,43 +17,60 @@
 
   let promoting: boolean = $state(false);
   let open: boolean = $state(false);
+  let promotionError: string | null = $state(null);
 
-  function promoteBuild(id: number) {
+  async function promoteBuild(id: number) {
     if (promoting) return;
+
+    promotionError = null;
     promoting = true;
-    const result = mutationStore({
-      client,
-      query: graphql(`
-        mutation PromoteBuild($input: PromoteBuildInput!) {
-          promoteBuild(input: $input) {
-            version {
-              id
+    try {
+      const result = await client
+        .mutation(
+          graphql(`
+            mutation PromoteBuild($input: PromoteBuildInput!) {
+              promoteBuild(input: $input) {
+                version {
+                  id
+                }
+                build {
+                  id
+                  channel
+                }
+              }
             }
-            build {
-              id
-              channel
-            }
-          }
-        }
-      `),
-      variables: {
-        input: {
-          project: page.params.project!,
-          version: page.params.version!,
-          number: id,
-        },
-      },
-    });
-    result.subscribe(({ error, fetching }) => {
-      if (!fetching) {
-        promoting = false;
-        if (error) {
-          alert(`Error promoting build #${id}: ${error.message}`);
-        }
+          `),
+          {
+            input: {
+              project: page.params.project!,
+              version: page.params.version!,
+              number: id,
+            },
+          },
+        )
+        .toPromise();
+      const errorMessage = getOperationErrorMessage(result.error, `promote build #${id}`);
+      if (errorMessage) {
+        promotionError = errorMessage;
+        return;
       }
-    });
+
+      if (!result.data?.promoteBuild) {
+        promotionError = getUnexpectedOperationResultMessage(`promote build #${id}`);
+      }
+    } catch (error) {
+      promotionError = getUnexpectedOperationResultMessage(`promote build #${id}`, error);
+    } finally {
+      promoting = false;
+    }
   }
 </script>
+
+{#if promotionError}
+  <Alert.Root variant="destructive">
+    <Alert.Description>{promotionError}</Alert.Description>
+  </Alert.Root>
+{/if}
 
 <AlertDialog.Root bind:open>
   <AlertDialog.Trigger>

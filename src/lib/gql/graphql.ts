@@ -99,6 +99,16 @@ export type CreateVersionPayload = {
   version?: Maybe<Version>;
 };
 
+export type CreateWebhookInput = {
+  url: Scalars['String']['input'];
+};
+
+export type CreateWebhookPayload = {
+  __typename?: 'CreateWebhookPayload';
+  secret: Scalars['String']['output'];
+  webhook: Webhook;
+};
+
 export type DeleteFamilyInput = {
   key: Scalars['String']['input'];
   project: Scalars['String']['input'];
@@ -118,6 +128,20 @@ export type DeleteVersionPayload = {
   __typename?: 'DeleteVersionPayload';
   ok: Scalars['Boolean']['output'];
 };
+
+export type DeleteWebhookInput = {
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteWebhookPayload = {
+  __typename?: 'DeleteWebhookPayload';
+  ok: Scalars['Boolean']['output'];
+};
+
+export enum DeliveryStatus {
+  Delivered = 'DELIVERED',
+  Failed = 'FAILED'
+}
 
 export type Download = {
   __typename?: 'Download';
@@ -167,8 +191,10 @@ export type Mutation = {
   __typename?: 'Mutation';
   createFamily?: Maybe<CreateFamilyPayload>;
   createVersion?: Maybe<CreateVersionPayload>;
+  createWebhook?: Maybe<CreateWebhookPayload>;
   deleteFamily?: Maybe<DeleteFamilyPayload>;
   deleteVersion?: Maybe<DeleteVersionPayload>;
+  deleteWebhook?: Maybe<DeleteWebhookPayload>;
   promoteBuild?: Maybe<PromoteBuildPayload>;
   updateFamily?: Maybe<UpdateFamilyPayload>;
   updateVersion?: Maybe<UpdateVersionPayload>;
@@ -185,6 +211,11 @@ export type MutationCreateVersionArgs = {
 };
 
 
+export type MutationCreateWebhookArgs = {
+  input: CreateWebhookInput;
+};
+
+
 export type MutationDeleteFamilyArgs = {
   input: DeleteFamilyInput;
 };
@@ -192,6 +223,11 @@ export type MutationDeleteFamilyArgs = {
 
 export type MutationDeleteVersionArgs = {
   input: DeleteVersionInput;
+};
+
+
+export type MutationDeleteWebhookArgs = {
+  input: DeleteWebhookInput;
 };
 
 
@@ -273,6 +309,7 @@ export type Query = {
   __typename?: 'Query';
   project?: Maybe<Project>;
   projects?: Maybe<Array<Maybe<Project>>>;
+  webhooks?: Maybe<Array<Maybe<Webhook>>>;
 };
 
 
@@ -367,6 +404,15 @@ export type VersionFilters = {
 
 export type VersionOrder = {
   direction?: InputMaybe<OrderDirection>;
+};
+
+export type Webhook = {
+  __typename?: 'Webhook';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  lastDeliveryAt?: Maybe<Scalars['DateTime']['output']>;
+  lastDeliveryStatus?: Maybe<DeliveryStatus>;
+  url: Scalars['String']['output'];
 };
 
 export type AllProjectsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -464,6 +510,25 @@ export type CreateVersionMutationVariables = Exact<{
 
 export type CreateVersionMutation = { __typename?: 'Mutation', createVersion?: { __typename?: 'CreateVersionPayload', version?: { __typename?: 'Version', key: string, family: { __typename?: 'Family', key: string }, java?: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } | null } | null } | null };
 
+export type WebhooksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type WebhooksQuery = { __typename?: 'Query', webhooks?: Array<{ __typename?: 'Webhook', id: string, url: string, createdAt: any, lastDeliveryStatus?: DeliveryStatus | null, lastDeliveryAt?: any | null } | null> | null };
+
+export type CreateWebhookMutationVariables = Exact<{
+  input: CreateWebhookInput;
+}>;
+
+
+export type CreateWebhookMutation = { __typename?: 'Mutation', createWebhook?: { __typename?: 'CreateWebhookPayload', secret: string, webhook: { __typename?: 'Webhook', id: string, url: string } } | null };
+
+export type DeleteWebhookMutationVariables = Exact<{
+  input: DeleteWebhookInput;
+}>;
+
+
+export type DeleteWebhookMutation = { __typename?: 'Mutation', deleteWebhook?: { __typename?: 'DeleteWebhookPayload', ok: boolean } | null };
+
 
 export const AllProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AllProjects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<AllProjectsQuery, AllProjectsQueryVariables>;
 export const PromoteBuildDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"PromoteBuild"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"PromoteBuildInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"promoteBuild"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"build"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"channel"}}]}}]}}]}}]} as unknown as DocumentNode<PromoteBuildMutation, PromoteBuildMutationVariables>;
@@ -478,3 +543,6 @@ export const VersionBuildsDocument = {"kind":"Document","definitions":[{"kind":"
 export const UpdateVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateVersionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"support"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"end"}}]}},{"kind":"Field","name":{"kind":"Name","value":"java"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"minimum"}}]}},{"kind":"Field","name":{"kind":"Name","value":"flags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recommended"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<UpdateVersionMutation, UpdateVersionMutationVariables>;
 export const ProjectFamiliesWithMetaDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProjectFamiliesWithMeta"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"projectKey"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"project"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"key"},"value":{"kind":"Variable","name":{"kind":"Name","value":"projectKey"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"families"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"java"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"minimum"}}]}},{"kind":"Field","name":{"kind":"Name","value":"flags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recommended"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ProjectFamiliesWithMetaQuery, ProjectFamiliesWithMetaQueryVariables>;
 export const CreateVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateVersionInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"family"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}}]}},{"kind":"Field","name":{"kind":"Name","value":"java"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"version"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"minimum"}}]}},{"kind":"Field","name":{"kind":"Name","value":"flags"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"recommended"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CreateVersionMutation, CreateVersionMutationVariables>;
+export const WebhooksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Webhooks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"webhooks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"lastDeliveryStatus"}},{"kind":"Field","name":{"kind":"Name","value":"lastDeliveryAt"}}]}}]}}]} as unknown as DocumentNode<WebhooksQuery, WebhooksQueryVariables>;
+export const CreateWebhookDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateWebhook"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateWebhookInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createWebhook"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"webhook"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"url"}}]}},{"kind":"Field","name":{"kind":"Name","value":"secret"}}]}}]}}]} as unknown as DocumentNode<CreateWebhookMutation, CreateWebhookMutationVariables>;
+export const DeleteWebhookDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteWebhook"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"DeleteWebhookInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteWebhook"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"ok"}}]}}]}}]} as unknown as DocumentNode<DeleteWebhookMutation, DeleteWebhookMutationVariables>;

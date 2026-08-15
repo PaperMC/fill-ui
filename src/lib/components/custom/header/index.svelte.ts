@@ -14,6 +14,11 @@ export const projectsHeaderSegment: HeaderNavigationSegment = {
   href: "/projects",
 };
 
+export const webhooksHeaderSegment: HeaderNavigationSegment = {
+  label: "Webhooks",
+  href: "/webhooks",
+};
+
 export function buildHeaderSegments(queries: SharedQueries, projectId?: string, familyId?: string, versionId?: string): HeaderNavigationSegment[] {
   const segments: HeaderNavigationSegment[] = [projectsHeaderSegment];
   // Only push subsequent segments if the parent segment exists

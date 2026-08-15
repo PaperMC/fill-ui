@@ -2,13 +2,15 @@
   import { page } from "$app/state";
   import { onMount } from "svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
+  import * as Alert from "$lib/components/ui/alert";
   import { Button } from "$lib/components/ui/button";
   import * as Select from "$lib/components/ui/select";
   import * as Input from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
   import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
-  import { getContextClient, queryStore, mutationStore } from "@urql/svelte";
+  import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { goto } from "$app/navigation";
   import MinJavaOverride from "$lib/components/MinJavaOverride.svelte";
   import FlagsOverride from "$lib/components/FlagsOverride.svelte";
@@ -60,18 +62,20 @@
 
   const client = getContextClient();
   let creating = $state(false);
+  let formError: string | null = $state(null);
 
-  function submitForm(e: Event) {
+  async function submitForm(e: Event) {
     e.preventDefault();
     if (creating) return;
 
+    formError = null;
     if (!versionId || !familyId) {
-      alert("Please fill in all required fields");
+      formError = "Please fill in all required fields.";
       return;
     }
     if (flags && flags.length > 0) {
       if (minJava === undefined) {
-        alert("You must set a minimum Java version if you set custom flags. See the notice for details.");
+        formError = "Set a minimum Java version when using custom flags. See the notice for details.";
         return;
       }
     }
@@ -89,53 +93,62 @@
       };
     }
 
-    const result = mutationStore({
-      client,
-      query: graphql(`
-        mutation CreateVersion($input: CreateVersionInput!) {
-          createVersion(input: $input) {
-            version {
-              key
-              family {
-                key
-              }
-              java {
+    try {
+      const result = await client
+        .mutation(
+          graphql(`
+            mutation CreateVersion($input: CreateVersionInput!) {
+              createVersion(input: $input) {
                 version {
-                  minimum
-                }
-                flags {
-                  recommended
+                  key
+                  family {
+                    key
+                  }
+                  java {
+                    version {
+                      minimum
+                    }
+                    flags {
+                      recommended
+                    }
+                  }
                 }
               }
             }
-          }
-        }
-      `),
-      variables: {
-        input: {
-          project: page.params.project!,
-          family: familyId,
-          key: versionId,
-          ...(javaInput && { java: javaInput }),
-        },
-      },
-    });
-
-    result.subscribe(({ data, error, fetching }) => {
-      if (!fetching) {
-        creating = false;
-        if (error) {
-          alert(`Error creating version: ${error.message}`);
-        } else if (data?.createVersion?.version) {
-          goto(
-            resolve("/projects/[project]/version/[version]", {
+          `),
+          {
+            input: {
               project: page.params.project!,
-              version: data.createVersion.version.key,
-            }),
-          );
-        }
+              family: familyId,
+              key: versionId,
+              ...(javaInput && { java: javaInput }),
+            },
+          },
+        )
+        .toPromise();
+      const errorMessage = getOperationErrorMessage(result.error, "create the version");
+      if (errorMessage) {
+        formError = errorMessage;
+        return;
       }
-    });
+
+      const version = result.data?.createVersion?.version;
+      if (!version) {
+        formError = getUnexpectedOperationResultMessage("create the version");
+        return;
+      }
+
+      await goto(
+        resolve("/projects/[project]/version/[version]", {
+          project: page.params.project!,
+          version: version.key,
+        }),
+      );
+    } catch (error) {
+      formError = getUnexpectedOperationResultMessage("create the version", error);
+    } finally {
+      creating = false;
+    }
   }
 
   function familyJava() {
@@ -164,6 +177,11 @@
   <Header {breadcrumbs} />
 
   <form class="space-y-2" onsubmit={submitForm}>
+    {#if formError}
+      <Alert.Root variant="destructive">
+        <Alert.Description>{formError}</Alert.Description>
+      </Alert.Root>
+    {/if}
     <Label for="id-input">ID</Label>
     <Input.Root id="id-input" bind:value={versionId} required></Input.Root>
 

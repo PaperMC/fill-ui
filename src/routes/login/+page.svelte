@@ -5,6 +5,7 @@
   import { API_ENDPOINT } from "$lib/api.svelte";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { SvelteURLSearchParams } from "svelte/reactivity";
   import * as Alert from "$lib/components/ui/alert";
@@ -72,7 +73,12 @@
 
 <div class="space-y-8">
   <header>
-    <h1 class="text-3xl">Fill</h1>
+    <h1 class="text-3xl">
+      <a
+        class="rounded-sm text-inherit no-underline transition-colors hover:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+        href={resolve("/")}>Fill</a
+      >
+    </h1>
     <h2 class="text-lg">Login</h2>
   </header>
 
