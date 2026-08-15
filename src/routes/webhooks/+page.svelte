@@ -305,7 +305,7 @@
       <AlertDialog.Header>
         <AlertDialog.Title>Delete webhook?</AlertDialog.Title>
         <AlertDialog.Description>
-          Deliveries to {webhookPendingDeletion?.url ?? "this endpoint"} will stop immediately. This action cannot be undone.
+          Deliveries to <span class="font-medium break-all text-foreground">{webhookPendingDeletion?.url ?? "this endpoint"}</span> will stop immediately. This action cannot be undone.
         </AlertDialog.Description>
       </AlertDialog.Header>
       <AlertDialog.Footer>
