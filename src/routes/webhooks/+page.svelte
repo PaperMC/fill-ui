@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { CircleAlertIcon, XIcon } from "@lucide/svelte";
+  import { RunedQuery } from "$lib/api.svelte";
   import FailureBadge from "$lib/components/FailureBadge.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
@@ -13,13 +13,14 @@
   import * as Field from "$lib/components/ui/field";
   import { Input } from "$lib/components/ui/input";
   import { Separator } from "$lib/components/ui/separator";
-  import { getContextClient } from "@urql/svelte";
+  import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import { DeliveryStatus, type Webhook } from "$lib/gql/graphql";
   import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { webhooksHeaderSegment } from "$lib/components/custom/header/index.svelte";
+  import { formatDateTime } from "$lib/utils/date";
 
-  const webhooksQuery = graphql(`
+  const webhooksDocument = graphql(`
     query Webhooks {
       webhooks {
         id
@@ -52,6 +53,12 @@
   `);
 
   const client = getContextClient();
+  const webhooksQueryStore = queryStore({
+    client,
+    query: webhooksDocument,
+    requestPolicy: "network-only",
+  });
+  const webhooksQuery = RunedQuery.static(webhooksQueryStore);
 
   type CreatedWebhookSecret = {
     id: string;
@@ -59,9 +66,11 @@
     secret: string;
   };
 
-  let webhooks: Webhook[] = $state([]);
-  let loading = $state(true);
-  let loadError: string | null = $state(null);
+  let webhooks = $derived(
+    (webhooksQuery.current?.webhooks ?? [])
+      .filter((webhook): webhook is Webhook => webhook !== null)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
+  );
   let operationError: string | null = $state(null);
   let newWebhookUrl = $state("");
   let newWebhookUrlError: string | null = $state(null);
@@ -71,30 +80,9 @@
   let deleteDialogOpen = $state(false);
   let createdWebhookSecrets: CreatedWebhookSecret[] = $state([]);
 
-  async function loadWebhooks() {
-    loading = true;
-    loadError = null;
-    try {
-      const result = await client.query(webhooksQuery, {}, { requestPolicy: "network-only" }).toPromise();
-      const errorMessage = getOperationErrorMessage(result.error, "load webhooks");
-      if (errorMessage) {
-        loadError = errorMessage;
-        return;
-      }
-
-      webhooks = (result.data?.webhooks ?? [])
-        .filter((webhook): webhook is Webhook => webhook !== null)
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    } catch (error) {
-      loadError = getUnexpectedOperationResultMessage("load webhooks", error);
-    } finally {
-      loading = false;
-    }
+  function refreshWebhooks() {
+    webhooksQueryStore.reexecute({ requestPolicy: "network-only" });
   }
-
-  onMount(() => {
-    loadWebhooks();
-  });
 
   async function createWebhook(e: Event) {
     e.preventDefault();
@@ -132,7 +120,7 @@
         ...createdWebhookSecrets,
       ];
       newWebhookUrl = "";
-      await loadWebhooks();
+      refreshWebhooks();
     } catch (error) {
       operationError = getUnexpectedOperationResultMessage("create the webhook", error);
     } finally {
@@ -159,23 +147,19 @@
         return;
       }
 
-      if (!result.data?.deleteWebhook) {
+      if (!result.data?.deleteWebhook?.ok) {
         operationError = getUnexpectedOperationResultMessage("delete the webhook");
         return;
       }
 
       deleteDialogOpen = false;
       webhookPendingDeletion = null;
-      await loadWebhooks();
+      refreshWebhooks();
     } catch (error) {
       operationError = getUnexpectedOperationResultMessage("delete the webhook", error);
     } finally {
       deleting = false;
     }
-  }
-
-  function formatDate(value: string | null | undefined): string {
-    return value === null || value === undefined ? "" : new Date(value).toLocaleString();
   }
 </script>
 
@@ -253,13 +237,13 @@
   <div class="flex max-w-2xl flex-col gap-3">
     <h2 class="text-xl font-semibold">Registered webhooks</h2>
 
-    {#if loading}
+    {#if webhooksQuery.loading}
       <LoadingSniffer text="Loading webhooks…" />
-    {:else if loadError !== null}
+    {:else if webhooksQuery.error}
       <Alert.Root variant="destructive">
         <CircleAlertIcon />
         <Alert.Title>Unable to load webhooks</Alert.Title>
-        <Alert.Description>{loadError}</Alert.Description>
+        <Alert.Description>Unable to load webhooks. Please try again.</Alert.Description>
       </Alert.Root>
     {:else if webhooks.length === 0}
       <p class="text-sm text-muted-foreground">No webhooks registered yet.</p>
@@ -274,13 +258,13 @@
             <div class="grid gap-4 text-sm sm:grid-cols-2 sm:gap-0">
               <div class="space-y-1">
                 <p class="text-muted-foreground">Created</p>
-                <p class="font-medium">{formatDate(webhook.createdAt)}</p>
+                <p class="font-medium">{formatDateTime(webhook.createdAt)}</p>
               </div>
               {#if webhook.lastDeliveryAt !== null}
                 <div class="space-y-1 sm:border-l sm:pl-4">
                   <p class="text-muted-foreground">Last delivery</p>
                   <div class="flex flex-wrap items-center gap-2">
-                    <span class="font-medium">{formatDate(webhook.lastDeliveryAt)}</span>
+                    <span class="font-medium">{formatDateTime(webhook.lastDeliveryAt)}</span>
                     {#if webhook.lastDeliveryStatus === DeliveryStatus.Delivered}
                       <SuccessBadge>Delivered</SuccessBadge>
                     {:else if webhook.lastDeliveryStatus === DeliveryStatus.Failed}
