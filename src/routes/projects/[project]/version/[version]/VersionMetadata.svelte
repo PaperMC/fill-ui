@@ -18,6 +18,7 @@
   import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { page } from "$app/state";
   import { AUTH_CTX } from "$lib/auth.svelte";
+  import { toast } from "svelte-sonner";
 
   const auth = AUTH_CTX.get();
 
@@ -191,6 +192,7 @@
 
       editMode = false;
       resetEditState();
+      toast.success("Version metadata saved.");
     } catch (error) {
       saveError = getUnexpectedOperationResultMessage("save the version metadata", error);
     } finally {

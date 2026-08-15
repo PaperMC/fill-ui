@@ -1,11 +1,11 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
-  import * as Alert from "$lib/components/ui/alert";
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import { getContextClient } from "@urql/svelte";
   import { graphql } from "$lib/gql";
   import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { page } from "$app/state";
+  import { toast } from "svelte-sonner";
 
   interface Props {
     buildNumber: number;
@@ -17,12 +17,10 @@
 
   let promoting: boolean = $state(false);
   let open: boolean = $state(false);
-  let promotionError: string | null = $state(null);
 
   async function promoteBuild(id: number) {
     if (promoting) return;
 
-    promotionError = null;
     promoting = true;
     try {
       const result = await client
@@ -51,26 +49,22 @@
         .toPromise();
       const errorMessage = getOperationErrorMessage(result.error, `promote build #${id}`);
       if (errorMessage) {
-        promotionError = errorMessage;
+        toast.error(errorMessage);
         return;
       }
 
       if (!result.data?.promoteBuild) {
-        promotionError = getUnexpectedOperationResultMessage(`promote build #${id}`);
+        toast.error(getUnexpectedOperationResultMessage(`promote build #${id}`));
+        return;
       }
+      toast.success(`Build #${id} promoted to recommended.`);
     } catch (error) {
-      promotionError = getUnexpectedOperationResultMessage(`promote build #${id}`, error);
+      toast.error(getUnexpectedOperationResultMessage(`promote build #${id}`, error));
     } finally {
       promoting = false;
     }
   }
 </script>
-
-{#if promotionError}
-  <Alert.Root variant="destructive">
-    <Alert.Description>{promotionError}</Alert.Description>
-  </Alert.Root>
-{/if}
 
 <AlertDialog.Root bind:open>
   <AlertDialog.Trigger>

@@ -15,6 +15,7 @@
   import { type LayoutProps } from "./$types";
   import Footer from "./Footer.svelte";
   import { createAppHydrationScope } from "$lib/hydration-scope";
+  import { Toaster } from "$lib/components/ui/sonner";
 
   let { children, data }: LayoutProps = $props();
 
@@ -78,6 +79,7 @@
 </svelte:head>
 
 <ModeWatcher />
+<Toaster />
 <div class="mx-auto flex min-h-svh max-w-5xl flex-col">
   <div class="p-6">
     {@render children?.()}
