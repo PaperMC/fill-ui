@@ -273,6 +273,11 @@
                     {/if}
                   </div>
                 </div>
+              {:else}
+                <div class="space-y-1 sm:border-l sm:pl-4">
+                  <p class="text-muted-foreground">Last delivery</p>
+                  <p class="font-medium">No deliveries yet</p>
+                </div>
               {/if}
             </div>
           </Card.Content>
