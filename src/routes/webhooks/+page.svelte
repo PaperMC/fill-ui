@@ -10,8 +10,8 @@
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import { Button } from "$lib/components/ui/button";
   import * as Card from "$lib/components/ui/card";
+  import * as Field from "$lib/components/ui/field";
   import { Input } from "$lib/components/ui/input";
-  import { Label } from "$lib/components/ui/label";
   import { Separator } from "$lib/components/ui/separator";
   import { getContextClient } from "@urql/svelte";
   import { graphql } from "$lib/gql";
@@ -64,6 +64,7 @@
   let loadError: string | null = $state(null);
   let operationError: string | null = $state(null);
   let newWebhookUrl = $state("");
+  let newWebhookUrlError: string | null = $state(null);
   let creating = $state(false);
   let deleting = $state(false);
   let webhookPendingDeletion: Webhook | null = $state(null);
@@ -100,9 +101,10 @@
     if (creating) return;
 
     operationError = null;
+    newWebhookUrlError = null;
     const url = newWebhookUrl.trim();
     if (!url) {
-      operationError = "Enter an endpoint URL.";
+      newWebhookUrlError = "Enter an endpoint URL.";
       return;
     }
 
@@ -193,13 +195,26 @@
         <Alert.Description>{operationError}</Alert.Description>
       </Alert.Root>
     {/if}
-    <div class="space-y-1.5">
-      <Label for="webhook-url">Endpoint URL</Label>
-      <div class="flex gap-2">
-        <Input id="webhook-url" bind:value={newWebhookUrl} placeholder="https://example.org/hooks/papermc" class="flex-1" disabled={creating} />
-        <Button type="submit" disabled={creating}>{creating ? "Creating..." : "Create"}</Button>
-      </div>
-    </div>
+    <Field.FieldGroup>
+      <Field.Field data-invalid={newWebhookUrlError !== null}>
+        <Field.FieldLabel for="webhook-url">Endpoint URL</Field.FieldLabel>
+        <div class="flex gap-2">
+          <Input
+            id="webhook-url"
+            bind:value={newWebhookUrl}
+            placeholder="https://example.org/hooks/papermc"
+            class="flex-1"
+            aria-invalid={newWebhookUrlError !== null}
+            disabled={creating}
+            oninput={() => (newWebhookUrlError = null)}
+          />
+          <Button type="submit" disabled={creating}>{creating ? "Creating..." : "Create"}</Button>
+        </div>
+        {#if newWebhookUrlError}
+          <Field.FieldError>{newWebhookUrlError}</Field.FieldError>
+        {/if}
+      </Field.Field>
+    </Field.FieldGroup>
   </form>
 
   {#if createdWebhookSecrets.length > 0}
