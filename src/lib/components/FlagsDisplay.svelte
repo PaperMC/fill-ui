@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
+  import SingleLineCopyable from "$lib/components/custom/SingleLineCopyable.svelte";
 
   interface Props {
     flags?: string[];
@@ -11,7 +11,4 @@
   const textToCopy = $derived(flagsString ?? (flags ?? []).join(" "));
 </script>
 
-<div class="relative">
-  <pre class="rounded-md bg-secondary p-2 pr-8 font-mono text-xs"><code class="block overflow-x-auto">{textToCopy}</code></pre>
-  <CopyToClipboard variant="outline" text={textToCopy} class="absolute top-1 right-1 " />
-</div>
+<SingleLineCopyable text={textToCopy} class="font-mono text-xs" />

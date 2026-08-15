@@ -4,9 +4,11 @@
 
   interface Props extends ButtonProps {
     text: string;
+    copyLabel?: string;
+    copiedLabel?: string;
   }
 
-  let { text, ...restProps }: Props = $props();
+  let { text, copyLabel = "Copy to clipboard", copiedLabel = "Copied to clipboard", ...restProps }: Props = $props();
 
   let showCopied = $state(false);
   let stopShowCopied: ReturnType<typeof setTimeout> | undefined;
@@ -20,8 +22,8 @@
         showCopied = false;
         stopShowCopied = undefined;
       }, 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
+    } catch (error) {
+      console.error("Failed to copy:", error);
     }
   }
 
@@ -36,7 +38,7 @@
   );
 </script>
 
-<Button {...mergedProps} onclick={copy} title={showCopied ? "Copied!" : "Copy to clipboard"}>
+<Button {...mergedProps} onclick={copy} aria-label={showCopied ? copiedLabel : copyLabel} title={showCopied ? copiedLabel : copyLabel}>
   {#if showCopied}
     <span class="iconify lucide--check"></span>
   {:else}

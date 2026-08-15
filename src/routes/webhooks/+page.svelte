@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { CircleAlertIcon, CheckIcon, CopyIcon, XIcon } from "@lucide/svelte";
+  import { CircleAlertIcon, XIcon } from "@lucide/svelte";
   import FailureBadge from "$lib/components/FailureBadge.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
   import SuccessBadge from "$lib/components/SuccessBadge.svelte";
+  import SingleLineCopyable from "$lib/components/custom/SingleLineCopyable.svelte";
   import * as Alert from "$lib/components/ui/alert";
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import { Button } from "$lib/components/ui/button";
@@ -56,7 +57,6 @@
     id: string;
     url: string;
     secret: string;
-    copied: boolean;
   };
 
   let webhooks: Webhook[] = $state([]);
@@ -126,7 +126,6 @@
           id: createdWebhook.webhook.id,
           url: createdWebhook.webhook.url,
           secret: createdWebhook.secret,
-          copied: false,
         },
         ...createdWebhookSecrets,
       ];
@@ -173,16 +172,6 @@
     }
   }
 
-  async function copySecret(webhookSecret: CreatedWebhookSecret) {
-    try {
-      await navigator.clipboard.writeText(webhookSecret.secret);
-      createdWebhookSecrets = createdWebhookSecrets.map((secret) => (secret.id === webhookSecret.id ? { ...secret, copied: true } : secret));
-    } catch (error) {
-      console.error("Unable to copy webhook secret", error);
-      operationError = "Unable to copy the webhook secret. Copy it manually instead.";
-    }
-  }
-
   function formatDate(value: string | null | undefined): string {
     return value === null || value === undefined ? "" : new Date(value).toLocaleString();
   }
@@ -219,19 +208,14 @@
         <Alert.Root>
           <CircleAlertIcon />
           <Alert.Title>Copy this webhook secret</Alert.Title>
-          <Alert.Description class="space-y-2">
+          <Alert.Description class="min-w-0 space-y-2">
             <p>The secret for <span class="font-medium break-all text-foreground">{webhookSecret.url}</span> is shown only once. Copy it now:</p>
-            <code class="block rounded bg-muted p-2 font-mono text-sm break-all">{webhookSecret.secret}</code>
-            <div>
-              <Button variant="outline" size="sm" onclick={() => copySecret(webhookSecret)}>
-                {#if webhookSecret.copied}
-                  <CheckIcon data-icon="inline-start" />
-                {:else}
-                  <CopyIcon data-icon="inline-start" />
-                {/if}
-                {webhookSecret.copied ? "Copied" : "Copy secret"}
-              </Button>
-            </div>
+            <SingleLineCopyable
+              text={webhookSecret.secret}
+              copyLabel="Copy webhook secret"
+              copiedLabel="Webhook secret copied"
+              class="font-mono text-sm text-foreground"
+            />
           </Alert.Description>
           <Alert.Action>
             <Button
@@ -305,7 +289,8 @@
       <AlertDialog.Header>
         <AlertDialog.Title>Delete webhook?</AlertDialog.Title>
         <AlertDialog.Description>
-          Deliveries to <span class="font-medium break-all text-foreground">{webhookPendingDeletion?.url ?? "this endpoint"}</span> will stop immediately. This action cannot be undone.
+          Deliveries to <span class="font-medium break-all text-foreground">{webhookPendingDeletion?.url ?? "this endpoint"}</span> will stop immediately. This action
+          cannot be undone.
         </AlertDialog.Description>
       </AlertDialog.Header>
       <AlertDialog.Footer>
