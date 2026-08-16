@@ -19,6 +19,7 @@
   import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
   import { webhooksHeaderSegment } from "$lib/components/custom/header/index.svelte";
   import { formatDateTime } from "$lib/utils/date";
+  import { toast } from "svelte-sonner";
 
   const webhooksDocument = graphql(`
     query Webhooks {
@@ -71,7 +72,7 @@
       .filter((webhook): webhook is Webhook => webhook !== null)
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
   );
-  let operationError: string | null = $state(null);
+  let createWebhookError: string | null = $state(null);
   let newWebhookUrl = $state("");
   let newWebhookUrlError: string | null = $state(null);
   let creating = $state(false);
@@ -88,7 +89,7 @@
     e.preventDefault();
     if (creating) return;
 
-    operationError = null;
+    createWebhookError = null;
     newWebhookUrlError = null;
     const url = newWebhookUrl.trim();
     if (!url) {
@@ -101,13 +102,13 @@
       const result = await client.mutation(createWebhookMutation, { input: { url } }).toPromise();
       const errorMessage = getOperationErrorMessage(result.error, "create the webhook");
       if (errorMessage) {
-        operationError = errorMessage;
+        createWebhookError = errorMessage;
         return;
       }
 
       const createdWebhook = result.data?.createWebhook;
       if (!createdWebhook) {
-        operationError = getUnexpectedOperationResultMessage("create the webhook");
+        createWebhookError = getUnexpectedOperationResultMessage("create the webhook");
         return;
       }
 
@@ -122,14 +123,13 @@
       newWebhookUrl = "";
       refreshWebhooks();
     } catch (error) {
-      operationError = getUnexpectedOperationResultMessage("create the webhook", error);
+      createWebhookError = getUnexpectedOperationResultMessage("create the webhook", error);
     } finally {
       creating = false;
     }
   }
 
   function requestWebhookDeletion(webhook: Webhook) {
-    operationError = null;
     webhookPendingDeletion = webhook;
     deleteDialogOpen = true;
   }
@@ -138,25 +138,25 @@
     if (!webhookPendingDeletion || deleting) return;
 
     deleting = true;
-    operationError = null;
     try {
       const result = await client.mutation(deleteWebhookMutation, { input: { id: webhookPendingDeletion.id } }).toPromise();
       const errorMessage = getOperationErrorMessage(result.error, "delete the webhook");
       if (errorMessage) {
-        operationError = errorMessage;
+        toast.error(errorMessage);
         return;
       }
 
       if (!result.data?.deleteWebhook?.ok) {
-        operationError = getUnexpectedOperationResultMessage("delete the webhook");
+        toast.error(getUnexpectedOperationResultMessage("delete the webhook"));
         return;
       }
 
       deleteDialogOpen = false;
       webhookPendingDeletion = null;
       refreshWebhooks();
+      toast.success("Webhook deleted.");
     } catch (error) {
-      operationError = getUnexpectedOperationResultMessage("delete the webhook", error);
+      toast.error(getUnexpectedOperationResultMessage("delete the webhook", error));
     } finally {
       deleting = false;
     }
@@ -172,11 +172,11 @@
 
   <form onsubmit={createWebhook} class="max-w-2xl space-y-3">
     <h2 class="text-xl font-semibold">Add webhook</h2>
-    {#if operationError}
+    {#if createWebhookError}
       <Alert.Root variant="destructive">
         <CircleAlertIcon />
         <Alert.Title>Webhook action failed</Alert.Title>
-        <Alert.Description>{operationError}</Alert.Description>
+        <Alert.Description>{createWebhookError}</Alert.Description>
       </Alert.Root>
     {/if}
     <Field.FieldGroup>
