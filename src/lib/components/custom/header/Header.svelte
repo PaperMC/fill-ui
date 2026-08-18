@@ -7,7 +7,7 @@
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { type HeaderProps } from "$lib/components/custom/header/index.svelte";
-  import { CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
+  import { BookOpenIcon, CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
 
   let { breadcrumbs }: HeaderProps = $props();
   const auth = AUTH_CTX.get();
@@ -23,8 +23,14 @@
         href={resolve("/")}>Fill</a
       >
     </h1>
-    {#if auth.getUsername()}
-      <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2">
+      {#if page.url.pathname !== resolve("/docs")}
+        <Button variant="outline" size="sm" href={resolve("/docs")}>
+          <BookOpenIcon data-icon="inline-start" />
+          API docs
+        </Button>
+      {/if}
+      {#if auth.getUsername()}
         {#if page.url.pathname !== resolve("/webhooks")}
           <Button variant="outline" size="sm" href={resolve("/webhooks")}>
             <WebhookIcon data-icon="inline-start" />
@@ -50,10 +56,10 @@
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-      </div>
-    {:else}
-      <Button variant="outline" size="sm" href="/login?redirect={encodeURIComponent(loginRedirect)}">Login</Button>
-    {/if}
+      {:else}
+        <Button variant="outline" size="sm" href="/login?redirect={encodeURIComponent(loginRedirect)}">Login</Button>
+      {/if}
+    </div>
   </div>
   <Breadcrumb.Root>
     <Breadcrumb.List class="text-lg">

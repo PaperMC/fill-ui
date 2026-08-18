@@ -55,6 +55,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@scalar/api-reference": "^1.65.1",
     "@urql/exchange-graphcache": "^9.0.1",
     "@urql/svelte": "^5.0.0",
     "mode-watcher": "^1.1.0",
