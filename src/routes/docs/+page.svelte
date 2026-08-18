@@ -2,6 +2,7 @@
   import { mode } from "mode-watcher";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { resolve } from "$app/paths";
+  import { API_ENDPOINT } from "$lib/api.svelte";
   import scalarStyleUrl from "@scalar/api-reference/style.css?url";
 
   let container: HTMLDivElement | undefined = $state();
@@ -34,7 +35,7 @@
         const { createApiReference } = await import("@scalar/api-reference");
         if (destroyed) return;
         reference = createApiReference(target, {
-          url: resolve("/openapi.yaml"),
+          url: API_ENDPOINT + "/openapi.yaml",
           forceDarkModeState,
         });
       } catch {
