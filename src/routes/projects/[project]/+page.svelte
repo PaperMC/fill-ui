@@ -2,6 +2,8 @@
   import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
+  import { resolve } from "$app/paths";
+  import CardLink from "$lib/components/custom/CardLink.svelte";
   import { Button } from "$lib/components/ui/button";
   import * as Alert from "$lib/components/ui/alert";
   import { getContextClient, queryStore } from "@urql/svelte";
@@ -74,9 +76,7 @@
       <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {#each families as family (family.key)}
           <li>
-            <Button class="w-full justify-between" variant="outline" href={`/projects/${page.params.project}/family/${family.key}`}>
-              <h3 class="text-sm font-medium">{family.key}</h3>
-            </Button>
+            <CardLink href={resolve("/projects/[project]/family/[family]", { project: page.params.project!, family: family.key })}>{family.key}</CardLink>
           </li>
         {/each}
       </ul>

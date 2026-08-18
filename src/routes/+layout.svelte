@@ -84,8 +84,8 @@
 
 <ModeWatcher />
 <Toaster />
-<div class={["flex flex-col", isDocs ? "" : "mx-auto min-h-svh max-w-5xl"]}>
-  <div class={isDocs ? "" : "p-6"}>
+<div class={["flex min-h-svh flex-col", isDocs ? "" : "mx-auto max-w-5xl"]}>
+  <div class={isDocs ? "flex flex-1 flex-col" : "p-6"}>
     {@render children?.()}
   </div>
   <Footer />

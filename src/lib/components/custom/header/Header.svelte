@@ -1,3 +1,7 @@
+<script lang="ts" module>
+  const logoUrl = "https://assets.papermc.io/brand/papermc_logo.min.svg";
+</script>
+
 <script lang="ts">
   import * as Breadcrumb from "$lib/components/ui/breadcrumb";
   import { Button, buttonVariants } from "$lib/components/ui/button";
@@ -16,12 +20,15 @@
 </script>
 
 <div>
-  <div class="flex justify-between">
-    <h1 class="text-3xl">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-3xl font-semibold tracking-tight">
       <a
-        class="rounded-sm text-inherit no-underline transition-colors hover:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-        href={resolve("/")}>Fill</a
+        class="flex items-center gap-2.5 rounded-sm text-inherit no-underline transition-colors hover:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+        href={resolve("/")}
       >
+        <img src={logoUrl} alt="" class="size-8" />
+        Fill
+      </a>
     </h1>
     <div class="flex items-center gap-2">
       {#if page.url.pathname !== resolve("/docs")}

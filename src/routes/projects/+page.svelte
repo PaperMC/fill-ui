@@ -1,7 +1,8 @@
 <script lang="ts">
   import { SHARED_QUERIES_CTX } from "$lib/api.svelte";
   import Header from "$lib/components/custom/header/Header.svelte";
-  import { Button } from "$lib/components/ui/button";
+  import CardLink from "$lib/components/custom/CardLink.svelte";
+  import { resolve } from "$app/paths";
   import * as Alert from "$lib/components/ui/alert";
   import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
   import { projectsHeaderSegment } from "$lib/components/custom/header/index.svelte";
@@ -37,9 +38,7 @@
       {:else}
         {#each safeProjects as project (project.key)}
           <li>
-            <Button class="w-full justify-between" variant="outline" href={`/projects/${project.key}`}>
-              <h3 class="text-sm font-medium">{project.name}</h3>
-            </Button>
+            <CardLink href={resolve("/projects/[project]", { project: project.key })}>{project.name}</CardLink>
           </li>
         {/each}
       {/if}
