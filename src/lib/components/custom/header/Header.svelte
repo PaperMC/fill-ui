@@ -1,14 +1,10 @@
-<script lang="ts" module>
-  const logoUrl = "https://assets.papermc.io/brand/papermc_logo.min.svg";
-</script>
-
 <script lang="ts">
   import * as Breadcrumb from "$lib/components/ui/breadcrumb";
   import { Button, buttonVariants } from "$lib/components/ui/button";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { goto } from "$app/navigation";
-  import { resolve } from "$app/paths";
+  import { asset, resolve } from "$app/paths";
   import { page } from "$app/state";
   import { type HeaderProps } from "$lib/components/custom/header/index.svelte";
   import { BookOpenIcon, CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
@@ -26,7 +22,7 @@
         class="flex items-center gap-2.5 rounded-sm text-inherit no-underline transition-colors hover:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
         href={resolve("/")}
       >
-        <img src={logoUrl} alt="" class="size-8" />
+        <img src={asset("/android-chrome-192x192.png")} alt="" class="size-12 [image-rendering:pixelated]" />
         Fill
       </a>
     </h1>
