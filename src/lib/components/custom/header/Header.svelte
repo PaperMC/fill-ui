@@ -4,10 +4,10 @@
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { goto } from "$app/navigation";
-  import { resolve } from "$app/paths";
+  import { asset, resolve } from "$app/paths";
   import { page } from "$app/state";
   import { type HeaderProps } from "$lib/components/custom/header/index.svelte";
-  import { CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
+  import { BookOpenIcon, CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
 
   let { breadcrumbs }: HeaderProps = $props();
   const auth = AUTH_CTX.get();
@@ -16,15 +16,24 @@
 </script>
 
 <div>
-  <div class="flex justify-between">
-    <h1 class="text-3xl">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-3xl font-semibold tracking-tight">
       <a
-        class="rounded-sm text-inherit no-underline transition-colors hover:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-        href={resolve("/")}>Fill</a
+        class="flex items-center gap-2.5 rounded-sm text-inherit no-underline transition-colors hover:text-muted-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+        href={resolve("/")}
       >
+        <img src={asset("/android-chrome-192x192.png")} alt="" class="size-12 [image-rendering:pixelated]" />
+        Fill
+      </a>
     </h1>
-    {#if auth.getUsername()}
-      <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2">
+      {#if page.url.pathname !== resolve("/docs")}
+        <Button variant="outline" size="sm" href={resolve("/docs")}>
+          <BookOpenIcon data-icon="inline-start" />
+          API docs
+        </Button>
+      {/if}
+      {#if auth.getUsername()}
         {#if page.url.pathname !== resolve("/webhooks")}
           <Button variant="outline" size="sm" href={resolve("/webhooks")}>
             <WebhookIcon data-icon="inline-start" />
@@ -50,10 +59,10 @@
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-      </div>
-    {:else}
-      <Button variant="outline" size="sm" href="/login?redirect={encodeURIComponent(loginRedirect)}">Login</Button>
-    {/if}
+      {:else}
+        <Button variant="outline" size="sm" href="/login?redirect={encodeURIComponent(loginRedirect)}">Login</Button>
+      {/if}
+    </div>
   </div>
   <Breadcrumb.Root>
     <Breadcrumb.List class="text-lg">

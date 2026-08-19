@@ -13,11 +13,15 @@
   import { ModeWatcher } from "mode-watcher";
   import { page } from "$app/state";
   import { type LayoutProps } from "./$types";
+  import { resolve } from "$app/paths";
   import Footer from "./Footer.svelte";
   import { createAppHydrationScope } from "$lib/hydration-scope";
   import { Toaster } from "$lib/components/ui/sonner";
 
   let { children, data }: LayoutProps = $props();
+
+  // Scalar renders its own full-height, full-width layout, so the docs route skips the app container.
+  const isDocs = $derived(page.url.pathname === resolve("/docs"));
 
   createAppHydrationScope();
 
@@ -80,8 +84,8 @@
 
 <ModeWatcher />
 <Toaster />
-<div class="mx-auto flex min-h-svh max-w-5xl flex-col">
-  <div class="p-6">
+<div class={["flex min-h-svh flex-col", isDocs ? "" : "mx-auto max-w-5xl"]}>
+  <div class={isDocs ? "flex flex-1 flex-col" : "p-6"}>
     {@render children?.()}
   </div>
   <Footer />
