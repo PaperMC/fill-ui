@@ -7,7 +7,8 @@
   import { Client, fetchExchange, setContextClient } from "@urql/svelte";
   import { cacheExchange } from "@urql/exchange-graphcache";
   import { relayPagination } from "@urql/exchange-graphcache/extras";
-  import { API_ENDPOINT, SHARED_QUERIES_CTX, SharedQueries } from "$lib/api.svelte";
+  import { API_ENDPOINT } from "$lib/api-endpoint";
+  import { SHARED_QUERIES_CTX, SharedQueries } from "$lib/api.svelte";
   import { AUTH_CTX, AuthHolder } from "$lib/auth.svelte";
   import { onMount } from "svelte";
   import { ModeWatcher } from "mode-watcher";

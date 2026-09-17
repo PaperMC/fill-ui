@@ -2,19 +2,7 @@ import type { Readable } from "svelte/store";
 import { createClient, fetchExchange, getContextClient, type OperationResultState, queryStore } from "@urql/svelte";
 import { graphql } from "$lib/gql";
 import { Context, watch } from "runed";
-
-const PROD_ENDPOINT = "https://fill.papermc.io";
-export const API_ENDPOINT = getApiEndpoint();
-
-function getApiEndpoint() {
-  if (import.meta.env.DEV) {
-    if (import.meta.env.VITE_USE_PROD_ENDPOINT === "true") {
-      return PROD_ENDPOINT;
-    }
-    return "http://localhost:8080";
-  }
-  return PROD_ENDPOINT;
-}
+import { API_ENDPOINT } from "$lib/api-endpoint";
 
 export class RunedQuery<V> {
   private currentState: OperationResultState<V> | undefined = $state();
