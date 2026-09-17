@@ -14,6 +14,7 @@
   import { watch } from "runed";
   import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
   import { tick } from "svelte";
+  import { getCommitGitHubUrl } from "$lib/utils/github";
 
   interface Props {
     build: Build;
@@ -23,6 +24,9 @@
   let { build, linked }: Props = $props();
 
   const auth = AUTH_CTX.get();
+
+  let primaryCommit = $derived(build.commits && build.commits.length > 0 ? build.commits[0] : null);
+  let buildGitHubUrl = $derived(primaryCommit ? getCommitGitHubUrl(page.params.project, primaryCommit.sha) : null);
 
   function formatBytes(bytes?: number | null): string {
     if (!bytes || bytes < 0) return "-";
@@ -71,6 +75,21 @@
         <div class="flex items-center gap-2">
           {#if auth.getUsername() && build.channel !== BuildChannel.Recommended}
             <PromoteBuildButton buildNumber={build.number} />
+          {/if}
+          {#if buildGitHubUrl && primaryCommit}
+            <Button
+              href={buildGitHubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              size="sm"
+              variant="link"
+              title={build.commits.length > 1
+                ? `View latest commit (${primaryCommit.sha.trim().slice(0, 7)}) on GitHub`
+                : `View commit on GitHub (${primaryCommit.sha.trim().slice(0, 7)})`}
+            >
+              <span class="iconify lucide--external-link"></span>
+              GitHub
+            </Button>
           {/if}
           <Button
             href="{API_ENDPOINT}/v3/projects/{page.params.project}/versions/{page.params.version}/builds/{build.number}"

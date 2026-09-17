@@ -19,6 +19,7 @@
   import { page } from "$app/state";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { toast } from "svelte-sonner";
+  import { getProjectGitHubRepo, getProjectGitHubUrl } from "$lib/utils/github";
 
   const auth = AUTH_CTX.get();
 
@@ -201,6 +202,8 @@
   }
 
   let effectiveJava = $derived(version.java ?? version.family.java);
+  let githubRepoName = $derived(getProjectGitHubRepo(page.params.project));
+  let githubRepoUrl = $derived(getProjectGitHubUrl(page.params.project));
 </script>
 
 <section class="space-y-4">
@@ -237,6 +240,23 @@
         <div class="font-medium">Family</div>
         <div class="mt-0.5">{version.family.key}</div>
       </div>
+      {#if githubRepoUrl}
+        <div class="text-sm">
+          <div class="font-medium">Repository</div>
+          <div class="mt-0.5">
+            <a
+              href={githubRepoUrl}
+              target="_blank"
+              rel="noopener noreferrer external"
+              class="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
+              title="View repository on GitHub"
+            >
+              <span>{githubRepoName}</span>
+              <span class="iconify size-3 lucide--external-link"></span>
+            </a>
+          </div>
+        </div>
+      {/if}
       <div class="text-sm">
         <div class="font-medium">Support</div>
         {#if editMode}
