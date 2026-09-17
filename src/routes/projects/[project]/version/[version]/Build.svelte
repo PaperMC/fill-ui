@@ -4,7 +4,7 @@
   import PromoteBuildButton from "$lib/components/PromoteBuildButton.svelte";
   import { Button } from "$lib/components/ui/button";
   import * as Card from "$lib/components/ui/card";
-  import { API_ENDPOINT } from "$lib/api.svelte";
+  import { API_ENDPOINT } from "$lib/api-endpoint";
   import { page } from "$app/state";
   import { type Build, BuildChannel } from "$lib/gql/graphql";
   import { AUTH_CTX } from "$lib/auth.svelte";

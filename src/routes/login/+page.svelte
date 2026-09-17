@@ -2,7 +2,7 @@
   import { Button } from "$lib/components/ui/button";
   import * as Input from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
-  import { API_ENDPOINT } from "$lib/api.svelte";
+  import { API_ENDPOINT } from "$lib/api-endpoint";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";

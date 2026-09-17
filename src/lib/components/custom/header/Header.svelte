@@ -7,7 +7,7 @@
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
   import { type HeaderProps } from "$lib/components/custom/header/index.svelte";
-  import { CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
+  import { BookOpenIcon, CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
 
   let { breadcrumbs }: HeaderProps = $props();
   const auth = AUTH_CTX.get();
@@ -23,37 +23,42 @@
         href={resolve("/")}>Fill</a
       >
     </h1>
-    {#if auth.getUsername()}
-      <div class="flex items-center gap-2">
-        {#if page.url.pathname !== resolve("/webhooks")}
-          <Button variant="outline" size="sm" href={resolve("/webhooks")}>
-            <WebhookIcon data-icon="inline-start" />
-            Webhooks
-          </Button>
-        {/if}
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger class={buttonVariants({ variant: "outline", size: "icon-sm" })} aria-label="Open profile menu">
-            <CircleUserIcon />
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content align="end" class="w-56">
-            <DropdownMenu.Label>{auth.getUsername()}</DropdownMenu.Label>
-            <DropdownMenu.Separator />
-            <DropdownMenu.Item
-              variant="destructive"
-              onclick={() => {
-                auth.logout();
-                goto(resolve(`/login?redirect=${encodeURIComponent(loginRedirect)}`));
-              }}
-            >
-              <LogOutIcon data-icon="inline-start" />
-              Log out
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
-      </div>
-    {:else}
-      <Button variant="outline" size="sm" href="/login?redirect={encodeURIComponent(loginRedirect)}">Login</Button>
-    {/if}
+    <div class="flex items-center gap-2">
+      <Button variant="outline" size="icon-sm" href={resolve("/api-docs")} aria-label="API docs" title="API docs">
+        <BookOpenIcon />
+      </Button>
+      {#if auth.getUsername()}
+        <div class="flex items-center gap-2">
+          {#if page.url.pathname !== resolve("/webhooks")}
+            <Button variant="outline" size="sm" href={resolve("/webhooks")}>
+              <WebhookIcon data-icon="inline-start" />
+              Webhooks
+            </Button>
+          {/if}
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger class={buttonVariants({ variant: "outline", size: "icon-sm" })} aria-label="Open profile menu">
+              <CircleUserIcon />
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content align="end" class="w-56">
+              <DropdownMenu.Label>{auth.getUsername()}</DropdownMenu.Label>
+              <DropdownMenu.Separator />
+              <DropdownMenu.Item
+                variant="destructive"
+                onclick={() => {
+                  auth.logout();
+                  goto(resolve(`/login?redirect=${encodeURIComponent(loginRedirect)}`));
+                }}
+              >
+                <LogOutIcon data-icon="inline-start" />
+                Log out
+              </DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
+        </div>
+      {:else}
+        <Button variant="outline" size="sm" href="/login?redirect={encodeURIComponent(loginRedirect)}">Login</Button>
+      {/if}
+    </div>
   </div>
   <Breadcrumb.Root>
     <Breadcrumb.List class="text-lg">

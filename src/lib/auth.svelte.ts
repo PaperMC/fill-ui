@@ -1,5 +1,5 @@
 import { Context } from "runed";
-import { API_ENDPOINT } from "./api.svelte";
+import { API_ENDPOINT } from "./api-endpoint";
 import { goto } from "$app/navigation";
 import { page } from "$app/state";
 import { SvelteURLSearchParams } from "svelte/reactivity";
