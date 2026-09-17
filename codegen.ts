@@ -3,6 +3,9 @@ import { type CodegenConfig } from "@graphql-codegen/cli";
 const PROD_ENDPOINT = "https://fill.papermc.io/graphql";
 
 function getSchema() {
+  if (process.env.GRAPHQL_SCHEMA) {
+    return process.env.GRAPHQL_SCHEMA;
+  }
   if (process.env.USE_PROD_ENDPOINT === "true") {
     return PROD_ENDPOINT;
   }

@@ -21,9 +21,25 @@
         query Version($projectKey: String!, $versionKey: String!) {
           project(key: $projectKey) {
             id
+            gitRepository {
+              forge
+              host
+              owner
+              name
+              url
+              commitUrlTemplate
+            }
             version(key: $versionKey) {
               id
               key
+              gitRepository {
+                forge
+                host
+                owner
+                name
+                url
+                commitUrlTemplate
+              }
               support {
                 status
                 end
@@ -129,6 +145,7 @@
 
   const sharedQueries = SHARED_QUERIES_CTX.get();
   let projectName = $derived(data.preloadedVersion?.project?.name || sharedQueries.projectNameOrFallback(page.params.project));
+  let gitRepository = $derived(versionQuery.current?.project?.version?.gitRepository ?? versionQuery.current?.project?.gitRepository);
 </script>
 
 <svelte:head>
@@ -157,7 +174,7 @@
         </Alert.Root>
       </section>
     {:else if version}
-      <VersionMetadata {version} />
+      <VersionMetadata {version} {gitRepository} />
     {:else}
       <section class="space-y-4">
         <h2 class="flex items-center text-lg font-medium">Metadata</h2>
@@ -176,7 +193,7 @@
       {#if !buildsQuery.error}
         <ul class="space-y-2">
           {#each builds as b (b.number)}
-            <Build build={b} linked={linkedBuildNumber === b.number} />
+            <Build build={b} linked={linkedBuildNumber === b.number} {gitRepository} />
           {/each}
         </ul>
       {/if}
