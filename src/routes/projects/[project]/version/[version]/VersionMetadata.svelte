@@ -19,7 +19,7 @@
   import { page } from "$app/state";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { toast } from "svelte-sonner";
-  import { getRepositoryName, getRepositoryUrl, getForgeLabel, type GitRepoLike } from "$lib/utils/github";
+  import { getRepositoryName, getRepositoryUrl, getForgeLabel, type GitRepoLike } from "$lib/utils/git";
 
   const auth = AUTH_CTX.get();
 
@@ -205,8 +205,8 @@
 
   let effectiveJava = $derived(version.java ?? version.family.java);
   let effectiveRepo = $derived(gitRepository ?? version.gitRepository);
-  let repoName = $derived(getRepositoryName(effectiveRepo, page.params.project));
-  let repoUrl = $derived(getRepositoryUrl(effectiveRepo, page.params.project));
+  let repoName = $derived(getRepositoryName(effectiveRepo));
+  let repoUrl = $derived(getRepositoryUrl(effectiveRepo));
   let forgeLabel = $derived(getForgeLabel(effectiveRepo));
 </script>
 

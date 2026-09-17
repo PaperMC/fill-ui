@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Build } from "$lib/gql/graphql";
-  import type { GitRepoLike } from "$lib/utils/github";
+  import type { GitRepoLike } from "$lib/utils/git";
   import Commit from "./Commit.svelte";
 
   interface Props {

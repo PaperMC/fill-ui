@@ -14,7 +14,7 @@
   import { watch } from "runed";
   import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
   import { tick } from "svelte";
-  import { getCommitUrl, getForgeLabel, type GitRepoLike } from "$lib/utils/github";
+  import { getCommitUrl, getForgeLabel, type GitRepoLike } from "$lib/utils/git";
 
   interface Props {
     build: Build;
@@ -27,7 +27,7 @@
   const auth = AUTH_CTX.get();
 
   let primaryCommit = $derived(build.commits && build.commits.length > 0 ? build.commits[0] : null);
-  let commitUrl = $derived(primaryCommit ? getCommitUrl(gitRepository, page.params.project, primaryCommit.sha) : null);
+  let commitUrl = $derived(primaryCommit ? getCommitUrl(gitRepository, primaryCommit.sha) : null);
   let forgeLabel = $derived(getForgeLabel(gitRepository));
 
   function formatBytes(bytes?: number | null): string {
