@@ -2,7 +2,7 @@
   import type { Commit } from "$lib/gql/graphql";
   import { Button } from "$lib/components/ui/button";
   import { slide } from "svelte/transition";
-  import { getCommitUrl, getForgeLabel, type GitRepoLike } from "$lib/utils/git";
+  import { getForgeLabel, type GitRepoLike } from "$lib/utils/git";
   import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
 
   interface Props {
@@ -18,7 +18,6 @@
   let firstLine = $derived(commitLines[0] ?? "");
   let remainingLines = $derived(commitLines.slice(1).join("\n"));
 
-  let commitUrl = $derived(getCommitUrl(gitRepository, commit.sha));
   let forgeLabel = $derived(getForgeLabel(gitRepository));
   let trimmedSha = $derived(commit.sha ? commit.sha.trim() : "");
   let shortSha = $derived(trimmedSha.slice(0, 7));
@@ -26,9 +25,9 @@
 
 <div class="space-y-0.5">
   <div class="flex items-center gap-1 font-mono text-xs text-muted-foreground">
-    {#if commitUrl && shortSha}
+    {#if commit.url && shortSha}
       <a
-        href={commitUrl}
+        href={commit.url}
         target="_blank"
         rel="noopener noreferrer external"
         class="inline-flex items-center gap-1 underline-offset-4 hover:text-foreground hover:underline"

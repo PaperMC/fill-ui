@@ -26,6 +26,7 @@
               host
               owner
               name
+              fullName
               url
               commitUrlTemplate
             }
@@ -37,6 +38,7 @@
                 host
                 owner
                 name
+                fullName
                 url
                 commitUrlTemplate
               }
@@ -105,6 +107,7 @@
                     commits {
                       sha
                       message
+                      url
                     }
                   }
                 }

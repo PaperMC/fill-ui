@@ -1,8 +1,11 @@
 import { GitForge, type GitRepository } from "$lib/gql/graphql";
 
-export type GitRepoLike = Pick<GitRepository, "owner" | "name"> & Partial<Pick<GitRepository, "forge" | "host" | "url" | "commitUrlTemplate">>;
+export type GitRepoLike = Pick<GitRepository, "url"> & Partial<Pick<GitRepository, "forge" | "host" | "owner" | "name" | "fullName">>;
 
 export function getRepositoryName(repo?: GitRepoLike | null): string | null {
+  if (repo?.fullName) {
+    return repo.fullName;
+  }
   if (repo?.owner && repo?.name) {
     return `${repo.owner}/${repo.name}`;
   }
@@ -11,21 +14,6 @@ export function getRepositoryName(repo?: GitRepoLike | null): string | null {
 
 export function getRepositoryUrl(repo?: GitRepoLike | null): string | null {
   return repo?.url ?? null;
-}
-
-export function getCommitUrl(repo?: GitRepoLike | null, sha?: string | null): string | null {
-  const trimmedSha = sha?.trim();
-  if (!trimmedSha || !/^[0-9a-f]{7,40}$/i.test(trimmedSha)) return null;
-
-  if (repo?.commitUrlTemplate) {
-    return repo.commitUrlTemplate.replace("{sha}", trimmedSha);
-  }
-
-  if (repo?.url) {
-    return `${repo.url}/commit/${trimmedSha}`;
-  }
-
-  return null;
 }
 
 export function getForgeLabel(repo?: GitRepoLike | null): string {
