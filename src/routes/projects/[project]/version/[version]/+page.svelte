@@ -23,24 +23,20 @@
             id
             gitRepository {
               forge
-              host
               owner
               name
               fullName
               url
-              commitUrlTemplate
             }
             version(key: $versionKey) {
               id
               key
               gitRepository {
                 forge
-                host
                 owner
                 name
                 fullName
                 url
-                commitUrlTemplate
               }
               support {
                 status

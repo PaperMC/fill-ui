@@ -1,16 +1,16 @@
 <script lang="ts">
-  import type { Commit } from "$lib/gql/graphql";
+  import type { Commit, GitForge } from "$lib/gql/graphql";
   import { Button } from "$lib/components/ui/button";
   import { slide } from "svelte/transition";
-  import { getForgeLabel, type GitRepoLike } from "$lib/utils/git";
+  import { getForgeLabel } from "$lib/utils/git";
   import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
 
   interface Props {
     commit: Commit;
-    gitRepository?: GitRepoLike | null;
+    forge?: GitForge | null;
   }
 
-  let { commit, gitRepository }: Props = $props();
+  let { commit, forge }: Props = $props();
 
   let collapsed = $state(true);
   let commitLines = $derived(commit.message.split(/\r?\n/));
@@ -18,7 +18,7 @@
   let firstLine = $derived(commitLines[0] ?? "");
   let remainingLines = $derived(commitLines.slice(1).join("\n"));
 
-  let forgeLabel = $derived(getForgeLabel(gitRepository));
+  let forgeLabel = $derived(getForgeLabel(forge));
   let trimmedSha = $derived(commit.sha ? commit.sha.trim() : "");
   let shortSha = $derived(trimmedSha.slice(0, 7));
 </script>

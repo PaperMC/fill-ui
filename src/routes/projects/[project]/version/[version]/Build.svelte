@@ -6,7 +6,7 @@
   import * as Card from "$lib/components/ui/card";
   import { API_ENDPOINT } from "$lib/api-endpoint";
   import { page } from "$app/state";
-  import { type Build, BuildChannel } from "$lib/gql/graphql";
+  import { type Build, BuildChannel, type GitRepository } from "$lib/gql/graphql";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import * as Popover from "$lib/components/ui/popover/index.js";
   import CommitList from "./CommitList.svelte";
@@ -14,12 +14,12 @@
   import { watch } from "runed";
   import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
   import { tick } from "svelte";
-  import { getForgeLabel, type GitRepoLike } from "$lib/utils/git";
+  import { getForgeLabel } from "$lib/utils/git";
 
   interface Props {
     build: Build;
     linked: boolean;
-    gitRepository?: GitRepoLike | null;
+    gitRepository?: GitRepository | null;
   }
 
   let { build, linked, gitRepository }: Props = $props();
@@ -28,7 +28,7 @@
 
   let primaryCommit = $derived(build.commits && build.commits.length > 0 ? build.commits[0] : null);
   let commitUrl = $derived(primaryCommit?.url ?? null);
-  let forgeLabel = $derived(getForgeLabel(gitRepository));
+  let forgeLabel = $derived(getForgeLabel(gitRepository?.forge));
 
   function formatBytes(bytes?: number | null): string {
     if (!bytes || bytes < 0) return "-";
@@ -105,7 +105,7 @@
           </Button>
         </div>
       </div>
-      <CommitList {build} {gitRepository} />
+      <CommitList {build} forge={gitRepository?.forge} />
       {#if build.downloads && build.downloads.length > 0}
         <div class="flex flex-wrap gap-2 overflow-x-auto">
           {#each build.downloads as d (d.name)}

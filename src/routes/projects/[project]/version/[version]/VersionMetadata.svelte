@@ -3,7 +3,7 @@
   import * as Alert from "$lib/components/ui/alert";
   import * as Card from "$lib/components/ui/card";
   import SupportBadge from "$lib/components/SupportBadge.svelte";
-  import { type Java, type Support, SupportStatus } from "$lib/gql/graphql";
+  import { type GitRepository, type Java, type Support, SupportStatus } from "$lib/gql/graphql";
   import FlagsDisplay from "$lib/components/FlagsDisplay.svelte";
   import DatePicker from "$lib/components/DatePicker.svelte";
   import { CalendarDate } from "@internationalized/date";
@@ -19,7 +19,7 @@
   import { page } from "$app/state";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { toast } from "svelte-sonner";
-  import { getRepositoryName, getRepositoryUrl, getForgeLabel, type GitRepoLike } from "$lib/utils/git";
+  import { getForgeLabel } from "$lib/utils/git";
 
   const auth = AUTH_CTX.get();
 
@@ -33,12 +33,12 @@
     family: Family;
     support: Support;
     java?: Java | null;
-    gitRepository?: GitRepoLike | null;
+    gitRepository?: GitRepository | null;
   };
 
   interface Props {
     version: Version;
-    gitRepository?: GitRepoLike | null;
+    gitRepository?: GitRepository | null;
     editMode?: boolean;
   }
 
@@ -204,10 +204,8 @@
   }
 
   let effectiveJava = $derived(version.java ?? version.family.java);
-  let effectiveRepo = $derived(gitRepository ?? version.gitRepository);
-  let repoName = $derived(getRepositoryName(effectiveRepo));
-  let repoUrl = $derived(getRepositoryUrl(effectiveRepo));
-  let forgeLabel = $derived(getForgeLabel(effectiveRepo));
+  let effectiveRepo = $derived(version.gitRepository ?? gitRepository);
+  let forgeLabel = $derived(getForgeLabel(effectiveRepo?.forge));
 </script>
 
 <section class="space-y-4">
@@ -244,18 +242,18 @@
         <div class="font-medium">Family</div>
         <div class="mt-0.5">{version.family.key}</div>
       </div>
-      {#if repoUrl}
+      {#if effectiveRepo?.url}
         <div class="text-sm">
           <div class="font-medium">Repository</div>
           <div class="mt-0.5">
             <a
-              href={repoUrl}
+              href={effectiveRepo.url}
               target="_blank"
               rel="noopener noreferrer external"
               class="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
               title="View repository on {forgeLabel}"
             >
-              <span>{repoName}</span>
+              <span>{effectiveRepo.fullName}</span>
               <span class="iconify size-3 lucide--external-link"></span>
             </a>
           </div>
