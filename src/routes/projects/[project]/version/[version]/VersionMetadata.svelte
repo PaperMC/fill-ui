@@ -253,7 +253,7 @@
               class="inline-flex items-center gap-1 text-primary underline-offset-4 hover:underline"
               title="View repository on {forgeLabel}"
             >
-              <span>{effectiveRepo.fullName}</span>
+              <span>{effectiveRepo.name}</span>
               <span class="iconify size-3 lucide--external-link"></span>
             </a>
           </div>

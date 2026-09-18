@@ -23,9 +23,7 @@
             id
             gitRepository {
               forge
-              owner
               name
-              fullName
               url
             }
             version(key: $versionKey) {
@@ -33,9 +31,7 @@
               key
               gitRepository {
                 forge
-                owner
                 name
-                fullName
                 url
               }
               support {
