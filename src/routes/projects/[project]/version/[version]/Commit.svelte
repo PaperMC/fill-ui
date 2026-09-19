@@ -1,23 +1,48 @@
 <script lang="ts">
-  import type { Commit } from "$lib/gql/graphql";
+  import type { Commit, GitForge } from "$lib/gql/graphql";
   import { Button } from "$lib/components/ui/button";
   import { slide } from "svelte/transition";
+  import { getForgeLabel } from "$lib/utils/git";
+  import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
 
   interface Props {
     commit: Commit;
+    forge?: GitForge | null;
   }
 
-  let { commit }: Props = $props();
+  let { commit, forge }: Props = $props();
 
   let collapsed = $state(true);
   let commitLines = $derived(commit.message.split(/\r?\n/));
   let hasOneLine = $derived(commitLines.filter((l) => l.length !== 0).length === 1);
   let firstLine = $derived(commitLines[0] ?? "");
   let remainingLines = $derived(commitLines.slice(1).join("\n"));
+
+  let forgeLabel = $derived(getForgeLabel(forge));
+  let trimmedSha = $derived(commit.sha ? commit.sha.trim() : "");
+  let shortSha = $derived(trimmedSha.slice(0, 7));
 </script>
 
 <div class="space-y-0.5">
-  <div class="truncate font-mono text-xs text-muted-foreground">{commit.sha}</div>
+  <div class="flex items-center gap-1 font-mono text-xs text-muted-foreground">
+    {#if commit.url && shortSha}
+      <a
+        href={commit.url}
+        target="_blank"
+        rel="noopener noreferrer external"
+        class="inline-flex items-center gap-1 underline-offset-4 hover:text-foreground hover:underline"
+        title="View commit on {forgeLabel} ({trimmedSha})"
+      >
+        <span>{shortSha}</span>
+        <span class="iconify size-3 lucide--external-link"></span>
+      </a>
+    {:else if shortSha}
+      <span>{shortSha}</span>
+    {/if}
+    {#if trimmedSha}
+      <CopyToClipboard text={trimmedSha} copyLabel="Copy full commit SHA" copiedLabel="Copied commit SHA!" />
+    {/if}
+  </div>
   {#if hasOneLine}
     <div class="ps-2 text-sm wrap-break-word">{firstLine}</div>
   {:else}
