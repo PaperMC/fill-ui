@@ -59,6 +59,6 @@
     "@urql/exchange-graphcache": "^9.0.1",
     "@urql/svelte": "^5.0.0",
     "mode-watcher": "^1.1.0",
-    "runed": "^0.37.1"
+    "runed": "^0.38.0"
   }
 }
