@@ -5,7 +5,7 @@
   import favicon16x from "$lib/assets/favicon-16x16.png";
   import snifferWalk from "$lib/assets/Sniffer_walk_pixel_art.gif";
   import { Client, fetchExchange, setContextClient } from "@urql/svelte";
-  import { cacheExchange } from "@urql/exchange-graphcache";
+  import { cacheExchange, type Cache } from "@urql/exchange-graphcache";
   import { relayPagination } from "@urql/exchange-graphcache/extras";
   import { API_ENDPOINT } from "$lib/api-endpoint";
   import { SHARED_QUERIES_CTX, SharedQueries } from "$lib/api.svelte";
@@ -21,6 +21,19 @@
   let { children, data }: LayoutProps = $props();
 
   createAppHydrationScope();
+
+  type DeleteInput = { input: { project: string; key: string } };
+
+  // Graphcache doesn't remove deleted entities, so drop them and any project-level lists that may reference them.
+  function invalidateDeleted(cache: Cache, projectKey: string, field: "family" | "version", key: string, listField: "families" | "versions") {
+    const project = cache.resolve("Query", "project", { key: projectKey }) as string | null;
+    if (!project) return;
+    const entity = cache.resolve(project, field, { key }) as string | null;
+    if (entity) cache.invalidate(entity);
+    for (const f of cache.inspectFields(project)) {
+      if (f.fieldName === listField) cache.invalidate(project, f.fieldName, f.arguments);
+    }
+  }
 
   const auth = new AuthHolder();
   AUTH_CTX.set(auth);
@@ -40,6 +53,14 @@
           JavaFlags: () => null,
           JavaVersion: () => null,
           Support: () => null,
+        },
+        updates: {
+          Mutation: {
+            deleteFamily: (result, args, cache) => {
+              const { input } = args as DeleteInput;
+              if ((result.deleteFamily as { ok?: boolean } | null)?.ok) invalidateDeleted(cache, input.project, "family", input.key, "families");
+            },
+          },
         },
       }),
       fetchExchange,

@@ -94,7 +94,7 @@
     <p class="text-sm text-muted-foreground">Family not found.</p>
   {:else}
     <div class="space-y-8">
-      <FamilyMetadata {family} />
+      <FamilyMetadata {family} deletable={versions.length === 0} />
 
       <section class="space-y-4">
         <div class="flex items-center gap-2">
