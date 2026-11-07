@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Button } from "$lib/components/ui/button";
   import * as Alert from "$lib/components/ui/alert";
+  import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import * as Card from "$lib/components/ui/card";
   import SupportBadge from "$lib/components/SupportBadge.svelte";
   import { type Java, type Support, SupportStatus } from "$lib/gql/graphql";
@@ -19,6 +20,8 @@
   import { page } from "$app/state";
   import { AUTH_CTX } from "$lib/auth.svelte";
   import { toast } from "svelte-sonner";
+  import { goto } from "$app/navigation";
+  import { resolve } from "$app/paths";
 
   const auth = AUTH_CTX.get();
 
@@ -37,9 +40,10 @@
   interface Props {
     version: Version;
     editMode?: boolean;
+    deletable?: boolean;
   }
 
-  let { version, editMode = $bindable(false) }: Props = $props();
+  let { version, editMode = $bindable(false), deletable = false }: Props = $props();
 
   function overridesFamilyJava(): boolean {
     return version.java !== undefined && version.java !== null;
@@ -200,6 +204,47 @@
     }
   }
 
+  let deleteDialogOpen = $state(false);
+  let deleting = $state(false);
+
+  async function deleteVersion() {
+    if (deleting) return;
+
+    deleting = true;
+    try {
+      const result = await client
+        .mutation(
+          graphql(`
+            mutation DeleteVersion($input: DeleteVersionInput!) {
+              deleteVersion(input: $input) {
+                ok
+              }
+            }
+          `),
+          { input: { project: page.params.project!, key: version.key } },
+        )
+        .toPromise();
+      const errorMessage = getOperationErrorMessage(result.error, "delete the version");
+      if (errorMessage) {
+        toast.error(errorMessage);
+        return;
+      }
+
+      if (!result.data?.deleteVersion?.ok) {
+        toast.error(getUnexpectedOperationResultMessage("delete the version"));
+        return;
+      }
+
+      deleteDialogOpen = false;
+      toast.success("Version deleted.");
+      await goto(resolve("/projects/[project]/family/[family]", { project: page.params.project!, family: version.family.key }));
+    } catch (error) {
+      toast.error(getUnexpectedOperationResultMessage("delete the version", error));
+    } finally {
+      deleting = false;
+    }
+  }
+
   let effectiveJava = $derived(version.java ?? version.family.java);
 </script>
 
@@ -219,6 +264,11 @@
       >
         <span class="iconify size-4 lucide--pencil"></span>
       </Button>
+      {#if deletable}
+        <Button size="icon-xs" variant="ghost" class="text-destructive" disabled={editMode} onclick={() => (deleteDialogOpen = true)} title="Delete version">
+          <span class="iconify size-4 lucide--trash"></span>
+        </Button>
+      {/if}
     {/if}
   </div>
   {#if saveError}
@@ -326,3 +376,28 @@
     </Button>
   {/if}
 </section>
+
+<AlertDialog.Root bind:open={deleteDialogOpen}>
+  <AlertDialog.Portal>
+    <AlertDialog.Overlay />
+    <AlertDialog.Content>
+      <AlertDialog.Header>
+        <AlertDialog.Title>Delete version?</AlertDialog.Title>
+        <AlertDialog.Description>
+          Version <span class="font-medium break-all text-foreground">{version.key}</span> will be deleted. This action cannot be undone.
+        </AlertDialog.Description>
+      </AlertDialog.Header>
+      <AlertDialog.Footer>
+        <AlertDialog.Cancel disabled={deleting}>Cancel</AlertDialog.Cancel>
+        <AlertDialog.Action variant="destructive" disabled={deleting} onclick={deleteVersion}>
+          {#if deleting}
+            <span class="iconify animate-spin lucide--loader-2"></span>
+            Deleting…
+          {:else}
+            Delete
+          {/if}
+        </AlertDialog.Action>
+      </AlertDialog.Footer>
+    </AlertDialog.Content>
+  </AlertDialog.Portal>
+</AlertDialog.Root>

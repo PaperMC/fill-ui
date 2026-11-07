@@ -60,6 +60,10 @@
               const { input } = args as DeleteInput;
               if ((result.deleteFamily as { ok?: boolean } | null)?.ok) invalidateDeleted(cache, input.project, "family", input.key, "families");
             },
+            deleteVersion: (result, args, cache) => {
+              const { input } = args as DeleteInput;
+              if ((result.deleteVersion as { ok?: boolean } | null)?.ok) invalidateDeleted(cache, input.project, "version", input.key, "versions");
+            },
           },
         },
       }),

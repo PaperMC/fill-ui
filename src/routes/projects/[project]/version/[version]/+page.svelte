@@ -157,7 +157,7 @@
         </Alert.Root>
       </section>
     {:else if version}
-      <VersionMetadata {version} />
+      <VersionMetadata {version} deletable={!buildsQuery.loading && !buildsQuery.error && builds.length === 0} />
     {:else}
       <section class="space-y-4">
         <h2 class="flex items-center text-lg font-medium">Metadata</h2>
