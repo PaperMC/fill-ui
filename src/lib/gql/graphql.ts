@@ -74,6 +74,7 @@ export type Commit = {
   __typename?: 'Commit';
   message: Scalars['String']['output'];
   sha: Scalars['String']['output'];
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type CreateFamilyInput = {
@@ -156,6 +157,17 @@ export type Family = Node & {
   id: Scalars['ID']['output'];
   java: Java;
   key: Scalars['String']['output'];
+};
+
+export enum GitForge {
+  Github = 'GITHUB'
+}
+
+export type GitRepository = {
+  __typename?: 'GitRepository';
+  forge: GitForge;
+  name: Scalars['String']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type Java = {
@@ -266,6 +278,7 @@ export type Project = Node & {
   __typename?: 'Project';
   families?: Maybe<Array<Maybe<Family>>>;
   family?: Maybe<Family>;
+  gitRepository?: Maybe<GitRepository>;
   id: Scalars['ID']['output'];
   key: Scalars['String']['output'];
   name: Scalars['String']['output'];
@@ -362,6 +375,7 @@ export type Version = Node & {
   build?: Maybe<Build>;
   builds?: Maybe<BuildConnection>;
   family: Family;
+  gitRepository?: Maybe<GitRepository>;
   id: Scalars['ID']['output'];
   java?: Maybe<Java>;
   key: Scalars['String']['output'];
