@@ -1,188 +1,56 @@
 /* eslint-disable */
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = T | null | undefined;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+/** Internal type. DO NOT USE DIRECTLY. */
+type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+/** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-/** All built-in and custom scalars, mapped to their actual values */
-export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  /** An RFC-3339 compliant Full Date Scalar */
-  Date: { input: any; output: any; }
-  /** A slightly refined version of RFC-3339 compliant DateTime Scalar */
-  DateTime: { input: any; output: any; }
-};
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+export const BuildChannel = {
+  Alpha: 'ALPHA',
+  Beta: 'BETA',
+  Recommended: 'RECOMMENDED',
+  Stable: 'STABLE'
+} as const;
 
-export type Build = Node & {
-  __typename?: 'Build';
-  channel: BuildChannel;
-  commits: Array<Commit>;
-  createdAt: Scalars['DateTime']['output'];
-  download?: Maybe<Download>;
-  downloads: Array<Download>;
-  id: Scalars['ID']['output'];
-  number: Scalars['Int']['output'];
-};
-
-
-export type BuildDownloadArgs = {
-  key: Scalars['String']['input'];
-};
-
-export enum BuildChannel {
-  Alpha = 'ALPHA',
-  Beta = 'BETA',
-  Recommended = 'RECOMMENDED',
-  Stable = 'STABLE'
-}
-
-export type BuildConnection = {
-  __typename?: 'BuildConnection';
-  edges?: Maybe<Array<Maybe<BuildEdge>>>;
-  nodes?: Maybe<Array<Maybe<Build>>>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type BuildEdge = {
-  __typename?: 'BuildEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Build>;
-};
-
-export type BuildFilters = {
-  channels?: InputMaybe<Array<InputMaybe<BuildChannel>>>;
-};
-
-export type BuildOrder = {
-  direction?: InputMaybe<OrderDirection>;
-};
-
-export type Checksums = {
-  __typename?: 'Checksums';
-  sha256: Scalars['String']['output'];
-};
-
-export type Commit = {
-  __typename?: 'Commit';
-  message: Scalars['String']['output'];
-  sha: Scalars['String']['output'];
-  url?: Maybe<Scalars['String']['output']>;
-};
-
+export type BuildChannel = typeof BuildChannel[keyof typeof BuildChannel];
 export type CreateFamilyInput = {
   java: JavaInput;
-  key: Scalars['String']['input'];
-  project: Scalars['String']['input'];
-};
-
-export type CreateFamilyPayload = {
-  __typename?: 'CreateFamilyPayload';
-  family?: Maybe<Family>;
+  key: string;
+  project: string;
 };
 
 export type CreateVersionInput = {
-  family: Scalars['String']['input'];
-  java?: InputMaybe<JavaInput>;
-  key: Scalars['String']['input'];
-  project: Scalars['String']['input'];
-};
-
-export type CreateVersionPayload = {
-  __typename?: 'CreateVersionPayload';
-  version?: Maybe<Version>;
+  family: string;
+  java?: JavaInput | null | undefined;
+  key: string;
+  project: string;
 };
 
 export type CreateWebhookInput = {
-  url: Scalars['String']['input'];
-};
-
-export type CreateWebhookPayload = {
-  __typename?: 'CreateWebhookPayload';
-  secret: Scalars['String']['output'];
-  webhook: Webhook;
+  url: string;
 };
 
 export type DeleteFamilyInput = {
-  key: Scalars['String']['input'];
-  project: Scalars['String']['input'];
-};
-
-export type DeleteFamilyPayload = {
-  __typename?: 'DeleteFamilyPayload';
-  ok?: Maybe<Scalars['Boolean']['output']>;
+  key: string;
+  project: string;
 };
 
 export type DeleteVersionInput = {
-  key: Scalars['String']['input'];
-  project: Scalars['String']['input'];
-};
-
-export type DeleteVersionPayload = {
-  __typename?: 'DeleteVersionPayload';
-  ok: Scalars['Boolean']['output'];
+  key: string;
+  project: string;
 };
 
 export type DeleteWebhookInput = {
-  id: Scalars['ID']['input'];
+  id: string | number;
 };
 
-export type DeleteWebhookPayload = {
-  __typename?: 'DeleteWebhookPayload';
-  ok: Scalars['Boolean']['output'];
-};
+export const DeliveryStatus = {
+  Delivered: 'DELIVERED',
+  Failed: 'FAILED'
+} as const;
 
-export enum DeliveryStatus {
-  Delivered = 'DELIVERED',
-  Failed = 'FAILED'
-}
-
-export type Download = {
-  __typename?: 'Download';
-  checksums: Checksums;
-  name: Scalars['String']['output'];
-  size: Scalars['Int']['output'];
-  url: Scalars['String']['output'];
-};
-
-export type Family = Node & {
-  __typename?: 'Family';
-  id: Scalars['ID']['output'];
-  java: Java;
-  key: Scalars['String']['output'];
-};
-
-export enum GitForge {
-  Github = 'GITHUB'
-}
-
-export type GitRepository = {
-  __typename?: 'GitRepository';
-  forge: GitForge;
-  name: Scalars['String']['output'];
-  url: Scalars['String']['output'];
-};
-
-export type Java = {
-  __typename?: 'Java';
-  flags: JavaFlags;
-  version: JavaVersion;
-};
-
-export type JavaFlags = {
-  __typename?: 'JavaFlags';
-  recommended: Array<Scalars['String']['output']>;
-};
-
+export type DeliveryStatus = typeof DeliveryStatus[keyof typeof DeliveryStatus];
 export type JavaFlagsInput = {
-  recommended: Array<Scalars['String']['input']>;
+  recommended: Array<string>;
 };
 
 export type JavaInput = {
@@ -190,379 +58,175 @@ export type JavaInput = {
   version: JavaVersionInput;
 };
 
-export type JavaVersion = {
-  __typename?: 'JavaVersion';
-  minimum: Scalars['Int']['output'];
-};
-
 export type JavaVersionInput = {
-  minimum: Scalars['Int']['input'];
-};
-
-export type Mutation = {
-  __typename?: 'Mutation';
-  createFamily?: Maybe<CreateFamilyPayload>;
-  createVersion?: Maybe<CreateVersionPayload>;
-  createWebhook?: Maybe<CreateWebhookPayload>;
-  deleteFamily?: Maybe<DeleteFamilyPayload>;
-  deleteVersion?: Maybe<DeleteVersionPayload>;
-  deleteWebhook?: Maybe<DeleteWebhookPayload>;
-  promoteBuild?: Maybe<PromoteBuildPayload>;
-  updateFamily?: Maybe<UpdateFamilyPayload>;
-  updateVersion?: Maybe<UpdateVersionPayload>;
-};
-
-
-export type MutationCreateFamilyArgs = {
-  input: CreateFamilyInput;
-};
-
-
-export type MutationCreateVersionArgs = {
-  input: CreateVersionInput;
-};
-
-
-export type MutationCreateWebhookArgs = {
-  input: CreateWebhookInput;
-};
-
-
-export type MutationDeleteFamilyArgs = {
-  input: DeleteFamilyInput;
-};
-
-
-export type MutationDeleteVersionArgs = {
-  input: DeleteVersionInput;
-};
-
-
-export type MutationDeleteWebhookArgs = {
-  input: DeleteWebhookInput;
-};
-
-
-export type MutationPromoteBuildArgs = {
-  input: PromoteBuildInput;
-};
-
-
-export type MutationUpdateFamilyArgs = {
-  input: UpdateFamilyInput;
-};
-
-
-export type MutationUpdateVersionArgs = {
-  input: UpdateVersionInput;
-};
-
-export type Node = {
-  id: Scalars['ID']['output'];
-};
-
-export enum OrderDirection {
-  Asc = 'ASC',
-  Desc = 'DESC'
-}
-
-export type PageInfo = {
-  __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['String']['output']>;
-  hasNextPage: Scalars['Boolean']['output'];
-  hasPreviousPage: Scalars['Boolean']['output'];
-  startCursor?: Maybe<Scalars['String']['output']>;
-};
-
-export type Project = Node & {
-  __typename?: 'Project';
-  families?: Maybe<Array<Maybe<Family>>>;
-  family?: Maybe<Family>;
-  gitRepository?: Maybe<GitRepository>;
-  id: Scalars['ID']['output'];
-  key: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  version?: Maybe<Version>;
-  versions?: Maybe<VersionConnection>;
-};
-
-
-export type ProjectFamilyArgs = {
-  key: Scalars['String']['input'];
-};
-
-
-export type ProjectVersionArgs = {
-  key: Scalars['String']['input'];
-};
-
-
-export type ProjectVersionsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  filterBy?: InputMaybe<VersionFilters>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<VersionOrder>;
+  minimum: number;
 };
 
 export type PromoteBuildInput = {
-  number: Scalars['Int']['input'];
-  project: Scalars['String']['input'];
-  version: Scalars['String']['input'];
-};
-
-export type PromoteBuildPayload = {
-  __typename?: 'PromoteBuildPayload';
-  build: Build;
-  version: Version;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  project?: Maybe<Project>;
-  projects?: Maybe<Array<Maybe<Project>>>;
-  webhooks?: Maybe<Array<Maybe<Webhook>>>;
-};
-
-
-export type QueryProjectArgs = {
-  key: Scalars['String']['input'];
-};
-
-export type Support = {
-  __typename?: 'Support';
-  end?: Maybe<Scalars['Date']['output']>;
-  status: SupportStatus;
+  number: number;
+  project: string;
+  version: string;
 };
 
 export type SupportInput = {
-  end?: InputMaybe<Scalars['Date']['input']>;
+  end?: string | null | undefined;
   status: SupportStatus;
 };
 
-export enum SupportStatus {
-  Deprecated = 'DEPRECATED',
-  Supported = 'SUPPORTED',
-  Unsupported = 'UNSUPPORTED'
-}
+export const SupportStatus = {
+  Deprecated: 'DEPRECATED',
+  Supported: 'SUPPORTED',
+  Unsupported: 'UNSUPPORTED'
+} as const;
 
+export type SupportStatus = typeof SupportStatus[keyof typeof SupportStatus];
 export type UpdateFamilyInput = {
-  java?: InputMaybe<JavaInput>;
-  key: Scalars['String']['input'];
-  project: Scalars['String']['input'];
-};
-
-export type UpdateFamilyPayload = {
-  __typename?: 'UpdateFamilyPayload';
-  family?: Maybe<Family>;
+  java?: JavaInput | null | undefined;
+  key: string;
+  project: string;
 };
 
 export type UpdateVersionInput = {
-  java?: InputMaybe<JavaInput>;
-  key: Scalars['String']['input'];
-  project: Scalars['String']['input'];
-  support?: InputMaybe<SupportInput>;
-};
-
-export type UpdateVersionPayload = {
-  __typename?: 'UpdateVersionPayload';
-  version?: Maybe<Version>;
-};
-
-export type Version = Node & {
-  __typename?: 'Version';
-  build?: Maybe<Build>;
-  builds?: Maybe<BuildConnection>;
-  family: Family;
-  gitRepository?: Maybe<GitRepository>;
-  id: Scalars['ID']['output'];
-  java?: Maybe<Java>;
-  key: Scalars['String']['output'];
-  support: Support;
-};
-
-
-export type VersionBuildArgs = {
-  number: Scalars['Int']['input'];
-};
-
-
-export type VersionBuildsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  filterBy?: InputMaybe<BuildFilters>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<BuildOrder>;
-};
-
-export type VersionConnection = {
-  __typename?: 'VersionConnection';
-  edges?: Maybe<Array<Maybe<VersionEdge>>>;
-  nodes?: Maybe<Array<Maybe<Version>>>;
-  pageInfo: PageInfo;
-  totalCount: Scalars['Int']['output'];
-};
-
-export type VersionEdge = {
-  __typename?: 'VersionEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Version>;
-};
-
-export type VersionFilters = {
-  familyKey?: InputMaybe<Scalars['String']['input']>;
-  supportStatus?: InputMaybe<SupportStatus>;
-};
-
-export type VersionOrder = {
-  direction?: InputMaybe<OrderDirection>;
-};
-
-export type Webhook = {
-  __typename?: 'Webhook';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
-  lastDeliveryAt?: Maybe<Scalars['DateTime']['output']>;
-  lastDeliveryStatus?: Maybe<DeliveryStatus>;
-  url: Scalars['String']['output'];
+  java?: JavaInput | null | undefined;
+  key: string;
+  project: string;
+  support?: SupportInput | null | undefined;
 };
 
 export type AllProjectsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllProjectsQuery = { __typename?: 'Query', projects?: Array<{ __typename?: 'Project', id: string, key: string, name: string } | null> | null };
+export type AllProjectsQuery = { projects: Array<{ id: string, key: string, name: string } | null> | null };
 
 export type PromoteBuildMutationVariables = Exact<{
   input: PromoteBuildInput;
 }>;
 
 
-export type PromoteBuildMutation = { __typename?: 'Mutation', promoteBuild?: { __typename?: 'PromoteBuildPayload', version: { __typename?: 'Version', id: string }, build: { __typename?: 'Build', id: string, channel: BuildChannel } } | null };
+export type PromoteBuildMutation = { promoteBuild: { version: { id: string }, build: { id: string, channel: BuildChannel } } | null };
 
 export type SsrProjectQueryVariables = Exact<{
-  project: Scalars['String']['input'];
+  project: string;
 }>;
 
 
-export type SsrProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', key: string, name: string } | null };
+export type SsrProjectQuery = { project: { key: string, name: string } | null };
 
 export type ProjectFamiliesQueryVariables = Exact<{
-  id: Scalars['String']['input'];
+  id: string;
 }>;
 
 
-export type ProjectFamiliesQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, families?: Array<{ __typename?: 'Family', id: string, key: string } | null> | null } | null };
+export type ProjectFamiliesQuery = { project: { id: string, families: Array<{ id: string, key: string } | null> | null } | null };
 
 export type SsrFamilyQueryVariables = Exact<{
-  project: Scalars['String']['input'];
-  id: Scalars['String']['input'];
+  project: string;
+  id: string;
 }>;
 
 
-export type SsrFamilyQuery = { __typename?: 'Query', project?: { __typename?: 'Project', key: string, name: string, family?: { __typename?: 'Family', key: string } | null } | null };
+export type SsrFamilyQuery = { project: { key: string, name: string, family: { key: string } | null } | null };
 
 export type FamilyQueryVariables = Exact<{
-  project: Scalars['String']['input'];
-  id: Scalars['String']['input'];
+  project: string;
+  id: string;
 }>;
 
 
-export type FamilyQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, family?: { __typename?: 'Family', id: string, key: string, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } | null, versions?: { __typename?: 'VersionConnection', edges?: Array<{ __typename?: 'VersionEdge', node?: { __typename?: 'Version', id: string, key: string, family: { __typename?: 'Family', id: string, key: string }, support: { __typename?: 'Support', status: SupportStatus, end?: any | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, endCursor?: string | null } } | null } | null };
+export type FamilyQuery = { project: { id: string, family: { id: string, key: string, java: { version: { minimum: number }, flags: { recommended: Array<string> } } } | null, versions: { edges: Array<{ node: { id: string, key: string, family: { id: string, key: string }, support: { status: SupportStatus, end: string | null } } | null } | null> | null, pageInfo: { hasNextPage: boolean, endCursor: string | null } } | null } | null };
 
 export type UpdateFamilyMutationVariables = Exact<{
   input: UpdateFamilyInput;
 }>;
 
 
-export type UpdateFamilyMutation = { __typename?: 'Mutation', updateFamily?: { __typename?: 'UpdateFamilyPayload', family?: { __typename?: 'Family', id: string, key: string, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } | null } | null };
+export type UpdateFamilyMutation = { updateFamily: { family: { id: string, key: string, java: { version: { minimum: number }, flags: { recommended: Array<string> } } } | null } | null };
 
 export type DeleteFamilyMutationVariables = Exact<{
   input: DeleteFamilyInput;
 }>;
 
 
-export type DeleteFamilyMutation = { __typename?: 'Mutation', deleteFamily?: { __typename?: 'DeleteFamilyPayload', ok?: boolean | null } | null };
+export type DeleteFamilyMutation = { deleteFamily: { ok: boolean | null } | null };
 
 export type CreateFamilyMutationVariables = Exact<{
   input: CreateFamilyInput;
 }>;
 
 
-export type CreateFamilyMutation = { __typename?: 'Mutation', createFamily?: { __typename?: 'CreateFamilyPayload', family?: { __typename?: 'Family', id: string, key: string, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } | null } | null };
+export type CreateFamilyMutation = { createFamily: { family: { id: string, key: string, java: { version: { minimum: number }, flags: { recommended: Array<string> } } } | null } | null };
 
 export type SsrVersionQueryVariables = Exact<{
-  project: Scalars['String']['input'];
-  id: Scalars['String']['input'];
+  project: string;
+  id: string;
 }>;
 
 
-export type SsrVersionQuery = { __typename?: 'Query', project?: { __typename?: 'Project', key: string, name: string, version?: { __typename?: 'Version', key: string, support: { __typename?: 'Support', status: SupportStatus, end?: any | null } } | null } | null };
+export type SsrVersionQuery = { project: { key: string, name: string, version: { key: string, support: { status: SupportStatus, end: string | null } } | null } | null };
 
 export type VersionQueryVariables = Exact<{
-  projectKey: Scalars['String']['input'];
-  versionKey: Scalars['String']['input'];
+  projectKey: string;
+  versionKey: string;
 }>;
 
 
-export type VersionQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, version?: { __typename?: 'Version', id: string, key: string, support: { __typename?: 'Support', status: SupportStatus, end?: any | null }, java?: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } | null, family: { __typename?: 'Family', id: string, key: string, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } } | null } | null };
+export type VersionQuery = { project: { id: string, version: { id: string, key: string, support: { status: SupportStatus, end: string | null }, java: { version: { minimum: number }, flags: { recommended: Array<string> } } | null, family: { id: string, key: string, java: { version: { minimum: number }, flags: { recommended: Array<string> } } } } | null } | null };
 
 export type VersionBuildsQueryVariables = Exact<{
-  projectKey: Scalars['String']['input'];
-  versionKey: Scalars['String']['input'];
-  after?: InputMaybe<Scalars['String']['input']>;
+  projectKey: string;
+  versionKey: string;
+  after?: string | null | undefined;
 }>;
 
 
-export type VersionBuildsQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, version?: { __typename?: 'Version', id: string, builds?: { __typename?: 'BuildConnection', edges?: Array<{ __typename?: 'BuildEdge', node?: { __typename?: 'Build', id: string, number: number, channel: BuildChannel, createdAt: any, downloads: Array<{ __typename?: 'Download', name: string, size: number, url: string, checksums: { __typename?: 'Checksums', sha256: string } }>, commits: Array<{ __typename?: 'Commit', sha: string, message: string }> } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } | null } | null };
+export type VersionBuildsQuery = { project: { id: string, version: { id: string, builds: { edges: Array<{ node: { id: string, number: number, channel: BuildChannel, createdAt: string, downloads: Array<{ name: string, size: number, url: string, checksums: { sha256: string } }>, commits: Array<{ sha: string, message: string }> } | null } | null> | null, pageInfo: { hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } | null } | null } | null };
 
 export type UpdateVersionMutationVariables = Exact<{
   input: UpdateVersionInput;
 }>;
 
 
-export type UpdateVersionMutation = { __typename?: 'Mutation', updateVersion?: { __typename?: 'UpdateVersionPayload', version?: { __typename?: 'Version', id: string, key: string, support: { __typename?: 'Support', status: SupportStatus, end?: any | null }, java?: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } | null } | null } | null };
+export type UpdateVersionMutation = { updateVersion: { version: { id: string, key: string, support: { status: SupportStatus, end: string | null }, java: { version: { minimum: number }, flags: { recommended: Array<string> } } | null } | null } | null };
 
 export type DeleteVersionMutationVariables = Exact<{
   input: DeleteVersionInput;
 }>;
 
 
-export type DeleteVersionMutation = { __typename?: 'Mutation', deleteVersion?: { __typename?: 'DeleteVersionPayload', ok: boolean } | null };
+export type DeleteVersionMutation = { deleteVersion: { ok: boolean } | null };
 
 export type ProjectFamiliesWithMetaQueryVariables = Exact<{
-  projectKey: Scalars['String']['input'];
+  projectKey: string;
 }>;
 
 
-export type ProjectFamiliesWithMetaQuery = { __typename?: 'Query', project?: { __typename?: 'Project', families?: Array<{ __typename?: 'Family', id: string, key: string, java: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } } | null> | null } | null };
+export type ProjectFamiliesWithMetaQuery = { project: { families: Array<{ id: string, key: string, java: { version: { minimum: number }, flags: { recommended: Array<string> } } } | null> | null } | null };
 
 export type CreateVersionMutationVariables = Exact<{
   input: CreateVersionInput;
 }>;
 
 
-export type CreateVersionMutation = { __typename?: 'Mutation', createVersion?: { __typename?: 'CreateVersionPayload', version?: { __typename?: 'Version', key: string, family: { __typename?: 'Family', key: string }, java?: { __typename?: 'Java', version: { __typename?: 'JavaVersion', minimum: number }, flags: { __typename?: 'JavaFlags', recommended: Array<string> } } | null } | null } | null };
+export type CreateVersionMutation = { createVersion: { version: { key: string, family: { key: string }, java: { version: { minimum: number }, flags: { recommended: Array<string> } } | null } | null } | null };
 
 export type WebhooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type WebhooksQuery = { __typename?: 'Query', webhooks?: Array<{ __typename?: 'Webhook', id: string, url: string, createdAt: any, lastDeliveryStatus?: DeliveryStatus | null, lastDeliveryAt?: any | null } | null> | null };
+export type WebhooksQuery = { webhooks: Array<{ id: string, url: string, createdAt: string, lastDeliveryStatus: DeliveryStatus | null, lastDeliveryAt: string | null } | null> | null };
 
 export type CreateWebhookMutationVariables = Exact<{
   input: CreateWebhookInput;
 }>;
 
 
-export type CreateWebhookMutation = { __typename?: 'Mutation', createWebhook?: { __typename?: 'CreateWebhookPayload', secret: string, webhook: { __typename?: 'Webhook', id: string, url: string } } | null };
+export type CreateWebhookMutation = { createWebhook: { secret: string, webhook: { id: string, url: string } } | null };
 
 export type DeleteWebhookMutationVariables = Exact<{
   input: DeleteWebhookInput;
 }>;
 
 
-export type DeleteWebhookMutation = { __typename?: 'Mutation', deleteWebhook?: { __typename?: 'DeleteWebhookPayload', ok: boolean } | null };
+export type DeleteWebhookMutation = { deleteWebhook: { ok: boolean } | null };
 
 
 export const AllProjectsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"AllProjects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"projects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<AllProjectsQuery, AllProjectsQueryVariables>;

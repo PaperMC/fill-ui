@@ -4,7 +4,8 @@
   import * as AlertDialog from "#lib/components/ui/alert-dialog/index.ts";
   import * as Card from "#lib/components/ui/card/index.ts";
   import SupportBadge from "#lib/components/SupportBadge.svelte";
-  import { type Java, type Support, SupportStatus } from "#lib/gql/graphql.ts";
+  import { SupportStatus } from "#lib/gql/graphql.ts";
+  import type { Java } from "#lib/graphql-types.ts";
   import FlagsDisplay from "#lib/components/FlagsDisplay.svelte";
   import DatePicker from "#lib/components/DatePicker.svelte";
   import { CalendarDate } from "@internationalized/date";
@@ -25,20 +26,13 @@
 
   const auth = AUTH_CTX.get();
 
-  type Family = {
-    key: string;
-    java?: Java;
-  };
-
-  type Version = {
-    key: string;
-    family: Family;
-    support: Support;
-    java?: Java | null;
-  };
-
   interface Props {
-    version: Version;
+    version: {
+      key: string;
+      family: { key: string; java: Java };
+      support: { status: SupportStatus; end: string | null };
+      java: Java | null;
+    };
     editMode?: boolean;
     deletable?: boolean;
   }

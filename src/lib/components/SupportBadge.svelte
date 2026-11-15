@@ -1,9 +1,9 @@
 <script lang="ts">
   import { Badge } from "#lib/components/ui/badge/index.ts";
-  import type { Support, SupportStatus } from "#lib/gql/graphql.ts";
+  import type { SupportStatus } from "#lib/gql/graphql.ts";
   import { formatDateTime } from "#lib/utils/date.ts";
 
-  const { support, showEnd = false }: { support: Support; showEnd?: boolean } = $props();
+  const { support, showEnd = false }: { support: { status: SupportStatus; end?: string | null }; showEnd?: boolean } = $props();
 
   function classes(status: SupportStatus): string {
     switch (status) {
