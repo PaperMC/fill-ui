@@ -1,4 +1,4 @@
-import type { SharedQueries } from "$lib/api.svelte";
+import type { SharedQueries } from "#lib/api.svelte.ts";
 
 export interface HeaderNavigationSegment {
   label: string;

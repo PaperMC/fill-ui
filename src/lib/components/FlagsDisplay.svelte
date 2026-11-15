@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SingleLineCopyable from "$lib/components/custom/SingleLineCopyable.svelte";
+  import SingleLineCopyable from "#lib/components/custom/SingleLineCopyable.svelte";
 
   interface Props {
     flags?: string[];

@@ -1,17 +1,17 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import Header from "$lib/components/custom/header/Header.svelte";
-  import * as Alert from "$lib/components/ui/alert";
-  import { Button } from "$lib/components/ui/button";
-  import * as Input from "$lib/components/ui/input";
-  import { Label } from "$lib/components/ui/label";
+  import Header from "#lib/components/custom/header/Header.svelte";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Input from "#lib/components/ui/input/index.ts";
+  import { Label } from "#lib/components/ui/label/index.ts";
   import { getContextClient } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
-  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
+  import { graphql } from "#lib/gql/index.ts";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "#lib/operation-error.ts";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
-  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
-  import { SHARED_QUERIES_CTX } from "$lib/api.svelte";
+  import { buildHeaderSegments } from "#lib/components/custom/header/index.svelte.ts";
+  import { SHARED_QUERIES_CTX } from "#lib/api.svelte.ts";
 
   let familyId: string | undefined = $state();
   let minJava: number | undefined = $state(21); // default minimum java

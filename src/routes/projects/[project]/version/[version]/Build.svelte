@@ -1,18 +1,18 @@
 <script lang="ts">
-  import ChannelBadge from "$lib/components/ChannelBadge.svelte";
-  import { formatDateTime } from "$lib/utils/date";
-  import PromoteBuildButton from "$lib/components/PromoteBuildButton.svelte";
-  import { Button } from "$lib/components/ui/button";
-  import * as Card from "$lib/components/ui/card";
-  import { API_ENDPOINT } from "$lib/api-endpoint";
+  import ChannelBadge from "#lib/components/ChannelBadge.svelte";
+  import { formatDateTime } from "#lib/utils/date.ts";
+  import PromoteBuildButton from "#lib/components/PromoteBuildButton.svelte";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Card from "#lib/components/ui/card/index.ts";
+  import { API_ENDPOINT } from "#lib/api-endpoint.ts";
   import { page } from "$app/state";
-  import { type Build, BuildChannel } from "$lib/gql/graphql";
-  import { AUTH_CTX } from "$lib/auth.svelte";
-  import * as Popover from "$lib/components/ui/popover/index.js";
+  import { type Build, BuildChannel } from "#lib/gql/graphql.ts";
+  import { AUTH_CTX } from "#lib/auth.svelte.ts";
+  import * as Popover from "#lib/components/ui/popover/index.js";
   import CommitList from "./CommitList.svelte";
   import { goto } from "$app/navigation";
   import { watch } from "runed";
-  import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
+  import CopyToClipboard from "#lib/components/custom/CopyToClipboard.svelte";
   import { tick } from "svelte";
 
   interface Props {
@@ -57,7 +57,7 @@
               e.preventDefault();
               // eslint-disable-next-line svelte/no-navigation-without-resolve
               goto(`?build=${build.number}`, {
-                noScroll: true,
+                reset: false,
               });
             }}
             href="?build={build.number}"

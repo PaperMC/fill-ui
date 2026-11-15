@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { SHARED_QUERIES_CTX } from "$lib/api.svelte";
-  import Header from "$lib/components/custom/header/Header.svelte";
-  import { Button } from "$lib/components/ui/button";
-  import * as Alert from "$lib/components/ui/alert";
-  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
-  import { projectsHeaderSegment } from "$lib/components/custom/header/index.svelte";
+  import { SHARED_QUERIES_CTX } from "#lib/api.svelte.ts";
+  import Header from "#lib/components/custom/header/Header.svelte";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
+  import LoadingSniffer from "#lib/components/LoadingSniffer.svelte";
+  import { projectsHeaderSegment } from "#lib/components/custom/header/index.svelte.ts";
 
   const sharedQueries = SHARED_QUERIES_CTX.get();
 

@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
-  import Header from "$lib/components/custom/header/Header.svelte";
+  import { RunedQuery, SHARED_QUERIES_CTX } from "#lib/api.svelte.ts";
+  import Header from "#lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
-  import { Button } from "$lib/components/ui/button";
-  import * as Alert from "$lib/components/ui/alert";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
   import { getContextClient, queryStore } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
-  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
-  import { AUTH_CTX } from "$lib/auth.svelte";
-  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
+  import { graphql } from "#lib/gql/index.ts";
+  import LoadingSniffer from "#lib/components/LoadingSniffer.svelte";
+  import { AUTH_CTX } from "#lib/auth.svelte.ts";
+  import { buildHeaderSegments } from "#lib/components/custom/header/index.svelte.ts";
   import { type PageProps } from "./$types";
 
   let { data }: PageProps = $props();

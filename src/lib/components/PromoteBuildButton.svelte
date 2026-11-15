@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import * as AlertDialog from "$lib/components/ui/alert-dialog";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as AlertDialog from "#lib/components/ui/alert-dialog/index.ts";
   import { getContextClient } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
-  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
+  import { graphql } from "#lib/gql/index.ts";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "#lib/operation-error.ts";
   import { page } from "$app/state";
   import { toast } from "svelte-sonner";
 

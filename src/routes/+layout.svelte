@@ -1,22 +1,22 @@
 <script lang="ts">
   import "../app.css";
-  import favicon from "$lib/assets/favicon.ico";
-  import favicon32x from "$lib/assets/favicon-32x32.png";
-  import favicon16x from "$lib/assets/favicon-16x16.png";
-  import snifferWalk from "$lib/assets/Sniffer_walk_pixel_art.gif";
+  import favicon from "#lib/assets/favicon.ico";
+  import favicon32x from "#lib/assets/favicon-32x32.png";
+  import favicon16x from "#lib/assets/favicon-16x16.png";
+  import snifferWalk from "#lib/assets/Sniffer_walk_pixel_art.gif";
   import { Client, fetchExchange, setContextClient } from "@urql/svelte";
   import { cacheExchange, type Cache } from "@urql/exchange-graphcache";
   import { relayPagination } from "@urql/exchange-graphcache/extras";
-  import { API_ENDPOINT } from "$lib/api-endpoint";
-  import { SHARED_QUERIES_CTX, SharedQueries } from "$lib/api.svelte";
-  import { AUTH_CTX, AuthHolder } from "$lib/auth.svelte";
+  import { API_ENDPOINT } from "#lib/api-endpoint.ts";
+  import { SHARED_QUERIES_CTX, SharedQueries } from "#lib/api.svelte.ts";
+  import { AUTH_CTX, AuthHolder } from "#lib/auth.svelte.ts";
   import { onMount } from "svelte";
   import { ModeWatcher } from "mode-watcher";
   import { page } from "$app/state";
   import { type LayoutProps } from "./$types";
   import Footer from "./Footer.svelte";
-  import { createAppHydrationScope } from "$lib/hydration-scope";
-  import { Toaster } from "$lib/components/ui/sonner";
+  import { createAppHydrationScope } from "#lib/hydration-scope.ts";
+  import { Toaster } from "#lib/components/ui/sonner/index.ts";
 
   let { children, data }: LayoutProps = $props();
 

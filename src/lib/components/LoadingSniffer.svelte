@@ -1,13 +1,13 @@
 <script lang="ts" module>
-  import snifferWalkGif from "$lib/assets/Sniffer_walk_pixel_art.gif";
-  import sniffletPlopGif from "$lib/assets/Snifflet_plop_pixel_art.gif";
-  import sniffletSniffGif from "$lib/assets/Snifflet_sniff_pixel_art.gif";
-  import snifferWalkWebm from "$lib/assets/Sniffer_walk_pixel_art.webm";
-  import sniffletPlopWebm from "$lib/assets/Snifflet_plop_pixel_art.webm";
-  import sniffletSniffWebm from "$lib/assets/Snifflet_sniff_pixel_art.webm";
-  import snifferWalkMp4 from "$lib/assets/Sniffer_walk_pixel_art.mp4";
-  import sniffletPlopMp4 from "$lib/assets/Snifflet_plop_pixel_art.mp4";
-  import sniffletSniffMp4 from "$lib/assets/Snifflet_sniff_pixel_art.mp4";
+  import snifferWalkGif from "#lib/assets/Sniffer_walk_pixel_art.gif";
+  import sniffletPlopGif from "#lib/assets/Snifflet_plop_pixel_art.gif";
+  import sniffletSniffGif from "#lib/assets/Snifflet_sniff_pixel_art.gif";
+  import snifferWalkWebm from "#lib/assets/Sniffer_walk_pixel_art.webm";
+  import sniffletPlopWebm from "#lib/assets/Snifflet_plop_pixel_art.webm";
+  import sniffletSniffWebm from "#lib/assets/Snifflet_sniff_pixel_art.webm";
+  import snifferWalkMp4 from "#lib/assets/Sniffer_walk_pixel_art.mp4";
+  import sniffletPlopMp4 from "#lib/assets/Snifflet_plop_pixel_art.mp4";
+  import sniffletSniffMp4 from "#lib/assets/Snifflet_sniff_pixel_art.mp4";
 
   const sniffers = [
     {
@@ -34,7 +34,7 @@
 </script>
 
 <script lang="ts">
-  import { createHydrationScope } from "$lib/hydration-scope";
+  import { createHydrationScope } from "#lib/hydration-scope.ts";
 
   interface Props {
     text?: string | undefined;

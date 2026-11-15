@@ -3,7 +3,7 @@ import { API_ENDPOINT } from "./api-endpoint";
 import { goto } from "$app/navigation";
 import { page } from "$app/state";
 import { SvelteURLSearchParams } from "svelte/reactivity";
-import { browser } from "$app/environment";
+import { browser } from "$app/env";
 import { redirect } from "@sveltejs/kit";
 import type { ServerLoad } from "@sveltejs/kit";
 

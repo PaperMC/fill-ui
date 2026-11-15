@@ -1,5 +1,5 @@
 <script lang="ts">
-  import * as Alert from "$lib/components/ui/alert";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
   import CircleAlertIcon from "@lucide/svelte/icons/circle-alert";
 
   let { ...restProps } = $props();

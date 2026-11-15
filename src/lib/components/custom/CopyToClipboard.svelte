@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import Button, { type ButtonProps } from "$lib/components/ui/button/button.svelte";
+  import Button, { type ButtonProps } from "#lib/components/ui/button/button.svelte";
   import { mergeProps } from "bits-ui";
   import { toast } from "svelte-sonner";
 
