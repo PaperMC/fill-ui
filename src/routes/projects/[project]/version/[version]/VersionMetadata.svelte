@@ -277,7 +277,7 @@
     </Alert.Root>
   {/if}
   <Card.Root>
-    <Card.Content class="space-y-2">
+    <Card.Content class="gap-2">
       <h3 class="text-lg font-medium">General</h3>
       <div class="text-sm">
         <div class="font-medium">Version ID</div>
@@ -319,7 +319,7 @@
       </div>
 
       {#if effectiveJava && version.family.java}
-        <h3 class="mt-4 text-lg font-medium">Java</h3>
+        <h3 class="mt-2 text-lg font-medium">Java</h3>
         {#if editMode}
           <JavaOverridesInfo />
           <MinJavaOverride bind:minJavaOverride={editState.java.minimum} familyMinJava={version.family.java.version.minimum} label="Minimum Version Override" />

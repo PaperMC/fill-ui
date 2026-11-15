@@ -48,7 +48,7 @@
 
 <li>
   <Card.Root bind:ref={card} data-linked={linked} size="sm" class="data-[linked=true]:ring-2 data-[linked=true]:ring-ring data-[linked=true]:ring-offset-2">
-    <Card.Content class="space-y-2">
+    <Card.Content class="gap-2">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex min-w-0 items-center gap-2">
           <Button

@@ -250,7 +250,7 @@
     {:else}
       {#each webhooks as webhook (webhook.id)}
         <Card.Root>
-          <Card.Content class="space-y-4">
+          <Card.Content class="gap-4">
             <div class="flex items-start justify-between gap-3">
               <Card.Title class="min-w-0 break-all">{webhook.url}</Card.Title>
               <Button class="shrink-0" variant="destructive" size="sm" onclick={() => requestWebhookDeletion(webhook)}>Delete</Button>
