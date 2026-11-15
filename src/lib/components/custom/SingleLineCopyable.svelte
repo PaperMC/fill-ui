@@ -1,6 +1,6 @@
 <script lang="ts">
-  import CopyToClipboard from "$lib/components/custom/CopyToClipboard.svelte";
-  import { cn } from "$lib/utils";
+  import CopyToClipboard from "#lib/components/custom/CopyToClipboard.svelte";
+  import { cn } from "#lib/utils.ts";
   import { ScrollState, useResizeObserver } from "runed";
 
   interface Props {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/utils.js";
+	import { cn, type WithElementRef } from "#lib/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
 
 	let {
@@ -12,8 +12,8 @@
 
 <div
 	bind:this={ref}
-	data-slot="field-label"
-	class={cn("gap-2 text-sm leading-snug font-medium group-data-[disabled=true]/field:opacity-50 flex w-fit items-center leading-snug", className)}
+	data-slot="field-title"
+	class={cn("gap-2 leading-snug text-sm font-medium group-data-[disabled=true]/field:opacity-50 flex w-fit items-center", className)}
 	{...restProps}
 >
 	{@render children?.()}

@@ -1,12 +1,12 @@
 <script lang="ts">
-  import * as Breadcrumb from "$lib/components/ui/breadcrumb";
-  import { Button, buttonVariants } from "$lib/components/ui/button";
-  import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-  import { AUTH_CTX } from "$lib/auth.svelte";
+  import * as Breadcrumb from "#lib/components/ui/breadcrumb/index.ts";
+  import { Button, buttonVariants } from "#lib/components/ui/button/index.ts";
+  import * as DropdownMenu from "#lib/components/ui/dropdown-menu/index.ts";
+  import { AUTH_CTX } from "#lib/auth.svelte.ts";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
   import { page } from "$app/state";
-  import { type HeaderProps } from "$lib/components/custom/header/index.svelte";
+  import { type HeaderProps } from "#lib/components/custom/header/index.svelte.ts";
   import { BookOpenIcon, CircleUserIcon, LogOutIcon, WebhookIcon } from "@lucide/svelte";
 
   let { breadcrumbs }: HeaderProps = $props();
@@ -24,16 +24,12 @@
       >
     </h1>
     <div class="flex items-center gap-2">
-      <Button variant="outline" size="icon-sm" href={resolve("/api-docs")} aria-label="API docs" title="API docs">
-        <BookOpenIcon />
-      </Button>
+      <Button variant="outline" size="icon-sm" href={resolve("api-docs")} aria-label="API docs" title="API docs"><BookOpenIcon /></Button>
+
       {#if auth.getUsername()}
         <div class="flex items-center gap-2">
-          {#if page.url.pathname !== resolve("/webhooks")}
-            <Button variant="outline" size="sm" href={resolve("/webhooks")}>
-              <WebhookIcon data-icon="inline-start" />
-              Webhooks
-            </Button>
+          {#if page.url.pathname !== resolve("webhooks")}
+            <Button variant="outline" size="sm" href={resolve("webhooks")}><WebhookIcon data-icon="inline-start" /> Webhooks</Button>
           {/if}
           <DropdownMenu.Root>
             <DropdownMenu.Trigger class={buttonVariants({ variant: "outline", size: "icon-sm" })} aria-label="Open profile menu">
@@ -46,7 +42,7 @@
                 variant="destructive"
                 onclick={() => {
                   auth.logout();
-                  goto(resolve(`/login?redirect=${encodeURIComponent(loginRedirect)}`));
+                  goto(resolve(`login?redirect=${encodeURIComponent(loginRedirect)}`));
                 }}
               >
                 <LogOutIcon data-icon="inline-start" />

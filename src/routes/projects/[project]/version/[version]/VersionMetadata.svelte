@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import * as Alert from "$lib/components/ui/alert";
-  import * as AlertDialog from "$lib/components/ui/alert-dialog";
-  import * as Card from "$lib/components/ui/card";
-  import SupportBadge from "$lib/components/SupportBadge.svelte";
-  import { type Java, type Support, SupportStatus } from "$lib/gql/graphql";
-  import FlagsDisplay from "$lib/components/FlagsDisplay.svelte";
-  import DatePicker from "$lib/components/DatePicker.svelte";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
+  import * as AlertDialog from "#lib/components/ui/alert-dialog/index.ts";
+  import * as Card from "#lib/components/ui/card/index.ts";
+  import SupportBadge from "#lib/components/SupportBadge.svelte";
+  import { type Java, type Support, SupportStatus } from "#lib/gql/graphql.ts";
+  import FlagsDisplay from "#lib/components/FlagsDisplay.svelte";
+  import DatePicker from "#lib/components/DatePicker.svelte";
   import { CalendarDate } from "@internationalized/date";
-  import * as Select from "$lib/components/ui/select";
-  import MinJavaOverride from "$lib/components/MinJavaOverride.svelte";
-  import FlagsOverride from "$lib/components/FlagsOverride.svelte";
-  import JavaOverridesInfo from "$lib/components/JavaOverridesInfo.svelte";
-  import { splitFlags } from "$lib/utils";
+  import * as Select from "#lib/components/ui/select/index.ts";
+  import MinJavaOverride from "#lib/components/MinJavaOverride.svelte";
+  import FlagsOverride from "#lib/components/FlagsOverride.svelte";
+  import JavaOverridesInfo from "#lib/components/JavaOverridesInfo.svelte";
+  import { splitFlags } from "#lib/utils.ts";
   import { watch } from "runed";
   import { getContextClient } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
-  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
+  import { graphql } from "#lib/gql/index.ts";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "#lib/operation-error.ts";
   import { page } from "$app/state";
-  import { AUTH_CTX } from "$lib/auth.svelte";
+  import { AUTH_CTX } from "#lib/auth.svelte.ts";
   import { toast } from "svelte-sonner";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
@@ -277,7 +277,7 @@
     </Alert.Root>
   {/if}
   <Card.Root>
-    <Card.Content class="space-y-2">
+    <Card.Content class="gap-2">
       <h3 class="text-lg font-medium">General</h3>
       <div class="text-sm">
         <div class="font-medium">Version ID</div>
@@ -319,7 +319,7 @@
       </div>
 
       {#if effectiveJava && version.family.java}
-        <h3 class="mt-4 text-lg font-medium">Java</h3>
+        <h3 class="mt-2 text-lg font-medium">Java</h3>
         {#if editMode}
           <JavaOverridesInfo />
           <MinJavaOverride bind:minJavaOverride={editState.java.minimum} familyMinJava={version.family.java.version.minimum} label="Minimum Version Override" />

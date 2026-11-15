@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
-  import Header from "$lib/components/custom/header/Header.svelte";
+  import { RunedQuery, SHARED_QUERIES_CTX } from "#lib/api.svelte.ts";
+  import Header from "#lib/components/custom/header/Header.svelte";
   import { page } from "$app/state";
   import { getContextClient, queryStore } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
-  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
+  import { graphql } from "#lib/gql/index.ts";
+  import LoadingSniffer from "#lib/components/LoadingSniffer.svelte";
   import VersionMetadata from "./VersionMetadata.svelte";
   import Build from "./Build.svelte";
-  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
+  import { buildHeaderSegments } from "#lib/components/custom/header/index.svelte.ts";
   import { type PageProps } from "./$types";
   import { Debounced } from "runed";
-  import * as Alert from "$lib/components/ui/alert";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
 
   let { data }: PageProps = $props();
 

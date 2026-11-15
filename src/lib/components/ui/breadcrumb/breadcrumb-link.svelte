@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/utils.js";
+	import { cn, type WithElementRef } from "#lib/utils.js";
 	import type { Snippet } from "svelte";
 	import type { HTMLAnchorAttributes } from "svelte/elements";
 
@@ -16,7 +16,7 @@
 
 	const attrs = $derived({
 		"data-slot": "breadcrumb-link",
-		class: cn("transition-colors hover:text-foreground", className),
+		class: cn("hover:text-foreground transition-colors", className),
 		href,
 		...restProps,
 	});

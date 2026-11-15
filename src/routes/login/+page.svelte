@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { Button } from "$lib/components/ui/button";
-  import * as Input from "$lib/components/ui/input";
-  import { Label } from "$lib/components/ui/label";
-  import { API_ENDPOINT } from "$lib/api-endpoint";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Input from "#lib/components/ui/input/index.ts";
+  import { Label } from "#lib/components/ui/label/index.ts";
+  import { API_ENDPOINT } from "#lib/api-endpoint.ts";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
   import { resolve } from "$app/paths";
-  import { AUTH_CTX } from "$lib/auth.svelte";
+  import { AUTH_CTX } from "#lib/auth.svelte.ts";
   import { SvelteURLSearchParams } from "svelte/reactivity";
-  import * as Alert from "$lib/components/ui/alert";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
 
   let username: string = $state("");
   let password: string = $state("");
@@ -50,8 +50,12 @@
       if (response.ok) {
         auth.login(username, result.access_token, result.refresh_token, result.expires_in);
 
-        // eslint-disable-next-line svelte/no-navigation-without-resolve
-        await goto(redirect);
+        try {
+          // eslint-disable-next-line svelte/no-navigation-without-resolve
+          await goto(redirect);
+        } catch {
+          await goto(resolve("/projects"));
+        }
       } else {
         errorMessage = result.message || "Invalid credentials";
       }

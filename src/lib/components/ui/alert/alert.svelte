@@ -6,7 +6,7 @@
 		variants: {
 			variant: {
 				default: "bg-card text-card-foreground",
-				destructive: "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
+				destructive: "text-destructive bg-card *:data-[slot=alert-description]:text-destructive/90 *:[svg]:text-current",
 			},
 		},
 		defaultVariants: {
@@ -18,7 +18,7 @@
 </script>
 
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/utils.js";
+	import { cn, type WithElementRef } from "#lib/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
 
 	let {

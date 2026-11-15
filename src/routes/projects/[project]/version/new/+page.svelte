@@ -1,23 +1,23 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { onMount } from "svelte";
-  import Header from "$lib/components/custom/header/Header.svelte";
-  import * as Alert from "$lib/components/ui/alert";
-  import { Button } from "$lib/components/ui/button";
-  import * as Select from "$lib/components/ui/select";
-  import * as Input from "$lib/components/ui/input";
-  import { Label } from "$lib/components/ui/label";
-  import { RunedQuery, SHARED_QUERIES_CTX } from "$lib/api.svelte";
+  import Header from "#lib/components/custom/header/Header.svelte";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Select from "#lib/components/ui/select/index.ts";
+  import * as Input from "#lib/components/ui/input/index.ts";
+  import { Label } from "#lib/components/ui/label/index.ts";
+  import { RunedQuery, SHARED_QUERIES_CTX } from "#lib/api.svelte.ts";
   import { getContextClient, queryStore } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
-  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
+  import { graphql } from "#lib/gql/index.ts";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "#lib/operation-error.ts";
   import { goto } from "$app/navigation";
-  import MinJavaOverride from "$lib/components/MinJavaOverride.svelte";
-  import FlagsOverride from "$lib/components/FlagsOverride.svelte";
-  import JavaOverridesInfo from "$lib/components/JavaOverridesInfo.svelte";
-  import { splitFlags } from "$lib/utils";
+  import MinJavaOverride from "#lib/components/MinJavaOverride.svelte";
+  import FlagsOverride from "#lib/components/FlagsOverride.svelte";
+  import JavaOverridesInfo from "#lib/components/JavaOverridesInfo.svelte";
+  import { splitFlags } from "#lib/utils.ts";
   import { resolve } from "$app/paths";
-  import { buildHeaderSegments } from "$lib/components/custom/header/index.svelte";
+  import { buildHeaderSegments } from "#lib/components/custom/header/index.svelte.ts";
 
   let versionId: string | undefined = $state();
   let familyId: string | undefined = $state();

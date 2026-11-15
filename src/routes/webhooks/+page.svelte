@@ -1,24 +1,24 @@
 <script lang="ts">
   import { CircleAlertIcon, XIcon } from "@lucide/svelte";
-  import { RunedQuery } from "$lib/api.svelte";
-  import FailureBadge from "$lib/components/FailureBadge.svelte";
-  import Header from "$lib/components/custom/header/Header.svelte";
-  import LoadingSniffer from "$lib/components/LoadingSniffer.svelte";
-  import SuccessBadge from "$lib/components/SuccessBadge.svelte";
-  import SingleLineCopyable from "$lib/components/custom/SingleLineCopyable.svelte";
-  import * as Alert from "$lib/components/ui/alert";
-  import * as AlertDialog from "$lib/components/ui/alert-dialog";
-  import { Button } from "$lib/components/ui/button";
-  import * as Card from "$lib/components/ui/card";
-  import * as Field from "$lib/components/ui/field";
-  import { Input } from "$lib/components/ui/input";
-  import { Separator } from "$lib/components/ui/separator";
+  import { RunedQuery } from "#lib/api.svelte.ts";
+  import FailureBadge from "#lib/components/FailureBadge.svelte";
+  import Header from "#lib/components/custom/header/Header.svelte";
+  import LoadingSniffer from "#lib/components/LoadingSniffer.svelte";
+  import SuccessBadge from "#lib/components/SuccessBadge.svelte";
+  import SingleLineCopyable from "#lib/components/custom/SingleLineCopyable.svelte";
+  import * as Alert from "#lib/components/ui/alert/index.ts";
+  import * as AlertDialog from "#lib/components/ui/alert-dialog/index.ts";
+  import { Button } from "#lib/components/ui/button/index.ts";
+  import * as Card from "#lib/components/ui/card/index.ts";
+  import * as Field from "#lib/components/ui/field/index.ts";
+  import { Input } from "#lib/components/ui/input/index.ts";
+  import { Separator } from "#lib/components/ui/separator/index.ts";
   import { getContextClient, queryStore } from "@urql/svelte";
-  import { graphql } from "$lib/gql";
-  import { DeliveryStatus, type Webhook } from "$lib/gql/graphql";
-  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "$lib/operation-error";
-  import { webhooksHeaderSegment } from "$lib/components/custom/header/index.svelte";
-  import { formatDateTime } from "$lib/utils/date";
+  import { graphql } from "#lib/gql/index.ts";
+  import { DeliveryStatus, type Webhook } from "#lib/gql/graphql.ts";
+  import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "#lib/operation-error.ts";
+  import { webhooksHeaderSegment } from "#lib/components/custom/header/index.svelte.ts";
+  import { formatDateTime } from "#lib/utils/date.ts";
   import { toast } from "svelte-sonner";
 
   const webhooksDocument = graphql(`
@@ -250,7 +250,7 @@
     {:else}
       {#each webhooks as webhook (webhook.id)}
         <Card.Root>
-          <Card.Content class="space-y-4">
+          <Card.Content class="gap-4">
             <div class="flex items-start justify-between gap-3">
               <Card.Title class="min-w-0 break-all">{webhook.url}</Card.Title>
               <Button class="shrink-0" variant="destructive" size="sm" onclick={() => requestWebhookDeletion(webhook)}>Delete</Button>

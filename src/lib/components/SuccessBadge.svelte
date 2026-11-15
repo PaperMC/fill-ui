@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { CheckIcon } from "@lucide/svelte";
-  import { Badge } from "$lib/components/ui/badge";
+  import { Badge } from "#lib/components/ui/badge/index.ts";
 
   let { children }: { children?: Snippet } = $props();
 </script>

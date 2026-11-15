@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/utils.js";
+	import { cn, type WithElementRef } from "#lib/utils.js";
 	import type { HTMLAttributes } from "svelte/elements";
 
 	let {
@@ -16,7 +16,7 @@
 	role="link"
 	aria-disabled="true"
 	aria-current="page"
-	class={cn("font-normal text-foreground", className)}
+	class={cn("text-foreground font-normal", className)}
 	{...restProps}
 >
 	{@render children?.()}

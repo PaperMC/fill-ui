@@ -1,8 +1,8 @@
 import type { Readable } from "svelte/store";
 import { createClient, fetchExchange, getContextClient, type OperationResultState, queryStore } from "@urql/svelte";
-import { graphql } from "$lib/gql";
+import { graphql } from "#lib/gql/index.ts";
 import { Context, watch } from "runed";
-import { API_ENDPOINT } from "$lib/api-endpoint";
+import { API_ENDPOINT } from "#lib/api-endpoint.ts";
 
 export class RunedQuery<V> {
   private currentState: OperationResultState<V> | undefined = $state();

@@ -1,7 +1,7 @@
 import type { PageServerLoad } from "./$types";
-import { graphql } from "$lib/gql";
-import { createServerClient } from "$lib/api.svelte";
-import { shouldSSROpenGraph } from "$lib/utils";
+import { graphql } from "#lib/gql/index.ts";
+import { createServerClient } from "#lib/api.svelte.ts";
+import { shouldSSROpenGraph } from "#lib/utils.ts";
 
 export const load: PageServerLoad = async ({ request, params }) => {
   if (shouldSSROpenGraph(request)) {

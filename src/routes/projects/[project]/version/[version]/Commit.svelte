@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Commit } from "$lib/gql/graphql";
-  import { Button } from "$lib/components/ui/button";
+  import type { Commit } from "#lib/gql/graphql.ts";
+  import { Button } from "#lib/components/ui/button/index.ts";
   import { slide } from "svelte/transition";
 
   interface Props {

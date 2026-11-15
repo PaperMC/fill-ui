@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Badge } from "$lib/components/ui/badge";
-  import type { BuildChannel } from "$lib/gql/graphql";
+  import { Badge } from "#lib/components/ui/badge/index.ts";
+  import type { BuildChannel } from "#lib/gql/graphql.ts";
 
-  const { channel } = $props<{ channel: BuildChannel }>();
+  const { channel }: { channel: BuildChannel } = $props();
 
   function classes(ch: BuildChannel): string {
     switch (ch) {
