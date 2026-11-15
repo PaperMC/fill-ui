@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Build } from "#lib/gql/graphql.ts";
+  import type { Build } from "#lib/graphql-types.ts";
   import Commit from "./Commit.svelte";
 
   interface Props {

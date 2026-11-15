@@ -6,7 +6,8 @@
   import * as Card from "#lib/components/ui/card/index.ts";
   import { API_ENDPOINT } from "#lib/api-endpoint.ts";
   import { page } from "$app/state";
-  import { type Build, BuildChannel } from "#lib/gql/graphql.ts";
+  import { BuildChannel } from "#lib/gql/graphql.ts";
+  import type { Build } from "#lib/graphql-types.ts";
   import { AUTH_CTX } from "#lib/auth.svelte.ts";
   import * as Popover from "#lib/components/ui/popover/index.js";
   import CommitList from "./CommitList.svelte";

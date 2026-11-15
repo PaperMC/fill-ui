@@ -15,7 +15,7 @@
   import { Separator } from "#lib/components/ui/separator/index.ts";
   import { getContextClient, queryStore } from "@urql/svelte";
   import { graphql } from "#lib/gql/index.ts";
-  import { DeliveryStatus, type Webhook } from "#lib/gql/graphql.ts";
+  import { DeliveryStatus } from "#lib/gql/graphql.ts";
   import { getOperationErrorMessage, getUnexpectedOperationResultMessage } from "#lib/operation-error.ts";
   import { webhooksHeaderSegment } from "#lib/components/custom/header/index.svelte.ts";
   import { formatDateTime } from "#lib/utils/date.ts";
@@ -66,10 +66,11 @@
     url: string;
     secret: string;
   };
+  type WebhookToDelete = { id: string; url: string };
 
   let webhooks = $derived(
     (webhooksQuery.current?.webhooks ?? [])
-      .filter((webhook): webhook is Webhook => webhook !== null)
+      .filter((webhook) => webhook !== null)
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()),
   );
   let createWebhookError: string | null = $state(null);
@@ -77,7 +78,7 @@
   let newWebhookUrlError: string | null = $state(null);
   let creating = $state(false);
   let deleting = $state(false);
-  let webhookPendingDeletion: Webhook | null = $state(null);
+  let webhookPendingDeletion: WebhookToDelete | null = $state(null);
   let deleteDialogOpen = $state(false);
   let createdWebhookSecrets: CreatedWebhookSecret[] = $state([]);
 
@@ -129,7 +130,7 @@
     }
   }
 
-  function requestWebhookDeletion(webhook: Webhook) {
+  function requestWebhookDeletion(webhook: WebhookToDelete) {
     webhookPendingDeletion = webhook;
     deleteDialogOpen = true;
   }

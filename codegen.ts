@@ -19,6 +19,11 @@ const config: CodegenConfig = {
       plugins: [],
       config: {
         useTypeImports: true,
+        enumType: "const",
+        scalars: {
+          Date: "string",
+          DateTime: "string",
+        },
       },
     },
   },

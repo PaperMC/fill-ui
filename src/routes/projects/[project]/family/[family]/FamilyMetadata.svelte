@@ -6,7 +6,7 @@
   import * as Card from "#lib/components/ui/card/index.ts";
   import * as Input from "#lib/components/ui/input/index.ts";
   import { Label } from "#lib/components/ui/label/index.ts";
-  import type { Java } from "#lib/gql/graphql.ts";
+  import type { Java } from "#lib/graphql-types.ts";
   import { splitFlags } from "#lib/utils.ts";
   import { getContextClient } from "@urql/svelte";
   import { graphql } from "#lib/gql/index.ts";
@@ -19,13 +19,8 @@
 
   const auth = AUTH_CTX.get();
 
-  type Family = {
-    key: string;
-    java: Java;
-  };
-
   interface Props {
-    family: Family;
+    family: { key: string; java: Java };
     editMode?: boolean;
     deletable?: boolean;
   }
